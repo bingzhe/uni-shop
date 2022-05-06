@@ -1,0 +1,11 @@
+{
+	"name": "ytk_uni",
+	"version": "1.0.0",
+	"main": "main.js",
+	"license": "MIT",
+	"dependencies": {
+		"copy-webpack-plugin": "5",
+		"vconsole": "^3.14.6",
+		"webpack": "^5.72.0"
+	}
+}
