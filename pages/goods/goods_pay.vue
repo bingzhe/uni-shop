@@ -1,0 +1,268 @@
+<template>
+	<view class="page-wrap padding-all">
+		<prompt :show="showPay" @onConfirm="payConfirm" @onCancel="showPay=false" title="请选择支付类型">
+			<view class="select-paytype-wrap">
+				<radio-group name="paytypeBox" @change="changePayType">
+					<template v-if="$util.isWeiXin()">
+						<!-- <view class="paytype-line flex-center-y">
+								<image class="paytype-icon" src="/static/imgs/wxpay.png" mode="aspectFit"></image>
+								<label>
+									<radio color="#fe543a" style="transform:scale(0.7)" value="2" checked />
+									<text>微信支付</text>
+								</label>
+							</view>
+							<view class="paytype-line flex-center-y">
+								<image class="paytype-icon" src="/static/imgs/alipay.png" mode="aspectFit"></image>
+								<label>
+									<radio color="#fe543a" style="transform:scale(0.7)" value="1" />
+									<text>支付宝支付</text>
+								</label>
+							</view> -->
+					</template>
+					<template v-else>
+						<view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/blancepay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="0" />
+								<text>余额支付</text>
+							</label>
+						</view>
+						<view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/alipay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="1" checked />
+								<text>支付宝支付</text>
+							</label>
+						</view>
+					</template>
+				</radio-group>
+			</view>
+		</prompt>
+
+		<!-- 设置收货地址或者填写手机号 -->
+		<view class="app-card">
+
+			<view v-if="goods_class == 1" class="padding-y has-active card-item">
+				<view class="card-item-label">
+					<text>收货地址</text>
+				</view>
+				<view class="card-item-value ">
+					<view class="card-item-input" >
+						<text>请选择收货地址</text>
+					</view>
+				</view>
+			</view>
+			<view v-if="goods_class == 2" class="padding-y has-active card-item">
+				<view class="card-item-label">
+					<text>手机号码</text>
+				</view>
+				<view class="card-item-value">
+					<input placeholder="请输入手机号码" class="card-item-input" type="number" maxlength="11" />
+				</view>
+			</view>
+
+		</view>
+
+		<!-- 订单详情 -->
+		<view class="app-card">
+			<view class="padding-y has-active card-item">
+				<view class="card-item-label">
+					<text>商品金额</text>
+				</view>
+				<view class="card-item-value order-price">
+					<text>{{pay_param.order_price}}</text>
+				</view>
+			</view>
+		</view>
+
+		<!-- 金额 -->
+		<view class="app-card ">
+			<view class="padding-y has-active card-item">
+				<view class="card-item-label">
+					<text>商品金额</text>
+				</view>
+				<view class="card-item-value order-price">
+					<text>{{pay_param.order_price}}</text>
+				</view>
+			</view>
+		</view>
+
+		<view class="goods-pay-bottom-empty"></view>
+		<view class="goods-pay-bottom">
+			<!-- <view class="goods-pay-num">
+				<text>共1件</text>
+			</view> -->
+			<view class="goods-pay-price">
+				<text class="goods-pay-price-label">合计：</text>
+				<text>{{pay_param.order_price}}</text>
+			</view>
+			<view @click="toPay" class="goods-pay-btn">
+				<text>提交订单</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import {
+		orderCreateApi,
+		payGroupOrderApi
+	} from '@/api/tuanApi.js';
+	import prompt from '@/components/uni-prompt.vue';
+
+	export default {
+		components: {
+			prompt
+		},
+		data() {
+			return {
+				showPay: false,
+				payType: 1, //支付方式0余额支付，1支付宝h5，2微信公众号，3微信小程序
+				goods_class: 1, //1代表实体2代表虚拟
+				pay_param: {
+					group_id: '',
+					order_price: '0',
+					phone: '15679773393',
+					address_id: ''
+				},
+				orderInfo: {
+					create_time: "",
+					goods_name: "",
+					goods_type: "",
+					order_id: "",
+					order_no: "",
+					order_price: "",
+					relation_id: "",
+					users_id: '',
+				},
+				payInfo: {}
+			}
+		},
+		onLoad(option) {
+			if (option.group_id) {
+				this.$set(this.pay_param, 'group_id', option.group_id);
+			}
+			if (option.order_price) {
+				this.$set(this.pay_param, 'order_price', option.order_price);
+			}
+			if (option.goods_class) {
+				this.goods_class = option.goods_class;
+			}
+			this.init();
+		},
+		methods: {
+			init() {
+
+			},
+			async orderCreate() {
+				let res = await orderCreateApi(this.pay_param);
+				Object.assign(this.orderInfo, res.data.data);
+				// this.orderInfo = res.data.data;
+			},
+			async orderPay() {
+				let res = await payGroupOrderApi({
+					order_no: this.orderInfo.order_no,
+					pay_type: this.payType
+				});
+				uni.hideLoading();
+				this.payInfo = res.data.data;
+
+				if (this.payType == 2) {
+					WeixinJSBridge.invoke('getBrandWCPayRequest', JSON.parse(this.payInfo.payData),
+						(res) => {
+							console.log(res);
+						});
+					uni.navigateBack({})
+					return;
+				}
+				uni.setStorageSync('webviewUrl', this.payInfo.payData);
+				this.$util.redirectTo('/otherpages/webview/webview')
+			},
+			// 去支付
+			toPay() {
+				this.showPay = true;
+			},
+			async payConfirm(e) {
+				uni.showLoading({
+					title: '支付中...',
+					mask: true
+				});
+				await this.orderCreate();
+				this.orderPay();
+				this.showPay = false;
+			},
+			changePayType(e) {
+				this.payType = e.detail.value;
+			},
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.goods-pay-bottom-empty {
+		height: 120rpx;
+	}
+
+	.goods-pay-bottom {
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 120rpx;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		background-color: $white-color;
+		padding: 0 30rpx;
+		font-size: $font-28;
+
+		.goods-pay-num {
+			color: $gray-color;
+			margin-left: 20rpx;
+		}
+
+		.goods-pay-price {
+			margin-left: 20rpx;
+			color: $app-primary-color;
+			font-size: 36rpx;
+			font-weight: bold;
+
+			.goods-pay-price-label {
+				font-size: $font-28;
+				color: $font-color;
+				font-weight: normal
+			}
+		}
+
+		.goods-pay-btn {
+			@extend %flex-center;
+			margin-left: 20rpx;
+			background-color: $app-primary-color;
+			color: $white-color;
+			height: 70rpx;
+			padding: 0 30rpx;
+			border-radius: 60rpx;
+		}
+	}
+
+	.select-paytype-wrap {
+		padding: 20rpx 0;
+
+		.paytype-line {
+			height: 80rpx;
+
+			.paytype-icon {
+				width: 50rpx;
+				height: 50rpx;
+				margin-right: 20rpx;
+			}
+		}
+	}
+
+	.order-price {
+		flex: 1;
+		text-align: right;
+		font-size: 34rpx;
+		font-weight: bold;
+	}
+</style>

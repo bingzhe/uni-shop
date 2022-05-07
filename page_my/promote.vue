@@ -1,0 +1,187 @@
+<template>
+	<view class="container">
+		<!-- 背景 -->
+		<image class="bg-img" src="../static/imgs/promoterBg.jpg"></image>
+
+
+		<view class="promote_ct">
+			<view class="promote_ct_hander">
+				<view class="promote_ct_hander_title">邀请码</view>
+				<view class="promote_ct_hander_code flex-center">
+					<view>{{userInfo.invitation_code}}</view>
+					<view @click="$util.copy(userInfo.invitation_code)" class="copy-btn">复制</view>
+				</view>
+				<view class="promote_ct_hander_ts">您的好友在注册时也可以填写邀请码</view>
+			</view>
+			<view class="ermweima" @longtap="saveImg()">
+				<image :src="erweima" mode="widthFix"></image>
+			</view>
+			<view style="margin-top: 15rpx;color: #9b9b9a;font-size: 26rpx;">长按保存二维码可分享</view>
+			<button class="saveImg" @click="saveImg">保存图片</button>
+		</view>
+	</view>
+</template>
+
+<script>
+	import config from '@/common/config.js';
+	
+	export default {
+		data() {
+			return {
+				invitationCode: '', //邀请码
+				erweima: '', // 要生成的二维码值
+				flag: true,
+				userInfo: uni.getStorageSync('userInfo'),
+				size: 256,
+				margin: 10,
+				backgroundColor: '#FFFFFF',
+				foregroundColor: '#000000'
+			}
+		},
+		onReady() {
+			// #ifdef MP-WEIXIN
+			this.userInfo = uni.getStorageSync('userInfo')
+			// #endif
+		},
+
+		onLoad() {
+			this.init()
+		},
+
+		methods: {
+			init() {
+				this.userInfo = uni.getStorageSync('userInfo')
+				this.erweima = config.imgUrl + this.userInfo.invitation_qr_code
+			},
+			saveImg() {
+				// H5 保存图片
+				// #ifdef H5
+				const imgUrl = this.erweima;
+				if (window.navigator.msSaveOrOpenBlob) {
+					let bstr = atob(imgUrl.split(",")[1]);
+					let n = bstr.length;
+					let u8arr = new Uint8Array(n);
+					while (n--) {
+						u8arr[n] = bstr.charCodeAt(n);
+					}
+					let blob = new Blob([u8arr]);
+					window.navigator.msSaveOrOpenBlob(blob, "chart-download" + "." + "png");
+				} else {
+					let a = document.createElement("a");
+					a.href = imgUrl;
+					a.setAttribute("download", "chart-download");
+					a.click();
+				}
+				// #endif
+			}
+
+		},
+	}
+</script>
+
+<style lang="scss">
+	.container {
+		width: 100%;
+	}
+
+	.bg-img {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: -1;
+	}
+
+	.promote_ct {
+		position: fixed;
+		text-align: center;
+		width: 100%;
+		margin-top: 260rpx;
+		padding-top: 30rpx;
+
+		.promote_ct_hander {
+			display: flex;
+			flex-direction: column;
+
+			.promote_ct_hander_title {
+				font-weight: 700;
+			}
+
+			.promote_ct_hander_code {
+				font-size: 32rpx;
+				color: $red-color;
+				height: 80rpx;
+				// position: relative;
+				.copy-btn {
+					// position: absolute;
+					// right: 160rpx;
+					@extend %flex-center;
+					margin-left: 12rpx;
+					height: 36rpx;
+					line-height: 0;
+					font-size: 24rpx;
+					border: 1rpx solid $red-color;
+					padding: 2rpx 16rpx;
+					border-radius: 30rpx;
+				}
+			}
+
+			.promote_ct_hander_ts {
+				margin-top: 10rpx;
+				font-size: 16rpx;
+				color: #9b9b9a;
+			}
+		}
+
+		.ermweima {
+			width: 300rpx;
+			height: 300rpx;
+			margin: auto;
+			margin-top: 20rpx;
+
+			image {
+				width: 100%;
+				height: 100%;
+			}
+		}
+
+		.saveImg {
+			margin: auto;
+			width: 280rpx;
+			height: 60rpx;
+			color: #fff;
+			background-color: #c82626;
+			font-size: 28rpx;
+			line-height: 60rpx;
+			border-radius: 40rpx;
+			margin-top: 20rpx;
+		}
+	}
+
+	.qr_area {
+		height: calc(100vh - 400rpx);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		.content {
+			text-align: center;
+			padding-bottom: 30rpx;
+
+			.img {
+				width: 500rpx;
+				height: 500rpx;
+			}
+		}
+	}
+
+	.qrcode-box {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+</style>

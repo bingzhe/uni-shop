@@ -255,6 +255,7 @@
 			},
 
 			judge(e) {
+
 				this._timer = setTimeout(() => {
 					let value = e.target.value;
 					const pattern = /[\W]/g; //修改inputRule 的值
@@ -265,12 +266,28 @@
 							// console.log(pattern.test(value[i]));
 							_str += value[i].replace(pattern, '')
 						} else {
-							// console.log(pattern.test(value[i]));
+							console.log(pattern.test(value[i]));
 							_str += value[i].replace(patt, '')
 						}
 					}
 					this.account = _str;
 				}, 10)
+				// this._timer = setTimeout(() => {
+				// 	let value = e.target.value;
+				// 	const pattern = /[\W]/g; //修改inputRule 的值
+				// 	const patt = /[^\u4E00-\u9FA5W]/g; //修改inputRule 的值
+				// 	let _str = ''
+				// 	for (let i = 0, len = value.length; i < len; i++) {
+				// 		if (!pattern.test(value[i])) {
+				// 			// console.log(pattern.test(value[i]));
+				// 			_str += value[i].replace(pattern, '')
+				// 		} else {
+				// 			// console.log(pattern.test(value[i]));
+				// 			_str += value[i].replace(patt, '')
+				// 		}
+				// 	}
+				// 	this.account = _str;
+				// }, 10)
 			},
 			/*微信登录相关  start*/
 			//方法：用来判断是否是微信内置的浏览器

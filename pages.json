@@ -5,7 +5,8 @@
 			"style": {
 				"navigationBarBackgroundColor": "#ff5454",
 				"navigationBarTextStyle": "white",
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/login/login",
@@ -23,6 +24,103 @@
 				"navigationBarTitleText": "我的",
 				"enablePullDownRefresh": true
 			}
+		}, {
+			"path": "pages/goods/goods_detail",
+			"style": {
+				// #ifdef H5
+				"navigationStyle": "custom",
+				// #endif
+				"navigationBarTitleText": "详情"
+			}
+		}, {
+			"path": "pages/goods/goods_pay",
+			"style": {
+				// #ifdef H5
+				"navigationStyle": "custom",
+				// #endif
+				"navigationBarTitleText": "支付"
+			}
+		}, {
+			"path": "pages/my/cz",
+			"style": {
+				"navigationBarBackgroundColor": "#ff5454",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "余额充值"
+			}
+		}, {
+			"path": "pages/my/tx",
+			"style": {
+				"navigationBarBackgroundColor": "#ff5454",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "提现"
+			}
+		}
+	],
+
+	"subPackages": [{
+			"root": "otherpages",
+			"pages": [{
+				"path": "webview/webview",
+				"style": {
+					// #ifdef H5
+					"navigationStyle": "custom",
+					// #endif
+					"navigationBarTitleText": "优团客"
+				}
+			}]
+		},
+		{
+			"root": "page_my",
+			"pages": [{
+					"path": "myPromote",
+					"style": {
+						"navigationBarTitleText": "推广中心",
+						"enablePullDownRefresh": false
+					}
+				}, {
+					"path": "promote",
+					"style": {
+						"navigationBarTitleText": "推广二维码",
+						"enablePullDownRefresh": false
+					}
+				}, {
+					"path": "promoterList",
+					"style": {
+						"navigationBarTitleText": "推广统计",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "myAddress",
+					"style": {
+						// #ifdef H5
+						"navigationStyle": "custom",
+						// #endif
+						"navigationBarTitleText": "我的地址",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "addAddress",
+					"style": {
+						// #ifdef H5
+						"navigationStyle": "custom",
+						// #endif
+						"navigationBarTitleText": "新增地址",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "myInformation",
+					"style": {
+						// #ifdef H5
+						"navigationStyle": "custom",
+						// #endif
+						"navigationBarTitleText": "基本信息",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
 		}
 	],
 	"globalStyle": {

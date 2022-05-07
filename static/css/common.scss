@@ -65,7 +65,7 @@
 }
 
 .app-card {
-	border-radius: 30rpx;
+	border-radius: 16rpx;
 	background-color: $white-color;
 	margin-bottom: 20rpx;
 	.card-title {
@@ -86,11 +86,11 @@
 	}
 	.card-item {
 		border-top: 1rpx solid $card-border-color;
-		height: 100rpx;
+		height: 80rpx;
 		@extend %flex-center-y;
 		.card-item-label {
 			width: 160rpx;
-			font-size: $font-30;
+			font-size: $font-28;
 		}
 		.card-item-value {
 			flex: 1;
