@@ -1,22 +1,104 @@
 import request from '@/common/http/request.js' // 自己的接口
 
 const url = {
+	Banner: 'Api/Index/getBanner', // 轮播图
+
 	GroupList: 'Api/Group/groupList', //热门拼团列表
 	GroupDetail: 'Api/Group/getGroupInfo', //拼团详情
-	
+
 	OrderCreate: 'Api/Order/OrderCreate', //创建拼团订单
 	PayGroupOrder: 'Api/OrderPay/groupOrder', //支付拼团订单
-	
+
 	OrderBalanceCreate: 'Api/Order/createBalanceOrder', //创建充值余额订单
 	OrderPay: 'Api/OrderPay/userOrder', //支付充值余额订单
-	
+
 	Withdraw: 'Api/UsersWithdraw/index', //提现
 	WithdrawConfig: 'Api/UsersWithdraw/getWithdrawConfig', //提现配置
-	
+
 	GetAddress: 'Api/Usersinfo/getAddress', // 获取地址列表
 	GetDefaultAddress: 'Api/Usersinfo/getDefaultAddress', // 获取用户默认地址
 	SaveAddress: 'Api/Usersinfo/saveAddress', // 增加用户地址
 	DelAddress: 'Api/Usersinfo/delAddress', // 删除用户地址
+
+
+	Statistics: 'Api/Usersinfo/statistics', // 推广统计
+	SaveAvatar: 'Api/Usersinfo/saveAvatar', // 上传头像
+	MobileCode: 'Api/Login/mobileCode', // 获取验证码
+	BindMobile: 'Api/Login/bindMobile', // 绑定手机号
+	RevisePwdByMobile: 'Api/Login/RevisePwdByMobile', // 手机号修改密码
+	RevisePwdByPwd: 'Api/Login/RevisePwdByPwd', // 旧密码修改密码
+}
+
+
+/**
+ * @param {Object} data
+ * 上传头像
+ */
+export function saveAvatarApi(data) {
+	return request.request({
+		url: url.SaveAvatar,
+		method: 'post',
+		data
+	})
+}
+
+/**
+ * @param {Object} data
+ * 推广统计
+ */
+export function statisticsApi(data) {
+	return request.request({
+		url: url.Statistics,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 旧密码修改密码
+ */
+export function revisePwdByPwdApi(data) {
+	return request.request({
+		url: url.RevisePwdByPwd,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 手机号修改密码
+ */
+export function revisePwdByMobileApi(data) {
+	return request.request({
+		url: url.RevisePwdByMobile,
+		method: 'post',
+		data
+	})
+}
+
+/**
+ * @param {Object} data
+ * 绑定手机号
+ */
+export function bindMobileApi(data) {
+	return request.request({
+		url: url.BindMobile,
+		method: 'post',
+		data
+	})
+}
+
+
+/**
+ * @param {Object} data
+ * 获取验证码
+ */
+export function mobileCodeApi(data) {
+	return request.request({
+		url: url.MobileCode,
+		method: 'post',
+		data
+	})
 }
 
 
@@ -158,5 +240,3 @@ export function groupListApi(data) {
 		data
 	})
 }
-
-

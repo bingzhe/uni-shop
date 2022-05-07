@@ -47,7 +47,7 @@
 					<text>收货地址</text>
 				</view>
 				<view class="card-item-value ">
-					<view class="card-item-input" >
+					<view class="card-item-input select-address">
 						<text>请选择收货地址</text>
 					</view>
 				</view>
@@ -264,5 +264,24 @@
 		text-align: right;
 		font-size: 34rpx;
 		font-weight: bold;
+	}
+
+	.select-address {
+		flex: 1;
+		align-items: center;
+		text-align: right;
+		padding-right: 30rpx;
+		position: relative;
+		&::after {
+			position: absolute;
+			content: '';
+			top: 12rpx;
+			right: 0;
+			width: 16rpx;
+			height: 16rpx;
+			border-right: 1rpx solid $black-color;
+			border-top: 1rpx solid $black-color;
+			transform: rotate(45deg);
+		}
 	}
 </style>

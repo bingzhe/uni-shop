@@ -24,13 +24,13 @@
 		<view class="list acea-row row-between-wrapper">
 			<view class="item acea-row row-center-wrapper row-column" style="float: left; text-align: center;" @click="goPoster()">
 				<view style="margin-top: 60rpx;">
-					<text class="iconfont icon-erweima " style="color: #FF0000;"></text>
+					<text class="iconfont icon-erweima "></text>
 					<view>推广名片</view>
 				</view>
 			</view>
 			<view class="item acea-row row-center-wrapper row-column" style="float: right; text-align: center;" @click="goPromoterList()">
 				<view style="margin-top: 60rpx;">
-					<text class="iconfont icon-tongji" style="color: #FF0000;"></text>
+					<text class="iconfont icon-tongji"></text>
 					<view>推广人统计</view>
 				</view>
 			</view>
@@ -123,7 +123,7 @@
 </script>
 
 
-<style lang="less">
+<style lang="scss" scoped>
 	/*我的推广*/
 	.my-promotion .header {
 		background-image: url('../static/imgs/tuiguangbj2.png');
@@ -208,7 +208,7 @@
 		/* background-image: linear-gradient(to right, #eb3729 0%, #eb3729 100%); */
 		/* background-image: -moz-linear-gradient(to right, #eb3729 0%, #eb3729 100%); */
 		margin-bottom: 0.2 * 100rpx;
-		color: #23AAE2;
+		color: $app-primary-color;
 	}
 	page{
 		background-color: #f5f5f5;

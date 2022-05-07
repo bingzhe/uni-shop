@@ -97,9 +97,9 @@
 	import {
 		saveAvatarApi,
 		mobileCodeApi,
-		// bindMobileApi,
-		// RevisePwdByPwdApi,
-		// RevisePwdByMobileApi
+		bindMobileApi,
+		revisePwdByPwdApi,
+		revisePwdByMobileApi
 	} from '@/api/tuanApi.js';
 	import {
 		userInfoApi,
@@ -212,25 +212,25 @@
 				this.$refs.popup.close()
 			},
 			async determine() {
-				// if (this.mobile) {
-				// 	let res = await bindMobileApi({
-				// 		mobile: this.mobile,
-				// 		code: this.yzm
-				// 	})
-				// 	this.$util.showToast({
-				// 		title: res.data.data
-				// 	})
-				// 	this.getUserInfo()
-				// 	this.$refs.popup.close()
-				// } else if (this.yzm) {
-				// 	this.$util.showToast({
-				// 		title: '请输入验证码'
-				// 	})
-				// } else {
-				// 	this.$util.showToast({
-				// 		title: '请输入手机号'
-				// 	})
-				// }
+				if (this.mobile) {
+					let res = await bindMobileApi({
+						mobile: this.mobile,
+						code: this.yzm
+					})
+					this.$util.showToast({
+						title: res.data.data
+					})
+					this.getUserInfo()
+					this.$refs.popup.close()
+				} else if (this.yzm) {
+					this.$util.showToast({
+						title: '请输入验证码'
+					})
+				} else {
+					this.$util.showToast({
+						title: '请输入手机号'
+					})
+				}
 			},
 			// 修改密码弹出层
 			changePassword() {
@@ -253,52 +253,49 @@
 				}
 			},
 			async determinePwd() {
-				
-				// if (!this.new_password) {
-				// 	this.$util.showToast({
-				// 		title: '新密码不能为空'
-				// 	})
-				// 	return
-				// } else if (!this.again_password) {
-				// 	this.$util.showToast({
-				// 		title: '确定密码不能为空'
-				// 	})
-				// 	return
-				// } else if (this.new_password != this.again_password) {
-				// 	this.$util.showToast({
-				// 		title: '新密码和确定密码不一致！'
-				// 	})
-				// 	return
-				// }
-				// if (!this.modifyShow) {
-				// 	if (!this.old_password) {
-				// 		this.$util.showToast({
-				// 			title: '旧密码不能为空'
-				// 		})
-				// 	} else {
-				// 		let res = await RevisePwdByPwdApi({
-				// 			old_password: this.old_password,
-				// 			new_password: this.new_password,
-				// 			again_password: this.again_password
-				// 		})
-				// 		this.$util.showToast({
-				// 			title: res.data.data
-				// 		})
-				// 	}
-				// } else {
-				// 	let res = await RevisePwdByMobileApi({
-				// 		mobile: this.mobile,
-				// 		code: this.old_password,
-				// 		new_password: this.new_password,
-				// 		again_password: this.again_password
-				// 	})
-				// 	this.$util.showToast({
-				// 		title: res.data.data
-				// 	})
-				// }
-				// this.$refs.popupPwd.close()
-				
-				
+				if (!this.new_password) {
+					this.$util.showToast({
+						title: '新密码不能为空'
+					})
+					return
+				} else if (!this.again_password) {
+					this.$util.showToast({
+						title: '确定密码不能为空'
+					})
+					return
+				} else if (this.new_password != this.again_password) {
+					this.$util.showToast({
+						title: '新密码和确定密码不一致！'
+					})
+					return
+				}
+				if (!this.modifyShow) {
+					if (!this.old_password) {
+						this.$util.showToast({
+							title: '旧密码不能为空'
+						})
+					} else {
+						let res = await revisePwdByPwdApi({
+							old_password: this.old_password,
+							new_password: this.new_password,
+							again_password: this.again_password
+						})
+						this.$util.showToast({
+							title: res.data.data
+						})
+					}
+				} else {
+					let res = await revisePwdByMobileApi({
+						mobile: this.mobile,
+						code: this.old_password,
+						new_password: this.new_password,
+						again_password: this.again_password
+					})
+					this.$util.showToast({
+						title: res.data.data
+					})
+				}
+				this.$refs.popupPwd.close()
 			}
 		}
 	}
@@ -382,7 +379,7 @@
 
 			.but_determine {
 				color: #fff;
-				background-color: $red-color;
+				background-color: $app-primary-color;
 			}
 		}
 	}
@@ -396,7 +393,7 @@
 		border-radius: 40rpx;
 		margin: auto;
 		margin-top: 100rpx;
-		background-color: $red-color;
+		background-color: $app-primary-color;
 		color: #fff;
 	}
 </style>
