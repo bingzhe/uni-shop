@@ -14,6 +14,7 @@ const url = {
 
 	Withdraw: 'Api/UsersWithdraw/index', //提现
 	WithdrawConfig: 'Api/UsersWithdraw/getWithdrawConfig', //提现配置
+	WithdrawBill: 'Api/UsersWithdraw/withdrawBill', // 提现明细 积分 保证金
 
 	GetAddress: 'Api/Usersinfo/getAddress', // 获取地址列表
 	GetDefaultAddress: 'Api/Usersinfo/getDefaultAddress', // 获取用户默认地址
@@ -30,6 +31,17 @@ const url = {
 }
 
 
+/**
+ * @param {Object} data
+ * 提现明细 积分 保证金
+ */
+export function withdrawBillApi(data) {
+	return request.request({
+		url: url.WithdrawBill,
+		method: 'post',
+		data
+	})
+}
 /**
  * @param {Object} data
  * 上传头像

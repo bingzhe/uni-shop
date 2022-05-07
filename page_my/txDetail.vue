@@ -27,7 +27,7 @@
 	import moment from 'moment';
 	import {
 		withdrawBillApi,
-	} from '@/api/seckillApi.js';
+	} from '@/api/tuanApi.js';
 	
 	export default {
 		data() {

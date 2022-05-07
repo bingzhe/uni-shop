@@ -74,20 +74,17 @@
 			"pages": [{
 					"path": "myPromote",
 					"style": {
-						"navigationBarTitleText": "推广中心",
-						"enablePullDownRefresh": false
+						"navigationBarTitleText": "推广中心"
 					}
 				}, {
 					"path": "promote",
 					"style": {
-						"navigationBarTitleText": "推广二维码",
-						"enablePullDownRefresh": false
+						"navigationBarTitleText": "推广二维码"
 					}
 				}, {
 					"path": "promoterList",
 					"style": {
-						"navigationBarTitleText": "推广统计",
-						"enablePullDownRefresh": false
+						"navigationBarTitleText": "推广统计"
 					}
 				},
 				{
@@ -96,8 +93,7 @@
 						// #ifdef H5
 						"navigationStyle": "custom",
 						// #endif
-						"navigationBarTitleText": "我的地址",
-						"enablePullDownRefresh": false
+						"navigationBarTitleText": "我的地址"
 					}
 				},
 				{
@@ -106,8 +102,7 @@
 						// #ifdef H5
 						"navigationStyle": "custom",
 						// #endif
-						"navigationBarTitleText": "新增地址",
-						"enablePullDownRefresh": false
+						"navigationBarTitleText": "新增地址"
 					}
 				},
 				{
@@ -116,8 +111,13 @@
 						// #ifdef H5
 						"navigationStyle": "custom",
 						// #endif
-						"navigationBarTitleText": "基本信息",
-						"enablePullDownRefresh": false
+						"navigationBarTitleText": "基本信息"
+					}
+				},
+				{
+					"path": "txDetail",
+					"style": {
+						"navigationBarTitleText": "提现明细"
 					}
 				}
 			]
