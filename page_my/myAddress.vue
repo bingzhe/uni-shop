@@ -71,7 +71,7 @@
 				})
 				this.addressList = data;
 
-				console.log(this.addressList);
+				// console.log(this.addressList);
 			},
 			// 新增地址
 			addAddress() {

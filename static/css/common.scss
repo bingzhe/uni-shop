@@ -86,11 +86,19 @@
 	}
 	.card-item {
 		border-top: 1rpx solid $card-border-color;
-		height: 80rpx;
+		min-height: 80rpx;
 		@extend %flex-center-y;
 		.card-item-label {
 			width: 160rpx;
+			height: 80rpx;
+			line-height: 80rpx;
 			font-size: $font-28;
+			&.require {
+				&::after {
+					content: "*";
+					color: $red-color;
+				}
+			}
 		}
 		.card-item-value {
 			flex: 1;

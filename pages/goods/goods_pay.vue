@@ -42,22 +42,33 @@
 		<!-- 设置收货地址或者填写手机号 -->
 		<view class="app-card">
 
-			<view v-if="goods_class == 1" class="padding-y has-active card-item">
-				<view class="card-item-label">
+			<view @click="selectAddress" v-if="goods_class == 1" class="padding-y has-active card-item">
+				<view class="card-item-label require">
 					<text>收货地址</text>
 				</view>
-				<view class="card-item-value ">
+				<view class="card-item-value">
 					<view class="card-item-input select-address">
-						<text>请选择收货地址</text>
+						<view v-if="Object.keys(defaultAddress).length > 0" class="address-detail-wrap">
+							<view class="address-detail-line">
+								<text>{{defaultAddress.province_name}}</text>
+								<text>{{defaultAddress.city_name}}</text>
+								<text>{{defaultAddress.area_name}}</text>
+							</view>
+							<view class="address-user-line"></view>
+						</view>
+						<view v-else class="address-detail-empty">
+							<text>请选择收货地址</text>
+						</view>
 					</view>
 				</view>
 			</view>
 			<view v-if="goods_class == 2" class="padding-y has-active card-item">
-				<view class="card-item-label">
+				<view class="card-item-label require">
 					<text>手机号码</text>
 				</view>
 				<view class="card-item-value">
-					<input placeholder="请输入手机号码" class="card-item-input" type="number" maxlength="11" />
+					<input v-model="pay_param.phone" placeholder="请输入手机号码" class="card-item-input" type="number"
+						maxlength="11" />
 				</view>
 			</view>
 
@@ -66,11 +77,37 @@
 		<!-- 订单详情 -->
 		<view class="app-card">
 			<view class="padding-y has-active card-item">
-				<view class="card-item-label">
-					<text>商品金额</text>
+				
+				<view class="goods-card flex-title">
+					<image class="goods-img" :src="$util.img(detail.goods_img)" mode="aspectFit"></image>
+					<view class="goods-detail-wrap">
+						<view class="goods-detail-top">
+							<view class="goods-detail-name">
+								<text>{{detail.goods_name}}</text>
+							</view>
+						</view>
+						<view class="goods-detail-bottom">
+							<view class="goods-detail-price-line flex-title">
+								<view class="goods-detail-price">
+									<text>{{detail.price}}</text>
+								</view>
+								<view class="goods-detail-num">
+									<text>x1</text>
+								</view>
+							</view>
+						</view>
+					</view>
 				</view>
-				<view class="card-item-value order-price">
-					<text>{{pay_param.order_price}}</text>
+				
+			</view>
+			<view v-if="goods_class == 1" class="padding-y has-active card-item">
+				<view class="card-item-label">
+					<text>配送方式</text>
+				</view>
+				<view class="card-item-value ">
+					<view class="card-item-input select-address">
+						<text>物流配送</text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -106,9 +143,11 @@
 <script>
 	import {
 		orderCreateApi,
-		payGroupOrderApi
+		payGroupOrderApi,
+		getDefaultAddressApi
 	} from '@/api/tuanApi.js';
 	import prompt from '@/components/uni-prompt.vue';
+
 
 	export default {
 		components: {
@@ -117,12 +156,14 @@
 		data() {
 			return {
 				showPay: false,
+				detail: {},
+				defaultAddress: {},
 				payType: 1, //支付方式0余额支付，1支付宝h5，2微信公众号，3微信小程序
 				goods_class: 1, //1代表实体2代表虚拟
 				pay_param: {
 					group_id: '',
 					order_price: '0',
-					phone: '15679773393',
+					phone: '',
 					address_id: ''
 				},
 				orderInfo: {
@@ -139,14 +180,24 @@
 			}
 		},
 		onLoad(option) {
+			if (Object.keys(option).length > 0) {
+				this.detail = {
+					...option
+				};
+			}
 			if (option.group_id) {
 				this.$set(this.pay_param, 'group_id', option.group_id);
 			}
-			if (option.order_price) {
-				this.$set(this.pay_param, 'order_price', option.order_price);
+			if (option.price) {
+				this.$set(this.pay_param, 'order_price', option.price);
 			}
 			if (option.goods_class) {
 				this.goods_class = option.goods_class;
+				if (option.goods_class == 1) {
+					this.getDefaultAddress();
+				} else {
+					this.pay_param.phone = uni.getStorageSync('userInfo').phone;
+				}
 			}
 			this.init();
 		},
@@ -154,6 +205,19 @@
 			init() {
 
 			},
+			async getDefaultAddress() {
+				let res = await getDefaultAddressApi();
+				this.defaultAddress = res.data.data || {};
+			},
+			selectAddress() {
+				this.$util.redirectTo('/page_my/myAddress', {
+					type: 'select'
+				})
+			},
+			changeAddress(e) {
+				this.defaultAddress = e;
+			},
+
 			async orderCreate() {
 				let res = await orderCreateApi(this.pay_param);
 				Object.assign(this.orderInfo, res.data.data);
@@ -180,6 +244,22 @@
 			},
 			// 去支付
 			toPay() {
+				if (this.goods_class == 1) {
+					if (!this.pay_param.address_id) {
+						this.$util.showToast({
+							title: '请选择收货地址'
+						})
+						return
+					}
+				}
+				if (this.goods_class == 2) {
+					if (!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(this.pay_param.phone)) {
+						this.$util.showToast({
+							title: '请输入正确的手机号码'
+						})
+						return
+					}
+				}
 				this.showPay = true;
 			},
 			async payConfirm(e) {
@@ -199,6 +279,7 @@
 </script>
 
 <style lang="scss" scoped>
+	
 	.goods-pay-bottom-empty {
 		height: 120rpx;
 	}
@@ -272,6 +353,7 @@
 		text-align: right;
 		padding-right: 30rpx;
 		position: relative;
+
 		&::after {
 			position: absolute;
 			content: '';
@@ -283,5 +365,48 @@
 			border-top: 1rpx solid $black-color;
 			transform: rotate(45deg);
 		}
+	}
+
+	.goods-card {
+		padding: 20rpx 0;
+		width: 100%;
+
+		.goods-img {
+			width: 200rpx;
+			height: 200rpx;
+			background-color: $app-background-color;
+			border-radius: 16rpx;
+		}
+
+		.goods-detail-wrap {
+			flex: 1;
+			margin-left: 20rpx;
+			height: 200rpx;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			font-size: $font-28;
+
+			.goods-detail-top {
+				.goods-detail-name {}
+			}
+
+			.goods-detail-bottom {
+				.goods-detail-price-line {
+					width: 100%;
+				}
+
+				.goods-detail-price {
+					font-size: $font-32;
+					color: $app-primary-color;
+					font-weight: bold;
+				}
+
+				.goods-detail-num {
+					font-size: $font-28;
+				}
+			}
+		}
+		
 	}
 </style>

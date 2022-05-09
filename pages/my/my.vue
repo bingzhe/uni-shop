@@ -98,12 +98,13 @@
 					[{
 							src: '/static/imgs/my/control-icon1.png',
 							text: '我参与的',
-							link: '/pages/apply/apply'
+							link: '/page_my/myInvolved',
+							check_login: true
 						},
 						{
 							src: '/static/imgs/my/control-icon3.png',
 							text: '我的订单',
-							link: '/page_my/myAcquired',
+							link: '/page_my/myOrder',
 							other_text: '',
 							check_login: true
 						},

@@ -41,8 +41,30 @@
 			</view>
 		</view>
 
-		<view class="padding-all">
-
+		<view class="goods-detail-card padding-all">
+			<view class="goods-price-line flex-center-y">
+				<view class="goods-price-tags">
+					<text>拼团价</text>
+				</view>
+				<view class="goods-price">
+					<text>{{detail.price}}</text>
+				</view>
+				<view class="goods-old-price">
+					<text>原价：</text>
+					<text>{{detail.goods_price}}</text>
+				</view>
+			</view>
+			<view class="goods-name-line">
+				<text>{{detail.goods_name}}</text>
+			</view>
+			<view class="goods-other-line flex-title">
+				<view class="goods-other-left">
+					<text>快递  卖家承担</text>
+				</view>
+				<view class="goods-other-right">
+					<text>销量{{detail.get_num}}件</text>
+				</view>
+			</view>
 		</view>
 
 		<view class="detail-bottom">
@@ -151,9 +173,10 @@
 					return;
 				}
 				this.$util.redirectTo('/pages/goods/goods_pay', {
-					group_id: this.detail.group_id,
-					goods_class: this.detail.goods_class,
-					order_price: this.detail.price,
+					...this.detail
+					// group_id: this.detail.group_id,
+					// goods_class: this.detail.goods_class,
+					// order_price: this.detail.price,
 				});
 			}
 		}
@@ -229,7 +252,7 @@
 		background-image: url(@/static/imgs/detail_bar_left.png);
 		background-position: center;
 		background-repeat: no-repeat;
-		background-size: cover;
+		background-size: 100% 100%;
 		color: $white-color;
 		font-size: $font-24;
 
@@ -262,25 +285,56 @@
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;
-			padding: 0 30rpx;
-			width: 300rpx;
-			height: 120rpx;
+			padding: 0 20rpx;
+			width: 320rpx;
+			height: 100%;
 			background-image: url(@/static/imgs/detail_bar_right.png);
-			background-position: left;
+			background-position: center;
 			background-repeat: no-repeat;
-			background-size: auto 100%;
+			background-size: cover;
 
 			.goods-bar-right-label {
 				width: 100%;
 				@extend %flex-center;
 				color: $app-primary-color;
-				margin: 20rpx 0 10rpx;
+				margin: 10rpx 0 10rpx;
 			}
 
 			.goods-bar-right-value {
 				width: 100%;
 				@extend %flex-center;
 			}
+		}
+	}
+
+	.goods-detail-card {
+		background-color: $white-color;
+		.goods-price-line {
+			.goods-price-tags {
+				background-color: $app-primary-color;
+				color: $white-color;
+				font-size: $font-24;
+				padding: 6rpx 10rpx 6rpx 16rpx;
+				border-radius: 20rpx 0 0 20rpx;
+			}
+			.goods-price {
+				color: $app-primary-color;
+				font-size: 40rpx;
+				font-weight: bold;
+				margin: 0 20rpx;
+			}
+			.goods-old-price {
+				font-size: $font-24;
+			}
+		}
+		.goods-name-line {
+			font-size: $font-32;
+			font-weight: bold;
+			margin: 20rpx 0;
+		}
+		.goods-other-line {
+			font-size: $font-24;
+			color: $gray-color;
 		}
 	}
 </style>

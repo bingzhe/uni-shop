@@ -5,12 +5,14 @@ const url = {
 
 	GroupList: 'Api/Group/groupList', //热门拼团列表
 	GroupDetail: 'Api/Group/getGroupInfo', //拼团详情
+	MyGroupList: 'Api/Group/getMyGroupList', //我参与的
 
 	OrderCreate: 'Api/Order/OrderCreate', //创建拼团订单
 	PayGroupOrder: 'Api/OrderPay/groupOrder', //支付拼团订单
 
 	OrderBalanceCreate: 'Api/Order/createBalanceOrder', //创建充值余额订单
 	OrderPay: 'Api/OrderPay/userOrder', //支付充值余额订单
+	OrderList: 'Api/Order/myOrderList', //我的订单
 
 	Withdraw: 'Api/UsersWithdraw/index', //提现
 	WithdrawConfig: 'Api/UsersWithdraw/getWithdrawConfig', //提现配置
@@ -30,6 +32,31 @@ const url = {
 	RevisePwdByPwd: 'Api/Login/RevisePwdByPwd', // 旧密码修改密码
 }
 
+
+
+/**
+ * @param {Object} data
+ * 我的订单
+ */
+export function getOrderListApi(data) {
+	return request.request({
+		url: url.OrderList,
+		method: 'post',
+		data
+	})
+}
+
+/**
+ * @param {Object} data
+ * 我参与的
+ */
+export function getMyGroupListApi(data) {
+	return request.request({
+		url: url.MyGroupList,
+		method: 'post',
+		data
+	})
+}
 
 /**
  * @param {Object} data

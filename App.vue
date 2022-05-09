@@ -12,6 +12,9 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	/*每个页面公共css */
+	body {
+		font-family: PingFang SC,Roboto Medium;
+	}
 </style>
