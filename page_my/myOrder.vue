@@ -6,9 +6,9 @@
 			<cover-view class="n-tabs-tab-wrapper" @click="switchTab(1)"><span
 					v-bind:class="{ 'n-tabs-tab--active': cashType == 1 }">待支付</span></cover-view>
 			<cover-view class="n-tabs-tab-wrapper" @click="switchTab(2)"><span
-					v-bind:class="{ 'n-tabs-tab--active': cashType == 2 }">待收货</span></cover-view>
+					v-bind:class="{ 'n-tabs-tab--active': cashType == 2 }">待发货</span></cover-view>
 			<cover-view class="n-tabs-tab-wrapper" @click="switchTab(3)"><span
-					v-bind:class="{ 'n-tabs-tab--active': cashType == 3 }">待发货</span></cover-view>
+					v-bind:class="{ 'n-tabs-tab--active': cashType == 3 }">待收货</span></cover-view>
 			<cover-view class="n-tabs-tab-wrapper" @click="switchTab(4)"><span
 					v-bind:class="{ 'n-tabs-tab--active': cashType == 4 }">已完成</span></cover-view>
 			<cover-view class="n-tabs-bar" v-bind:style="tabBarSide"></cover-view>
@@ -70,7 +70,7 @@
 				tabBarSide: '',
 				list: [],
 				searchParam: {
-					status: '1', //1拼团中2拼团成功3拼团失败
+					status: '1', //1待支付2待发货3待收货4已完成（不传查全部）
 				}
 			};
 		},
@@ -92,10 +92,10 @@
 					return '待支付';
 				}
 				if(status == 1) {
-					return '待收货';
+					return '待发货';
 				}
 				if(status == 2) {
-					return '待发货';
+					return '待收货';
 				}
 				if(status == 3) {
 					return '已完成';

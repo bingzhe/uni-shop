@@ -4,6 +4,27 @@
 			<view class="select-paytype-wrap">
 				<radio-group name="paytypeBox" @change="changePayType">
 					<template v-if="$util.isWeiXin()">
+						<view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/blancepay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="0" />
+								<text>余额支付</text>
+							</label>
+						</view>
+						<view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/alipay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="1" checked />
+								<text>支付宝支付</text>
+							</label>
+						</view>
+						<view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/wxpay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="2" checked />
+								<text>微信支付</text>
+							</label>
+						</view>
 						<!-- <view class="paytype-line flex-center-y">
 								<image class="paytype-icon" src="/static/imgs/wxpay.png" mode="aspectFit"></image>
 								<label>
@@ -77,7 +98,7 @@
 		<!-- 订单详情 -->
 		<view class="app-card">
 			<view class="padding-y has-active card-item">
-				
+
 				<view class="goods-card flex-title">
 					<image class="goods-img" :src="$util.img(detail.goods_img)" mode="aspectFit"></image>
 					<view class="goods-detail-wrap">
@@ -98,7 +119,7 @@
 						</view>
 					</view>
 				</view>
-				
+
 			</view>
 			<view v-if="goods_class == 1" class="padding-y has-active card-item">
 				<view class="card-item-label">
@@ -231,6 +252,17 @@
 				uni.hideLoading();
 				this.payInfo = res.data.data;
 
+				if (this.payType == 0) {
+					this.$util.redirectTo('/page_my/myInvolved', {
+						orderType: res.data.data
+					});
+					return;
+				}
+				if (this.payType == 1) {
+					uni.setStorageSync('webviewUrl', this.payInfo.payData);
+					this.$util.redirectTo('/otherpages/webview/webview');
+					return;
+				}
 				if (this.payType == 2) {
 					WeixinJSBridge.invoke('getBrandWCPayRequest', JSON.parse(this.payInfo.payData),
 						(res) => {
@@ -239,12 +271,11 @@
 					uni.navigateBack({})
 					return;
 				}
-				uni.setStorageSync('webviewUrl', this.payInfo.payData);
-				this.$util.redirectTo('/otherpages/webview/webview')
 			},
 			// 去支付
 			toPay() {
 				if (this.goods_class == 1) {
+					this.pay_param.address_id = this.defaultAddress.address_id;
 					if (!this.pay_param.address_id) {
 						this.$util.showToast({
 							title: '请选择收货地址'
@@ -279,7 +310,6 @@
 </script>
 
 <style lang="scss" scoped>
-	
 	.goods-pay-bottom-empty {
 		height: 120rpx;
 	}
@@ -407,6 +437,6 @@
 				}
 			}
 		}
-		
+
 	}
 </style>

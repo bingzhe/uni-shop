@@ -33,23 +33,50 @@
 						</view>
 						<view class="group-detail-bottom flex-title">
 							<view class="left">
-								<view class="group-tags-wrap">
+								<!-- <view class="group-tags-wrap">
 									<view class="group-tags team-num">
 										<text>{{item.team_num}}人团</text>
 									</view>
-								</view>
+								</view> -->
+								
 								<view class="group-price">
 									<text class="group-price-symbol">￥</text>
 									<text>{{item.price}}</text>
 								</view>
-								<view class="group-old-price">
-									<text>单购价：</text>
-									<text>{{item.goods_price}}</text>
+								<view class="del-price">
+									<text class="label">原价：</text>
+									<text class="value">{{item.goods_price}}</text>
 								</view>
+								<template v-if="item.join_status == 0">
+									<view class="group-team-num">
+										<text>剩余{{(item.team_num - item.join_num)}}人拼成</text>
+									</view>
+									<view class="hsr-line">
+										<view class="hsr-line-blue"
+											:style="{width: ((item.join_num || 0 /item.team_num)*20 + '%')} ">
+										</view>
+									</view>
+								</template>
 							</view>
 							<view class="right">
-								<view class="group-btn">
+								<!-- <view v-if="item.join_status == 0" class="group-btn">
 									<text>去分享</text>
+								</view> -->
+								<view v-if="item.join_status == 1" class="group-btn">
+									<text>中产品</text>
+								</view>
+								<view v-if="item.join_status == 2" class="group-btn">
+									<text>中红包</text>
+								</view>
+								<view v-if="item.join_status == 3" class="group-btn disabled">
+									<text>拼团失败</text>
+								</view>
+
+								<view v-if="item.join_status == 0" class="">
+									<uni-countdown ref="countdown" @timeup="timeOver" :showDay="item.showDay>0"
+										:font-size="11" :day="item.showDay" :hour="item.showHour"
+										:minute="item.showMinute" :second="item.showSecond" color="#FFFFFF"
+										background-color="#ff5454" splitorColor="#ff5454" />
 								</view>
 							</view>
 						</view>
@@ -83,6 +110,12 @@
 			};
 		},
 		onLoad(option) {
+			if (option.orderType) {
+				if (option.orderType == 1) {
+					this.switchTab(2);
+					return;
+				}
+			}
 			this.getMyGroupList();
 		},
 		methods: {
@@ -103,9 +136,33 @@
 				}
 				this.getMyGroupList();
 			},
+
+			formatCountdown(list, key) {
+				let nowTime = moment();
+				if (!Array.isArray(list)) {
+					return [];
+				}
+				list = list.map(item => {
+					let time = moment(item[key] * 1000).add(3, 'd').valueOf() - nowTime;
+					return Object.assign(item, {
+						showDay: moment.duration(time).days(),
+						showHour: moment.duration(time).hours(),
+						showMinute: moment.duration(time).minutes(),
+						showSecond: moment.duration(time).seconds(),
+						showTime: item[key] * 1000 - new Date()
+					})
+				});
+				console.log(list);
+				return list;
+			},
 			async getMyGroupList() {
 				let res = await getMyGroupListApi(this.searchParam);
-				this.list = res.data.data;
+				// this.list = res.data.data;
+				this.list = this.formatCountdown(res.data.data, 'end_time');
+			},
+
+			timeOver() {
+				this.init();
 			}
 		}
 	}
@@ -207,7 +264,7 @@
 
 			.group-detail {
 				flex: 1;
-				padding-left: 30rpx;
+				padding-left: 20rpx;
 				min-height: 200rpx;
 				color: $font-color;
 				font-size: $font-30;
@@ -216,8 +273,18 @@
 				justify-content: space-between;
 
 				.group-detail-bottom {
+					.left {
+						height: 150rpx;
+						display: flex;
+						flex-direction: column;
+						justify-content: flex-end;
+						width: 240rpx;
+
+						overflow: hidden;
+					}
+
 					.right {
-						height: 120rpx;
+						height: 150rpx;
 						display: flex;
 						flex-direction: column;
 						justify-content: flex-end;
@@ -228,6 +295,10 @@
 							padding: 8rpx 16rpx;
 							border-radius: 30rpx;
 							font-size: $font-26;
+
+							&.disabled {
+								background-color: $gray-color;
+							}
 						}
 					}
 				}
@@ -253,11 +324,37 @@
 					color: $app-primary-color;
 					font-size: 40rpx;
 					font-weight: bold;
-					padding: 4rpx 0;
+					// padding: 0 0 4rpx;
 
 					.group-price-symbol {
 						font-size: $font-28;
 					}
+
+					.old-price {
+						color: $gray-color;
+						font-size: $font-24;
+						font-weight: normal;
+						text-decoration: line-through;
+						margin-left: 8rpx;
+					}
+				}
+
+				.del-price {
+					color: $gray-color;
+					font-size: $font-24;
+					font-weight: normal;
+					.label {
+						text-decoration: none;
+					}
+					.value {
+						text-decoration: line-through;
+					}
+				}
+
+				.group-team-num {
+					font-size: $font-24;
+					color: $gray-color;
+					margin: 4rpx 0 8rpx;
 				}
 
 				.group-old-price {
@@ -266,5 +363,29 @@
 
 			}
 		}
+	}
+
+
+	.hsr-line,
+	.hsr-line-blue {
+		overflow: hidden;
+		position: relative;
+		height: 12rpx;
+		width: 100%;
+		background-color: $white-color;
+		border-radius: 10rpx;
+		margin: 2rpx 0;
+	}
+
+	.hsr-line {
+		box-shadow: 0 0 1rpx 1rpx $gray-color;
+	}
+
+	.hsr-line-blue {
+		background-color: $app-primary-color;
+		position: absolute;
+		top: 0;
+		left: 0;
+		margin: 0;
 	}
 </style>
