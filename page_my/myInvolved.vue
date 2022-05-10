@@ -143,7 +143,7 @@
 					return [];
 				}
 				list = list.map(item => {
-					let time = moment(item[key] * 1000).add(3, 'd').valueOf() - nowTime;
+					let time = moment(item[key] * 1000).valueOf() - nowTime;
 					return Object.assign(item, {
 						showDay: moment.duration(time).days(),
 						showHour: moment.duration(time).hours(),

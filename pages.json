@@ -119,24 +119,24 @@
 					"style": {
 						"navigationBarTitleText": "提现明细"
 					}
+				}, {
+					"path": "myInvolved",
+					"style": {
+						"navigationBarTitleText": "我参与的"
+					}
+
+				}, {
+					"path": "myOrder",
+					"style": {
+						"navigationBarTitleText": "我的订单"
+					}
+				}, {
+					"path": "orderDetail",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
 				}
-			    ,{
-                    "path" : "myInvolved",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "我参与的"
-                }
-                
-                }
-                ,{
-                    "path" : "myOrder",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "我的订单"
-                }
-                
-                }
-            ]
+			]
 		}
 	],
 	"globalStyle": {

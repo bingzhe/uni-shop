@@ -187,6 +187,60 @@ export default {
 		}
 	},
 
+
+	/**
+	 * 计算两个经纬度之间的距离
+	 * @param {Object} lat1
+	 * @param {Object} lng1
+	 * @param {Object} lat2
+	 * @param {Object} lng2
+	 */
+	getDistance(lat1, lng1, lat2, lng2) {
+		var radLat1 = lat1 * Math.PI / 180.0;
+		var radLat2 = lat2 * Math.PI / 180.0;
+		var a = radLat1 - radLat2;
+		var b = lng1 * Math.PI / 180.0 - lng2 * Math.PI / 180.0;
+		var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+			Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+		s = s * 6378.137; // EARTH_RADIUS;
+		s = Math.round(s * 10000) / 10000;
+		return s;
+	},
+	// #ifdef H5
+	/**
+	 * 判断该浏览器是否为safaria浏览器
+	 */
+	isSafari() {
+		let res = uni.getSystemInfoSync();
+		var ua = navigator.userAgent.toLowerCase();
+		if (ua.indexOf('applewebkit') > -1 && ua.indexOf('mobile') > -1 && ua.indexOf('safari') > -1 &&
+			ua.indexOf('linux') === -1 && ua.indexOf('android') === -1 && ua.indexOf('chrome') === -1 &&
+			ua.indexOf('ios') === -1 && ua.indexOf('browser') === -1) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	// #endif
+	goBack(backUrl = '/pages/index/index/index') {
+		if (getCurrentPages().length == 1) {
+			this.redirectTo(backUrl);
+		} else {
+			uni.navigateBack();
+		}
+	},
+	/**
+	 * 转换数字，保留f位
+	 * @param {Object} e
+	 * @param {Object} f
+	 */
+	numberFixed(e, f) {
+		if (!f) {
+			f = 0;
+		}
+		return Number(e).toFixed(f);
+	},
+
 	/**
 	 * 获取url参数
 	 * @param {Object} callback

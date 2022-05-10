@@ -62,7 +62,6 @@
 
 		<!-- 设置收货地址或者填写手机号 -->
 		<view class="app-card">
-
 			<view @click="selectAddress" v-if="goods_class == 1" class="padding-y has-active card-item">
 				<view class="card-item-label require">
 					<text>收货地址</text>
@@ -92,13 +91,11 @@
 						maxlength="11" />
 				</view>
 			</view>
-
 		</view>
 
 		<!-- 订单详情 -->
 		<view class="app-card">
 			<view class="padding-y has-active card-item">
-
 				<view class="goods-card flex-title">
 					<image class="goods-img" :src="$util.img(detail.goods_img)" mode="aspectFit"></image>
 					<view class="goods-detail-wrap">
@@ -119,7 +116,6 @@
 						</view>
 					</view>
 				</view>
-
 			</view>
 			<view v-if="goods_class == 1" class="padding-y has-active card-item">
 				<view class="card-item-label">
@@ -255,7 +251,7 @@
 				if (this.payType == 0) {
 					this.$util.redirectTo('/page_my/myInvolved', {
 						orderType: res.data.data
-					});
+					}, 'reLaunch');
 					return;
 				}
 				if (this.payType == 1) {

@@ -74,6 +74,16 @@
             "base" : "/h5/",
             "mode" : "history"
         },
-        "title" : "优团客"
+        "title" : "优团客",
+        "sdkConfigs" : {
+            "maps" : {
+                "qqmap" : {
+                    "key" : "V74BZ-Z5OCD-3AU4J-PCWL2-GRUQ6-FLFP4"
+                }
+            }
+        },
+        "devServer" : {
+            "https" : false
+        }
     }
 }

@@ -59,13 +59,37 @@
 			</view>
 			<view class="goods-other-line flex-title">
 				<view class="goods-other-left">
-					<text>快递  卖家承担</text>
+					<text>快递 卖家承担</text>
 				</view>
 				<view class="goods-other-right">
 					<text>销量{{detail.get_num}}件</text>
 				</view>
 			</view>
 		</view>
+
+		<view class="shop-list">
+			<view class="shop-item flex-center-y" v-for="(item, index) in detail.shop_list" :key="index">
+				<image class="shop-img" :src="$util.img(item.logo)" mode="aspectFit"></image>
+				<view class="shop-detail">
+					<view class="shop-detail-left">
+						<view class="shop-detail-name">
+							<text>{{item.shop_name}}</text>
+						</view>
+						<view class="shop-detail-site">
+							<text v-if="item.distance>0">{{item.distance}}km</text>
+							<text v-if="item.distance>0" style="margin: 0 10rpx;">|</text>
+							<text>{{item.full_address}}{{item.address}}</text>
+						</view>
+					</view>
+					<view class="shop-detail-right">
+						<view class="shop-map-btn" @click="openMap(item, index)">
+							<text>打开地图</text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+
 
 		<view class="detail-bottom">
 			<view @click="toPay" class="detail-bottom-btn">
@@ -129,6 +153,7 @@
 					}],
 					status: 1,
 					team_num: 10,
+					shop_list: []
 				}
 			}
 		},
@@ -144,17 +169,18 @@
 				this.groupDetail();
 			},
 			initCountDown() {
-
 				let time = moment(this.detail.end_time * 1000).valueOf() - new Date()
-
 				this.showDay = moment.duration(time).days();
 				this.showHour = moment.duration(time).hours();
 				this.showMinute = moment.duration(time).minutes();
 				this.showSecond = moment.duration(time).seconds();
 			},
 			async groupDetail() {
+				let _location = uni.getStorageSync('location')
 				let res = await groupDetailApi({
-					group_id: this.group_id
+					group_id: this.group_id,
+					longitude: _location.longitude || 114.92085,
+					latitude: _location.latitude || 25.81751,
 				});
 				this.detail = res.data.data;
 				this.initCountDown();
@@ -178,12 +204,86 @@
 					// goods_class: this.detail.goods_class,
 					// order_price: this.detail.price,
 				});
-			}
+			},
+
+			// 打开地图
+			openMap(item, index) {
+				uni.openLocation({
+					name: item.site_name,
+					address: item.full_address + item.address,
+					latitude: +item.latitude,
+					longitude: +item.longitude
+				})
+			},
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.shop-list {
+		padding: 20rpx;
+
+		.shop-item {
+			background-color: $white-color;
+			padding: 20rpx;
+			border-radius: 16rpx;
+
+			.shop-img {
+				height: 120rpx;
+				width: 120rpx;
+				background-color: #eee;
+				border-radius: 16rpx;
+			}
+
+			.shop-detail {
+				flex: 1;
+				display: flex;
+				justify-content: space-between;
+
+				.shop-detail-left {
+					margin-left: 20rpx;
+					width: 360rpx;
+					font-size: $font-28;
+
+					.shop-detail-name {
+						font-size: 32rpx;
+						line-height: 50rpx;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+					}
+
+					.shop-detail-site {
+						color: gray;
+						line-height: 50rpx;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+					}
+				}
+
+				.shop-detail-right {
+					@extend %flex-center;
+
+					.shop-map-btn {
+						font-size: $font-28;
+						height: 50rpx;
+						line-height: 50rpx;
+						background-color: rgba($color: #007AFF, $alpha: 0.2);
+						color: #007AFF;
+						padding: 0 20rpx;
+						border-radius: 30rpx;
+
+						&:active {
+							background-color: rgba($color: #007AFF, $alpha: 0.3);
+						}
+					}
+				}
+			}
+		}
+	}
+
+
 	.detail-bottom-empty {
 		height: 120rpx;
 	}
@@ -309,6 +409,7 @@
 
 	.goods-detail-card {
 		background-color: $white-color;
+
 		.goods-price-line {
 			.goods-price-tags {
 				background-color: $app-primary-color;
@@ -317,21 +418,25 @@
 				padding: 6rpx 10rpx 6rpx 16rpx;
 				border-radius: 20rpx 0 0 20rpx;
 			}
+
 			.goods-price {
 				color: $app-primary-color;
 				font-size: 40rpx;
 				font-weight: bold;
 				margin: 0 20rpx;
 			}
+
 			.goods-old-price {
 				font-size: $font-24;
 			}
 		}
+
 		.goods-name-line {
 			font-size: $font-32;
 			font-weight: bold;
 			margin: 20rpx 0;
 		}
+
 		.goods-other-line {
 			font-size: $font-24;
 			color: $gray-color;

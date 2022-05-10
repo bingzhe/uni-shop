@@ -85,11 +85,17 @@
 		}
 	}
 	.card-item {
-		border-top: 1rpx solid $card-border-color;
+		border-bottom: 1rpx solid $card-border-color;
+		&.n-b-b {
+			border-bottom: none;
+		}
+		&:last-child {
+			border-bottom: none;
+		}
 		min-height: 80rpx;
 		@extend %flex-center-y;
 		.card-item-label {
-			width: 160rpx;
+			width: 180rpx;
 			height: 80rpx;
 			line-height: 80rpx;
 			font-size: $font-28;

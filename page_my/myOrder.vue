@@ -16,7 +16,7 @@
 
 		<view class="list-wrap">
 			<view v-if="list.length>0" class="list-body order-list">
-				<view class="order-item" v-for="(item, index) in list" :key="index">
+				<view @click="toOrderDetail(item, index)" class="order-item" v-for="(item, index) in list" :key="index">
 					<view class="goods-card flex-title">
 						<image class="goods-img" :src="$util.img(item.image_url)" mode="aspectFit"></image>
 						<view class="goods-detail-wrap">
@@ -88,22 +88,27 @@
 				this.getOrderList();
 			},
 			formatStatus(status) {
-				if(status == 0) {
+				if (status == 0) {
 					return '待支付';
 				}
-				if(status == 1) {
+				if (status == 1) {
 					return '待发货';
 				}
-				if(status == 2) {
+				if (status == 2) {
 					return '待收货';
 				}
-				if(status == 3) {
+				if (status == 3) {
 					return '已完成';
 				}
 			},
 			async getOrderList() {
 				let res = await getOrderListApi(this.searchParam);
 				this.list = res.data.data;
+			},
+			toOrderDetail(item, index) {
+				this.$util.redirectTo('/page_my/orderDetail', {
+					detail: JSON.stringify(item)
+				});
 			}
 		}
 	}
@@ -166,12 +171,15 @@
 			background-color: $white-color;
 			border-radius: 8rpx;
 			margin-bottom: 20rpx;
+
 			&:active {
 				background-color: $app-active-color;
 			}
+
 			.order-other {
 				font-size: $font-28;
 				height: 70rpx;
+
 				.order-status-text {
 					color: $app-primary-color;
 				}
