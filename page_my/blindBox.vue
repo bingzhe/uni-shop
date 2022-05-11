@@ -47,14 +47,26 @@
 </template>
 
 <script>
+	import {
+		getLotteryApi
+	} from '@/api/tuanApi.js';
+
 	export default {
 		data() {
 			return {
 
 			}
 		},
+		onLoad(option) {
+			this.init();
+		},
 		methods: {
-
+			init() {
+				this.getLottery();
+			},
+			async getLottery() {
+				let res = await getLotteryApi();
+			}
 		}
 	}
 </script>
@@ -79,6 +91,7 @@
 			height: 1200rpx;
 		}
 	}
+
 	.gift-show-wrap {
 		position: absolute;
 		left: 0;
@@ -86,16 +99,19 @@
 		padding: 0 45rpx 0 42rpx;
 		z-index: 100;
 		width: 100%;
+
 		.gift-img-wrap {
 			@extend %flex-center;
 			width: 100%;
 			height: 100%;
+
 			.gift-img {
 				width: 100rpx;
 				height: 100rpx;
 			}
 		}
 	}
+
 	.blind-text-wrap {
 		position: absolute;
 		left: 0;

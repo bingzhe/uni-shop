@@ -31,9 +31,22 @@ const url = {
 	BindMobile: 'Api/Login/bindMobile', // 绑定手机号
 	RevisePwdByMobile: 'Api/Login/RevisePwdByMobile', // 手机号修改密码
 	RevisePwdByPwd: 'Api/Login/RevisePwdByPwd', // 旧密码修改密码
+	
+	Lottery: 'Api/Lottery/index', // 获取抽奖信息
 }
 
 
+/**
+ * @param {Object} data
+ * 获取抽奖信息
+ */
+export function getLotteryApi(data) {
+	return request.request({
+		url: url.Lottery,
+		method: 'post',
+		data
+	})
+}
 
 /**
  * @param {Object} data

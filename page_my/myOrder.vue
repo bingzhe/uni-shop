@@ -3,8 +3,8 @@
 		<cover-view class="n-tabs-wrapper">
 			<cover-view class="n-tabs-tab-wrapper" @click="switchTab(0)"><span
 					v-bind:class="{ 'n-tabs-tab--active': cashType == 0 }">全部</span></cover-view>
-			<cover-view class="n-tabs-tab-wrapper" @click="switchTab(1)"><span
-					v-bind:class="{ 'n-tabs-tab--active': cashType == 1 }">待支付</span></cover-view>
+			<!-- <cover-view class="n-tabs-tab-wrapper" @click="switchTab(1)"><span
+					v-bind:class="{ 'n-tabs-tab--active': cashType == 1 }">待支付</span></cover-view> -->
 			<cover-view class="n-tabs-tab-wrapper" @click="switchTab(2)"><span
 					v-bind:class="{ 'n-tabs-tab--active': cashType == 2 }">待发货</span></cover-view>
 			<cover-view class="n-tabs-tab-wrapper" @click="switchTab(3)"><span
@@ -81,11 +81,37 @@
 			moment,
 			switchTab(e) {
 				this.cashType = e;
-				this.tabBarSide = {
-					transform: `translateX(${e*100}%)`
-				}
 				this.searchParam.status = e;
 				this.getOrderList();
+				// this.tabBarSide = {
+				// 	transform: `translateX(${e*100}%)`
+				// }
+				
+				if(e == 0) {
+					this.tabBarSide = {
+						transform: `translateX(0%)`
+					}
+				}
+				if(e == 1) {
+					this.tabBarSide = {
+						transform: `translateX(0%)`
+					}
+				}
+				if(e == 2) {
+					this.tabBarSide = {
+						transform: `translateX(100%)`
+					}
+				}
+				if(e == 3) {
+					this.tabBarSide = {
+						transform: `translateX(200%)`
+					}
+				}
+				if(e == 4) {
+					this.tabBarSide = {
+						transform: `translateX(300%)`
+					}
+				}
 			},
 			formatStatus(status) {
 				if (status == 0) {
@@ -194,7 +220,7 @@
 	}
 
 
-	$bar-width: 20%;
+	$bar-width: 25%;
 
 	.n-tabs-wrapper {
 		margin: 0;

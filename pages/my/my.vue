@@ -50,10 +50,12 @@
 					</view>
 				</view>
 			</view>
+			
 			<view v-for="(sub_arr,index) in control_list" :key="index">
 				<view class="control-list ">
+					<!-- @click="controlClick(item, index)" -->
 					<view @click="controlClick(item, index)"
-						class="control-item padding-y flex-title has-arrow has-active" v-for="(item, index) in sub_arr"
+						class="control-item padding-y has-arrow has-active" v-for="(item, index) in sub_arr"
 						:key="index">
 						<view class="main flex-center-y">
 							<image class="control-icon" :src="item.src" mode="aspectFit"></image>
@@ -65,6 +67,7 @@
 					</view>
 				</view>
 			</view>
+			
 		</view>
 		<view v-if="$util.checkLogin()" class="page-btn-wrap">
 			<view class="page-btn" @click="logoutClick">
@@ -95,7 +98,8 @@
 				isMember: false,
 				portraitImg: '',
 				control_list: [
-					[{
+					[
+						{
 							src: '/static/imgs/my/control-icon1.png',
 							text: '我参与的',
 							link: '/page_my/myInvolved',
@@ -129,7 +133,7 @@
 						{
 							src: '/static/imgs/my/control-icon9.png',
 							text: '盲盒抽奖',
-							link: '/page_my/blindBox',
+							// link: '/page_my/blindBox',
 							check_login: true
 						}
 					],
@@ -200,7 +204,13 @@
 						return;
 					}
 				}
-				this.$util.redirectTo(item.link);
+				if (item.link) {
+					this.$util.redirectTo(item.link);
+				} else {
+					this.$util.showToast({
+						title: `${item.text}正在开发中...`
+					})
+				}
 			},
 			// 去充值
 			toCz() {
@@ -365,17 +375,14 @@
 		border-radius: 60rpx;
 		background-color: $member-card-color;
 		color: $member-card-text-color;
-
 		>.main {
 			font-size: $font-32;
 			font-weight: bold;
 		}
-
 		>.other {
 			font-size: $font-28;
 			position: relative;
 			margin-right: 20rpx;
-
 			&::after {
 				position: absolute;
 				right: -20rpx;
@@ -394,16 +401,16 @@
 		background-color: $white-color;
 		border-radius: 16rpx;
 		margin-bottom: 30rpx;
-
 		.control-item {
 			height: 100rpx;
+			overflow: hidden;
 			position: relative;
-
+			@extend %flex-center-y;
+			justify-content: space-between;
 			.control-icon {
 				width: 32rpx;
 				margin-right: 20rpx;
 			}
-
 			&::after {
 				position: absolute;
 				right: 30rpx;
