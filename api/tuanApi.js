@@ -17,6 +17,7 @@ const url = {
 	Withdraw: 'Api/UsersWithdraw/index', //提现
 	WithdrawConfig: 'Api/UsersWithdraw/getWithdrawConfig', //提现配置
 	WithdrawBill: 'Api/UsersWithdraw/withdrawBill', // 提现明细 积分 保证金
+	UsersBill: 'Api/Usersinfo/getUsersBill', // 查询余额 积分 保证金 消费充值明细
 
 	GetAddress: 'Api/Usersinfo/getAddress', // 获取地址列表
 	GetDefaultAddress: 'Api/Usersinfo/getDefaultAddress', // 获取用户默认地址
@@ -33,6 +34,18 @@ const url = {
 }
 
 
+
+/**
+ * @param {Object} data
+ * 查询余额 积分 保证金 消费充值明细
+ */
+export function getUsersBillApi(data) {
+	return request.request({
+		url: url.UsersBill,
+		method: 'post',
+		data
+	})
+}
 
 /**
  * @param {Object} data

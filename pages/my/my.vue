@@ -23,7 +23,7 @@
 						<view class="user-info-blance-value">{{userInfo.balance_money || '0.00'}}</view>
 					</view>
 					<view class="user-info-treasure">
-						<view class="user-blance" @click="detail(3)">
+						<view class="user-blance" @click="detail(2)">
 							<text>
 								余额
 							</text>
@@ -31,7 +31,7 @@
 								{{userInfo.balance_money || '0.00'}}
 							</text>
 						</view>
-						<view class="user-integral">
+						<view class="user-integral" @click="detail(1)">
 							<text>
 								积分
 							</text>
@@ -56,7 +56,7 @@
 						class="control-item padding-y flex-title has-arrow has-active" v-for="(item, index) in sub_arr"
 						:key="index">
 						<view class="main flex-center-y">
-							<image class="control-icon" :src="item.src" mode="widthFix"></image>
+							<image class="control-icon" :src="item.src" mode="aspectFit"></image>
 							<view>{{item.text}}</view>
 						</view>
 						<view class="other_text other" v-if="item.other_text">
@@ -124,6 +124,12 @@
 							src: '/static/imgs/my/control-icon2.png',
 							text: '推广中心',
 							link: '/page_my/myPromote',
+							check_login: true
+						},
+						{
+							src: '/static/imgs/my/control-icon9.png',
+							text: '盲盒抽奖',
+							link: '/page_my/blindBox',
 							check_login: true
 						}
 					],
@@ -198,24 +204,39 @@
 			},
 			// 去充值
 			toCz() {
+				if (!this.$util.checkLogin()) {
+					this.$util.redirectTo('/pages/login/login', undefined);
+					return;
+				}
 				this.$util.redirectTo('/pages/my/cz');
 			},
 			toTx() {
+				if (!this.$util.checkLogin()) {
+					this.$util.redirectTo('/pages/login/login', undefined);
+					return;
+				}
 				this.$util.redirectTo('/pages/my/tx', {
 					type: 1
 				});
 			},
 			// 明细
 			detail(e) {
-				if (e == 1) {
-					uni.navigateTo({
-						url: '/page_my/detail?type=' + e
-					})
-				} else {
-					uni.navigateTo({
-						url: '/page_my/detail?type=' + 3
-					})
+				if (!this.$util.checkLogin()) {
+					this.$util.redirectTo('/pages/login/login', undefined);
+					return;
 				}
+				this.$util.redirectTo('/page_my/userBillDetail', {
+					type: e
+				});
+				// if (e == 1) {
+				// 	uni.navigateTo({
+				// 		url: '/page_my/userBillDetail?type=' + e
+				// 	})
+				// } else {
+				// 	uni.navigateTo({
+				// 		url: '/page_my/userBillDetail?type=' + 3
+				// 	})
+				// }
 
 			}
 		}
@@ -373,6 +394,7 @@
 		background-color: $white-color;
 		border-radius: 16rpx;
 		margin-bottom: 30rpx;
+
 		.control-item {
 			height: 100rpx;
 			position: relative;

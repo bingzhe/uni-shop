@@ -1,6 +1,5 @@
 <template>
-	<view>
-
+	<view class="page-wrap">
 		<view class="content">
 			<view class="n-tabs-wrapper">
 				<view class="n-tabs-tab-wrapper" @click="switchTab(0)"><span

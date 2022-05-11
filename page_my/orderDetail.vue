@@ -1,5 +1,66 @@
 <template>
 	<view class="page-wrap">
+
+		<prompt :show="showPay" @onConfirm="payConfirm" @onCancel="showPay=false" title="请选择支付类型">
+			<view class="select-paytype-wrap">
+				<radio-group name="paytypeBox" @change="changePayType">
+					<template v-if="$util.isWeiXin()">
+						<view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/blancepay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="0" checked />
+								<text>余额支付</text>
+							</label>
+						</view>
+						<!-- <view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/alipay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="1"  />
+								<text>支付宝支付</text>
+							</label>
+						</view>
+						<view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/wxpay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="2" checked />
+								<text>微信支付</text>
+							</label>
+						</view> -->
+						<!-- <view class="paytype-line flex-center-y">
+									<image class="paytype-icon" src="/static/imgs/wxpay.png" mode="aspectFit"></image>
+									<label>
+										<radio color="#fe543a" style="transform:scale(0.7)" value="2" checked />
+										<text>微信支付</text>
+									</label>
+								</view>
+								<view class="paytype-line flex-center-y">
+									<image class="paytype-icon" src="/static/imgs/alipay.png" mode="aspectFit"></image>
+									<label>
+										<radio color="#fe543a" style="transform:scale(0.7)" value="1" />
+										<text>支付宝支付</text>
+									</label>
+								</view> -->
+					</template>
+					<template v-else>
+						<view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/blancepay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="0" checked />
+								<text>余额支付</text>
+							</label>
+						</view>
+						<!-- <view class="paytype-line flex-center-y">
+							<image class="paytype-icon" src="/static/imgs/alipay.png" mode="aspectFit"></image>
+							<label>
+								<radio color="#fe543a" style="transform:scale(0.7)" value="1" checked />
+								<text>支付宝支付</text>
+							</label>
+						</view> -->
+					</template>
+				</radio-group>
+			</view>
+		</prompt>
+
 		<!-- 订单状态 -->
 		<view class="status-card">
 			<view class="order-status-left">
@@ -126,15 +187,18 @@
 					</view>
 				</view>
 			</view> -->
-			<view v-if="detail.order_price" class="padding-y has-active card-item n-b-b">
+			<view v-if="detail.order_price" class="padding-y card-item n-b-b">
 				<view class="card-item-label">
 					<text>实际付金额：</text>
 				</view>
-				<view class="card-item-value ">
+				<view class="card-item-value flex-title">
 					<view class="card-item-input ">
 						<text>￥</text>
 						<text>{{detail.order_price}}</text>
 					</view>
+					<!-- <view v-if="detail.order_status == payType" @click="toPay" class="pay-btn">
+						<text>去支付</text>
+					</view> -->
 				</view>
 			</view>
 		</view>
@@ -144,10 +208,22 @@
 
 <script>
 	import moment from 'moment';
+	import prompt from '@/components/uni-prompt.vue';
+	import {
+		payGroupOrderApi
+	} from '@/api/tuanApi.js';
+
 
 	export default {
+		components: {
+			prompt
+		},
 		data() {
 			return {
+				showPay: false,
+				payType: 0, //支付方式0余额支付，1支付宝h5，2微信公众号，3微信小程序
+				payInfo: {},
+
 				detail: {}
 			}
 		},
@@ -192,11 +268,74 @@
 					return '已完成';
 				}
 			},
+			changePayType(e) {
+				this.payType = e.detail.value;
+			},
+			async orderPay() {
+				let res = await payGroupOrderApi({
+					order_no: this.detail.order_no,
+					pay_type: this.payType
+				});
+				uni.hideLoading();
+				this.payInfo = res.data.data;
+
+				if (this.payType == 0) {
+					this.$util.redirectTo('/page_my/myInvolved', {
+						orderType: res.data.data
+					}, 'reLaunch');
+					return;
+				}
+				if (this.payType == 1) {
+					uni.setStorageSync('webviewUrl', this.payInfo.payData);
+					this.$util.redirectTo('/otherpages/webview/webview');
+					return;
+				}
+				if (this.payType == 2) {
+					WeixinJSBridge.invoke('getBrandWCPayRequest', JSON.parse(this.payInfo.payData),
+						(res) => {
+							console.log(res);
+						});
+					uni.navigateBack({})
+					return;
+				}
+			},
+			toPay() {
+				this.showPay = true;
+			},
+			payConfirm() {
+				uni.showLoading({
+					title: '支付中...',
+					mask: true
+				});
+				this.orderPay();
+				this.showPay = false;
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.pay-btn {
+		background: linear-gradient(to right, rgba($app-primary-color, 0.7), $app-primary-color);
+		color: $white-color;
+		padding: 8rpx 16rpx;
+		border-radius: 30rpx;
+		font-size: $font-26;
+	}
+
+	.select-paytype-wrap {
+		padding: 20rpx 0;
+
+		.paytype-line {
+			height: 80rpx;
+
+			.paytype-icon {
+				width: 50rpx;
+				height: 50rpx;
+				margin-right: 20rpx;
+			}
+		}
+	}
 	.status-card {
 		background-size: 100% 100%;
 		padding: 40rpx;

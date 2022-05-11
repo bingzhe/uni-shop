@@ -1,24 +1,11 @@
 <template>
 	<view style="width: 100%;">
-			<view class="n-tabs-wrapper">
-				<view class="n-tabs-tab-wrapper" @click="switchTab(0)"><span
-						v-bind:class="{ 'n-tabs-tab--active': cashType == 0 }">全部</span></view>
-				<view class="n-tabs-tab-wrapper" @click="switchTab(1)"><span
-						v-bind:class="{ 'n-tabs-tab--active': cashType == 1 }">余额提现明细</span></view>
-				<view class="n-tabs-tab-wrapper" @click="switchTab(2)"><span
-						v-bind:class="{ 'n-tabs-tab--active': cashType == 2 }">积分提现明细</span></view>
-				<view class="n-tabs-bar" v-bind:style="tabBarSide"></view>
-			</view>
-		
 		<view class="detail_ct" v-for="(item, index) in list" :key="index">
 			<view class="detail_ct_st">
-				<view v-if="item.status == -1" class="detail_ct_st_text">未通过</view>
-				<view v-else-if="status == 0" class="detail_ct_st_text">审核中</view>
-				<view v-else-if="status == 1" class="detail_ct_st_text">待财务审核</view>
-				<view v-else class="detail_ct_st_time">审核通过</view>
+				<view class="detail_ct_st_text">{{item.type_name}}</view>
 				<view class="detail_ct_st_time">{{moment(item.create_time*1000).format('YYYY-MM-DD HH:mm:ss')}}</view>
 			</view>
-			<view class="detail_ct_money">{{item.withdraw_price}}</view>
+			<view class="detail_ct_money">{{item.bill_data}}</view>
 		</view>
 	</view>
 </template>
@@ -26,9 +13,9 @@
 <script>
 	import moment from 'moment';
 	import {
-		withdrawBillApi,
+		getUsersBillApi,
 	} from '@/api/tuanApi.js';
-	
+
 	export default {
 		data() {
 			return {
@@ -41,31 +28,51 @@
 				status: ''
 			};
 		},
-		onLoad() {
-       this.detailList('')
+		onLoad(option) {
+			this.type = option.type
+			this.detailList('')
+
 		},
+
+		// watch: {
+		// 	/**
+		// 	 * 监听route
+		// 	 * @param {Object} to 要前往的页面
+		// 	 * @param {Object} from 之前的页面
+		// 	 */
+		// 	$route(to, from) {
+		// 		// TODO 根据页面路径判断刷新
+		// 	}
+		// },
+
 		methods: {
 			moment,
 			switchTab(e) {
 				this.cashType = e
 				if (e == 1) {
-					this.tabBarSide ={ transform: 'translateX(100%)'}
+					this.tabBarSide = {
+						transform: 'translateX(100%)'
+					}
 					this.detailList(2)
 				} else if (e == 0) {
-					this.tabBarSide = {transform: 'translateX(0%)'}
+					this.tabBarSide = {
+						transform: 'translateX(0%)'
+					}
 					this.detailList('')
 				} else {
-					this.tabBarSide = {transform: 'translateX(200%)'}
+					this.tabBarSide = {
+						transform: 'translateX(200%)'
+					}
 					this.detailList(1)
 				}
-				
+
 			},
 			// 获取明细
-			async detailList (e) {
+			async detailList() {
 				let data = {
-					type: e
+					type: this.type
 				}
-				let res = await withdrawBillApi(data);
+				let res = await getUsersBillApi(data);
 				this.list = res.data.data
 				console.log(this.list);
 			}
@@ -75,9 +82,10 @@
 
 <style lang="scss">
 	page {
-		padding-top: 100rpx;
+		// padding-top: 100rpx;
 		background-color: #f7f7f7;
 	}
+
 	.n-tabs-wrapper {
 		margin: 0rpx 0rpx;
 		overflow: hidden;
@@ -115,7 +123,7 @@
 		transition-property: all;
 		transition-duration: 0.5s;
 	}
-	
+
 	.detail_ct {
 		display: flex;
 		justify-content: space-between;
@@ -123,16 +131,19 @@
 		width: 100%;
 		padding: 15rpx 30rpx;
 		border-bottom: 1rpx solid $border-color-dark;
+
 		.detail_ct_st {
 			display: flex;
 			flex-direction: column;
 			font-size: $font-base;
+
 			.detail_ct_st_time {
 				margin-top: 10rpx;
 				color: $uni-text-color-grey;
 				font-size: $font-sm;
 			}
 		}
+
 		.detail_ct_money {
 			color: $red-color;
 		}

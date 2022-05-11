@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="page-wrap">
 		<view class="czmain">
 			<view class="cztop">
 				<view class="czxx">余额充值</view>

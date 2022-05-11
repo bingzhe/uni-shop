@@ -135,6 +135,21 @@
 					"style": {
 						"navigationBarTitleText": "订单详情"
 					}
+				}, {
+					"path": "userBillDetail",
+					"style": {
+						"navigationBarTitleText": "明细"
+					}
+				}, {
+					"path": "blindBox",
+					"style": {
+						// #ifdef H5
+						"navigationStyle": "custom",
+						// #endif
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "盲盒抽奖"
+					}
 				}
 			]
 		}

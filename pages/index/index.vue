@@ -15,7 +15,7 @@
 				</view>
 			</view>
 			<view v-if="data_list.length>0" class="list-body group-list">
-				<view class="group-item" v-for="(item, index) in data_list" :key="index">
+				<view @click="toDetail(item)" class="group-item" v-for="(item, index) in data_list" :key="index">
 					<image class="group-img" :src="$util.img(item.goods_img)" mode="aspectFit"></image>
 					<view class="group-detail">
 						<view class="group-detail-top">
@@ -41,8 +41,8 @@
 							</view>
 
 							<view class="right">
-								<view @click="toDetail(item)" class="group-btn">
-									<text>去拼团</text>
+								<view class="group-btn">
+									<text>去参团</text>
 								</view>
 							</view>
 
