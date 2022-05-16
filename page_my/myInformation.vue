@@ -249,6 +249,12 @@
 				if (this.modifyShow) {
 					this.modifyShow = false
 				} else {
+					if(uni.getStorageSync('userInfo').phone) {
+						this.$util.showToast({
+							title: '请绑定手机号'
+						})
+						return
+					}
 					this.modifyShow = true
 				}
 			},

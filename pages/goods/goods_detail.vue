@@ -31,7 +31,8 @@
 				<view class="">
 				</view>
 			</view>
-			<view class="goods-bar-right" :style="{'background-image': 'url('+$util.img('public/img/detail_bar_right.png')+')'}">
+			<view class="goods-bar-right"
+				:style="{'background-image': 'url('+$util.img('public/img/detail_bar_right.png')+')'}">
 				<view class="goods-bar-right-label">
 					<text>距结束仅剩</text>
 				</view>
@@ -70,7 +71,8 @@
 		</view>
 
 		<view class="shop-list">
-			<view class="shop-item flex-center-y" v-for="(item, index) in detail.shop_list" :key="index">
+			<view @click="toShopHtml(item, index)" class="shop-item flex-center-y"
+				v-for="(item, index) in detail.shop_list" :key="index">
 				<image class="shop-img" :src="$util.img(item.logo)" mode="aspectFit"></image>
 				<view class="shop-detail">
 					<view class="shop-detail-left">
@@ -84,12 +86,16 @@
 						</view>
 					</view>
 					<view class="shop-detail-right">
-						<view class="shop-map-btn" @click="openMap(item, index)">
+						<view class="shop-map-btn" @click.stop="openMap(item, index)">
 							<text>打开地图</text>
 						</view>
 					</view>
 				</view>
 			</view>
+		</view>
+
+		<view class="goods-html">
+			<rich-text :nodes="detail.goods_info"></rich-text>
 		</view>
 
 
@@ -127,6 +133,7 @@
 					goods_class: null,
 					goods_id: null,
 					goods_img: "",
+					goods_info: "",
 					goods_name: "",
 					goods_price: "",
 					group_id: null,
@@ -198,11 +205,20 @@
 					longitude: +item.longitude
 				})
 			},
+			toShopHtml(item, index) {
+				this.$util.redirectTo('/pages/goods/goods_rich', {
+					html: item.goods_content
+				})
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.goods-html {
+		margin: 30rpx 30rpx;
+	}
+
 	.shop-list {
 		padding: 20rpx;
 

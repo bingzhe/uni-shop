@@ -335,6 +335,7 @@
 					this.userInfo.point = this.userInfo.point - this.money
 				}
 				uni.setStorageSync('userInfo', this.userInfo)
+				uni.navigateBack({})
 			}
 		}
 	}

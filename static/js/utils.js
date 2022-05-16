@@ -121,7 +121,26 @@ export default {
 			return false;
 		}
 	},
-
+	
+	/**
+	 * 检测苹果X以上的手机
+	 */
+	isIPhoneX() {
+		let res = uni.getSystemInfoSync();
+		if (res.model.search('iPhone X') != -1) {
+			return true;
+		}
+		return false;
+	},
+	//判断安卓还是iOS
+	isAndroid() {
+		let platform = uni.getSystemInfoSync().platform
+		if (platform == 'ios') {
+			return false;
+		} else if (platform == 'android') {
+			return true;
+		}
+	},
 
 	/**
 	 * 复制

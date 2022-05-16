@@ -149,12 +149,12 @@
 			if (option.inviteCode) {
 				this.inviteCode = option.inviteCode;
 			}
-			// this.isWeixin = this.isWechat() // 判断是否为微信内置浏览器
-			// if (this.isWeixin && !uni.getStorageSync('openId')) {
-			// 	this.checkWeChatCode() //通过微信官方接口获取code之后，会重新刷新设置的回调地址【redirect_uri】
-			// } else {
-			// 	this.openId = uni.getStorageSync('openId');
-			// }
+			this.isWeixin = this.isWechat() // 判断是否为微信内置浏览器
+			if (this.isWeixin && !uni.getStorageSync('openId')) {
+				this.checkWeChatCode() //通过微信官方接口获取code之后，会重新刷新设置的回调地址【redirect_uri】
+			} else {
+				this.openId = uni.getStorageSync('openId');
+			}
 		},
 		onShow() {},
 		methods: {
@@ -214,7 +214,8 @@
 				let _param = {
 					username: account,
 					password: password,
-					wx_openid: this.openId
+					wx_openid: this.openId,
+					weapp_openid: this.weapp_openid
 				};
 				let res = await this.Login(_param);
 				let resz = await this.GetInfo();
@@ -289,23 +290,8 @@
 					}
 					this.account = _str;
 				}, 10)
-				// this._timer = setTimeout(() => {
-				// 	let value = e.target.value;
-				// 	const pattern = /[\W]/g; //修改inputRule 的值
-				// 	const patt = /[^\u4E00-\u9FA5W]/g; //修改inputRule 的值
-				// 	let _str = ''
-				// 	for (let i = 0, len = value.length; i < len; i++) {
-				// 		if (!pattern.test(value[i])) {
-				// 			// console.log(pattern.test(value[i]));
-				// 			_str += value[i].replace(pattern, '')
-				// 		} else {
-				// 			// console.log(pattern.test(value[i]));
-				// 			_str += value[i].replace(patt, '')
-				// 		}
-				// 	}
-				// 	this.account = _str;
-				// }, 10)
 			},
+			
 			/*微信登录相关  start*/
 			//方法：用来判断是否是微信内置的浏览器
 			isWechat() {
@@ -334,8 +320,7 @@
 			// 请求微信接口，用来获取code
 			getWeChatCode() {
 				let local = encodeURIComponent(window.location.href); //获取当前页面地址作为回调地址
-				let appid = 'wx7a273ee00e914ee6'
-
+				let appid = 'wxbb5892c3708ff99d'
 				//通过微信官方接口获取code之后，会重新刷新设置的回调地址【redirect_uri】
 				window.location.href =
 					"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +

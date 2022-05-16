@@ -6,13 +6,13 @@
 				<view class="czyebox">
 					<view class="cash-select">
 						<view class="cs-title">充值方式</view>
-						<template v-if="$util.isWeiXin()">
-							<!-- <view @click="selectType(2)" class="cs-li flex-center-y"
+						<template v-if="$util.isWeiXin() && !$util.isAndroid()">
+							<view @click="selectType(2)" class="cs-li flex-center-y"
 								v-bind:class="{ 'cs-li-select':  (payType == 2)}">
 								<image src="/static/imgs/wxpay.png"
 									style="height: 40rpx; width: 40rpx; margin-right: 10rpx;" mode="aspectFit"></image>
 								微信支付
-							</view> -->
+							</view>
 							<view @click="selectType(1)" class="cs-li icon yticon flex-center-y"
 								v-bind:class="{ 'cs-li-select': (payType == 1) }">
 								<!-- 支付宝支付 -->
@@ -90,9 +90,9 @@
 			}
 		},
 		onLoad(option) {
-			// if (this.$util.isWeiXin()) {
-			// 	this.payType = 2;
-			// }
+			if (this.$util.isWeiXin() && !this.$util.isAndroid()) {
+				this.payType = 2;
+			}
 		},
 		onShow() {},
 		methods: {
@@ -123,6 +123,7 @@
 				Object.assign(this.orderInfo, res.data.data);
 				// this.orderInfo = res.data.data;
 			},
+
 			async orderPay() {
 				let res = await orderPayApi({
 					order_no: this.orderInfo.order_no,
@@ -130,23 +131,21 @@
 				});
 				uni.hideLoading();
 				this.payInfo = res.data.data;
+				if (this.payType == 1) {
+					this.$util.redirectTo('/otherpages/webview/webview', {
+						link: encodeURIComponent(this.payInfo.payData)
+					})
+					return
+				}
 				if (this.payType == 2) {
-					// new Weixin().pay(JSON.parse(this.payInfo.payData), () => {
-					// 	this.$util.showToast({
-					// 		title: '支付成功'
-					// 	})
-					// })
 					WeixinJSBridge.invoke('getBrandWCPayRequest', JSON.parse(this.payInfo.payData),
 						(res) => {
-							console.log(res);
+							uni.navigateBack({})
 						})
 					return;
 				}
-				
+
 				// uni.setStorageSync('webviewUrl', this.payInfo.payData)
-				this.$util.redirectTo('/otherpages/webview/webview', {
-					link: encodeURIComponent(this.payInfo.payData)
-				})
 				// console.log(res.data)
 			},
 			//提交支付
@@ -180,6 +179,7 @@
 	page {
 		background: #f9f9f9;
 	}
+
 	.page-wrap {
 		padding-top: 30rpx;
 	}
