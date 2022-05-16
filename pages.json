@@ -24,11 +24,21 @@
 				"navigationBarTitleText": "我的",
 				"enablePullDownRefresh": true
 			}
-		}, {
+		},
+		{
+			"path": "pages/my/protocol",
+			"style": {
+				// #ifdef H5
+				"navigationStyle": "default",
+				// #endif
+				"navigationBarTitleText": "优团客"
+			}
+		},
+		{
 			"path": "pages/goods/goods_detail",
 			"style": {
 				// #ifdef H5
-				"navigationStyle": "custom",
+				"navigationStyle": "default",
 				// #endif
 				"navigationBarTitleText": "详情"
 			}
@@ -36,7 +46,7 @@
 			"path": "pages/goods/goods_pay",
 			"style": {
 				// #ifdef H5
-				"navigationStyle": "custom",
+				"navigationStyle": "default",
 				// #endif
 				"navigationBarTitleText": "支付"
 			}
@@ -63,7 +73,7 @@
 				"path": "webview/webview",
 				"style": {
 					// #ifdef H5
-					"navigationStyle": "custom",
+					"navigationStyle": "default",
 					// #endif
 					"navigationBarTitleText": "优团客"
 				}
@@ -91,7 +101,7 @@
 					"path": "myAddress",
 					"style": {
 						// #ifdef H5
-						"navigationStyle": "custom",
+						"navigationStyle": "default",
 						// #endif
 						"navigationBarTitleText": "我的地址"
 					}
@@ -100,7 +110,7 @@
 					"path": "addAddress",
 					"style": {
 						// #ifdef H5
-						"navigationStyle": "custom",
+						"navigationStyle": "default",
 						// #endif
 						"navigationBarTitleText": "新增地址"
 					}
@@ -109,7 +119,7 @@
 					"path": "myInformation",
 					"style": {
 						// #ifdef H5
-						"navigationStyle": "custom",
+						"navigationStyle": "default",
 						// #endif
 						"navigationBarTitleText": "基本信息"
 					}
@@ -144,11 +154,24 @@
 					"path": "blindBox",
 					"style": {
 						// #ifdef H5
-						"navigationStyle": "custom",
+						"navigationStyle": "default",
 						// #endif
 						"navigationBarBackgroundColor": "#ff5454",
 						"navigationBarTextStyle": "white",
 						"navigationBarTitleText": "盲盒抽奖"
+					}
+				}, {
+					"path": "lotteryList",
+					"style": {
+						"navigationBarTitleText": "我的奖品"
+					}
+				}, {
+					"path": "findPwd",
+					"style": {
+						// #ifdef H5
+						"navigationStyle": "custom",
+						// #endif
+						"navigationBarTitleText": "找回密码"
 					}
 				}
 			]
@@ -160,7 +183,9 @@
 		"navigationBarBackgroundColor": "#ffffff",
 		"backgroundColor": "#F7f7f7",
 		"backgroundColorTop": "#f7f7f7",
-		"backgroundColorBottom": "#f7f7f7"
+		"backgroundColorBottom": "#f7f7f7",
+		"rpxCalcMaxDeviceWidth": 600,
+		"maxWidth": 600
 	},
 	"tabBar": {
 		// #ifdef H5

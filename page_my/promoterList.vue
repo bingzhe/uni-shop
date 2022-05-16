@@ -1,23 +1,23 @@
 <template>
-	<view class="promoter-list" ref="container">
+	<view class="page-wrap promoter-list" ref="container">
 		<view class="header">
 			<view class="promoterHeader bg-color-red">
 				<view class="headerCon acea-row row-between-wrapper">
 					<view style="padding-top: 80rpx;">
 						<view class="name">推广人数</view>
 						<view>
-							<text class="num">{{ total||'0' }}</text>
+							<text class="num">{{ first||'0' }}</text>
 							<text>人</text>
 						</view>
 					</view>
 				</view>
 			</view>
-			<view class="nav acea-row row-around">
+			<!-- <view class="nav acea-row row-around">
 				<view class="item" :class="screen.grade == 0 ? 'on' : ''" @click="checkGrade(0)">一级({{ first||'0' }})
 				</view>
 				<view class="item" :class="screen.grade == 1 ? 'on' : ''" @click="checkGrade(1)">二级({{ second||'0' }})
 				</view>
-			</view>
+			</view> -->
 
 		</view>
 		<view class="list">

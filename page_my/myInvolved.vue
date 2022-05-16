@@ -1,15 +1,15 @@
 <template>
-	<view style="width: 100%;">
+	<view class="page-wrap">
 		<view class="n-tabs-wrapper">
 			<view class="n-tabs-tab-wrapper" @click="switchTab(0)"><span
-					v-bind:class="{ 'n-tabs-tab--active': cashType == 0 }">拼团失败</span></view>
+					v-bind:class="{ 'n-tabs-tab--active': cashType == 0 }">参团失败</span></view>
 			<view class="n-tabs-tab-wrapper" @click="switchTab(1)"><span
-					v-bind:class="{ 'n-tabs-tab--active': cashType == 1 }">拼团中</span></view>
+					v-bind:class="{ 'n-tabs-tab--active': cashType == 1 }">参团中</span></view>
 			<view class="n-tabs-tab-wrapper" @click="switchTab(2)"><span
-					v-bind:class="{ 'n-tabs-tab--active': cashType == 2 }">拼团成功</span></view>
-			<view class="n-tabs-bar" v-bind:style="tabBarSide"></view>
+					v-bind:class="{ 'n-tabs-tab--active': cashType == 2 }">参团成功</span></view>
+			<view class="n-tabs-bar" :style="[tabBarSide]"></view>
 		</view>
-
+		<view class="n-tabs-wrapper-empty"></view>
 		<!-- <view class="detail_ct" v-for="(item, index) in list" :key="index">
 			<view class="detail_ct_st">
 				<view v-if="item.status == -1" class="detail_ct_st_text">未通过</view>
@@ -23,12 +23,15 @@
 
 		<view class="list-wrap">
 			<view v-if="list.length>0" class="list-body group-list">
-				<view class="group-item" v-for="(item, index) in list" :key="index">
+				<view @click="toDetail(item)" class="group-item" v-for="(item, index) in list" :key="index">
 					<image class="group-img" :src="$util.img(item.image_url)" mode="aspectFit"></image>
 					<view class="group-detail">
-						<view class="group-detail-top">
+						<view class="group-detail-top flex-title">
 							<view class="group-name">
 								<text>{{item.goods_name}}</text>
+							</view>
+							<view class="group-order">
+								<text v-if="item.join_status == 1" @click.stop="getOrderInfo(item, index)">查看订单</text>
 							</view>
 						</view>
 						<view class="group-detail-bottom flex-title">
@@ -38,7 +41,6 @@
 										<text>{{item.team_num}}人团</text>
 									</view>
 								</view> -->
-								
 								<view class="group-price">
 									<text class="group-price-symbol">￥</text>
 									<text>{{item.price}}</text>
@@ -53,7 +55,7 @@
 									</view>
 									<view class="hsr-line">
 										<view class="hsr-line-blue"
-											:style="{width: ((item.join_num || 0 /item.team_num)*20 + '%')} ">
+											:style="{width: ((item.join_num || 0 /item.team_num)*24 + 'rpx')} ">
 										</view>
 									</view>
 								</template>
@@ -95,6 +97,7 @@
 	import moment from 'moment';
 
 	import {
+		getOrderInfoApi,
 		getMyGroupListApi,
 	} from '@/api/tuanApi.js';
 
@@ -102,7 +105,7 @@
 		data() {
 			return {
 				cashType: 1,
-				tabBarSide: '',
+				tabBarSide: {},
 				list: [],
 				searchParam: {
 					status: '1', //1拼团中2拼团成功3拼团失败
@@ -134,9 +137,9 @@
 				if (e == 2) {
 					this.searchParam.status = 2;
 				}
+				console.log(this.tabBarSide)
 				this.getMyGroupList();
 			},
-
 			formatCountdown(list, key) {
 				let nowTime = moment();
 				if (!Array.isArray(list)) {
@@ -152,7 +155,6 @@
 						showTime: item[key] * 1000 - new Date()
 					})
 				});
-				console.log(list);
 				return list;
 			},
 			async getMyGroupList() {
@@ -160,9 +162,22 @@
 				// this.list = res.data.data;
 				this.list = this.formatCountdown(res.data.data, 'end_time');
 			},
-
+			async getOrderInfo(item, index) {
+				let res = await getOrderInfoApi({
+					order_no: item.order_no
+				});
+				this.$util.redirectTo('/page_my/orderDetail', {
+					detail: JSON.stringify(res.data.data)
+				});
+			},
 			timeOver() {
 				this.init();
+			},
+			toDetail(item) {
+				console.log(item);
+				this.$util.redirectTo('/pages/goods/goods_detail', {
+					group_id: item.group_id
+				})
 			}
 		}
 	}
@@ -170,27 +185,26 @@
 
 <style lang="scss" scoped>
 	page {
-		padding-top: 100rpx;
+		// padding-top: 100rpx;
 		background-color: #f7f7f7;
 	}
 
 	.list-empty {
 		color: $gray-color;
 		@extend %flex-center;
+		@extend %app-default-width;
 		height: 400rpx;
 	}
 
-
-
-
-	.n-tabs-wrapper {
-		margin: 0rpx 0rpx;
-		overflow: hidden;
-		width: 100%;
+	.n-tabs-wrapper-empty {
 		height: 100rpx;
-		// border-bottom: 1px solid #E7E7E7;
-		top: 88rpx;
+	}
+	.n-tabs-wrapper {
+		overflow: hidden;
+		@extend %app-default-width;
+		height: 100rpx;
 		position: fixed;
+		z-index: 20;
 		background-color: #fff;
 	}
 
@@ -298,12 +312,18 @@
 
 							&.disabled {
 								background-color: $gray-color;
+								background-image: none;
 							}
 						}
 					}
 				}
 
 				.group-name {}
+
+				.group-order {
+					color: $app-primary-color;
+					font-size: $font-26;
+				}
 
 				.group-tags-wrap {
 					@extend %flex-center-y;
@@ -343,9 +363,11 @@
 					color: $gray-color;
 					font-size: $font-24;
 					font-weight: normal;
+
 					.label {
 						text-decoration: none;
 					}
+
 					.value {
 						text-decoration: line-through;
 					}
@@ -371,7 +393,8 @@
 		overflow: hidden;
 		position: relative;
 		height: 12rpx;
-		width: 100%;
+		// width: 100%;
+		width: 240rpx;
 		background-color: $white-color;
 		border-radius: 10rpx;
 		margin: 2rpx 0;

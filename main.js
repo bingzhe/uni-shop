@@ -12,6 +12,12 @@ if (process.env.NODE_ENV == 'development') { // 开发环境
 	// #endif
 }
 
+// // #ifdef H5
+// // 提交前需要注释  本地调试使用
+// const vconsole = require('vconsole')
+// Vue.prototype.$vconsole = new vconsole() // 使用vconsole
+// // #endif
+
 Vue.config.productionTip = false
 Vue.prototype.$util = Util
 

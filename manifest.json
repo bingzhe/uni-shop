@@ -50,11 +50,16 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "",
+        "appid" : "wx31977fcea6b64f75",
         "setting" : {
             "urlCheck" : false
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "计算当前位置到指定店铺距离"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -83,7 +88,8 @@
             }
         },
         "devServer" : {
-            "https" : false
+            "https" : false,
+            "port" : 4399
         }
     }
 }

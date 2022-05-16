@@ -3,6 +3,7 @@
 		<view class="my-wrap padding-y">
 			<!-- <view class="status-bar"></view> -->
 			<view class="user-info">
+				
 				<view class="user-info-header flex-center-y">
 					<view class="user-avatar-wrap">
 						<image v-if="!userInfo.avatar" class="user-avatar" src="/static/imgs/logo.png"
@@ -17,6 +18,7 @@
 						</view>
 					</view>
 				</view>
+				
 				<view class="user-info-body">
 					<view class="user-info-blance">
 						<view class="user-info-blance-label">账户余额</view>
@@ -51,7 +53,7 @@
 				</view>
 			</view>
 			
-			<view v-for="(sub_arr,index) in control_list" :key="index">
+			<view v-for="(sub_arr,indexz) in control_list" :key="indexz">
 				<view class="control-list ">
 					<!-- @click="controlClick(item, index)" -->
 					<view @click="controlClick(item, index)"
@@ -67,13 +69,13 @@
 					</view>
 				</view>
 			</view>
-			
 		</view>
 		<view v-if="$util.checkLogin()" class="page-btn-wrap">
 			<view class="page-btn" @click="logoutClick">
 				<text>退出登录</text>
 			</view>
 		</view>
+		
 	</view>
 </template>
 
@@ -133,7 +135,7 @@
 						{
 							src: '/static/imgs/my/control-icon9.png',
 							text: '盲盒抽奖',
-							// link: '/page_my/blindBox',
+							link: '/page_my/blindBox',
 							check_login: true
 						}
 					],
@@ -141,7 +143,10 @@
 			}
 		},
 
-		onLoad() {
+		onLoad(option) {
+			if(option.token) {
+				uni.setStorageSync('token', option.token)
+			}
 			// this.init();
 			this.GetInfo();
 
@@ -319,7 +324,8 @@
 			width: 100%;
 			height: 200rpx;
 			background-color: $app-primary-color;
-
+			margin-top: -2rpx;
+			
 			.user-info-blance {
 				text-align: center;
 

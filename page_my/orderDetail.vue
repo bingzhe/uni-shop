@@ -88,7 +88,10 @@
 		<view class="shop-card ">
 			<view class="padding-y has-active card-item">
 				<view class="goods-card flex-title">
-					<image class="goods-img" :src="$util.img(detail.image_url)" mode="aspectFit"></image>
+					<image v-if="detail.image_url" class="goods-img" :src="$util.img(detail.image_url)"
+						mode="aspectFit"></image>
+					<image v-if="detail.goods_img" class="goods-img" :src="$util.img(detail.goods_img)"
+						mode="aspectFit"></image>
 					<view class="goods-detail-wrap">
 						<view class="goods-detail-top">
 							<view class="goods-detail-name">
@@ -164,13 +167,53 @@
 					</view>
 				</view>
 			</view>
-			<view v-if="detail.goods_class == 1" class="padding-y has-active card-item n-b-b">
+			<view v-if="detail.logistics_company" class="padding-y has-active card-item n-b-b">
 				<view class="card-item-label">
-					<text>配送方式</text>
+					<text>配送方式：</text>
 				</view>
 				<view class="card-item-value ">
 					<view class="card-item-input ">
-						<text>物流配送</text>
+						<text>{{detail.logistics_company}}</text>
+					</view>
+				</view>
+			</view>
+			<view v-if="detail.logistics_no" class="padding-y has-active card-item n-b-b">
+				<view class="card-item-label">
+					<text>物流编号：</text>
+				</view>
+				<view class="card-item-value ">
+					<view class="card-item-input ">
+						<text>{{detail.logistics_no}}</text>
+					</view>
+				</view>
+			</view>
+			<view v-if="detail.complete_address" class="padding-y has-active card-item n-b-b">
+				<view class="card-item-label">
+					<text>收货地址：</text>
+				</view>
+				<view class="card-item-value ">
+					<view class="card-item-input ">
+						<text>{{detail.complete_address}}</text>
+					</view>
+				</view>
+			</view>
+			<view v-if="detail.telephone" class="padding-y has-active card-item n-b-b">
+				<view class="card-item-label">
+					<text>手机号：</text>
+				</view>
+				<view class="card-item-value ">
+					<view class="card-item-input ">
+						<text>{{detail.telephone}}</text>
+					</view>
+				</view>
+			</view>
+			<view v-if="detail.receipt_name" class="padding-y has-active card-item n-b-b">
+				<view class="card-item-label">
+					<text>签收人：</text>
+				</view>
+				<view class="card-item-value ">
+					<view class="card-item-input ">
+						<text>{{detail.receipt_name}}</text>
 					</view>
 				</view>
 			</view>
@@ -202,7 +245,11 @@
 				</view>
 			</view>
 		</view>
-
+		<view v-if="detail.goods_class == 1 && detail.order_status == 2" class="page-btn-wrap">
+			<view @click="receiptClick" class="page-btn">
+				<text>签收</text>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -210,6 +257,8 @@
 	import moment from 'moment';
 	import prompt from '@/components/uni-prompt.vue';
 	import {
+		receiptApi,
+		lotteryReceiptApi,
 		payGroupOrderApi
 	} from '@/api/tuanApi.js';
 
@@ -223,7 +272,10 @@
 				showPay: false,
 				payType: 0, //支付方式0余额支付，1支付宝h5，2微信公众号，3微信小程序
 				payInfo: {},
-
+				receiptParam: {
+					id: '',
+					order_id: ''
+				},
 				detail: {}
 			}
 		},
@@ -236,9 +288,15 @@
 		},
 		methods: {
 			moment,
-			init() {
+			init() {},
 
+			resetOrderList() {
+				let pages = getCurrentPages();
+				let backPage = pages[pages.length - 2];
+				backPage.getOrderList && backPage.getOrderList();
+				backPage.lotteryList && backPage.lotteryList();
 			},
+
 			// 0余额支付，1支付宝h5，2微信公众号，3微信小程序
 			formatPayType(type) {
 				if (status == 0) {
@@ -268,6 +326,17 @@
 					return '已完成';
 				}
 			},
+			async receipt() {
+				let res = await receiptApi(this.receiptParam);
+				uni.navigateBack({});
+				this.resetOrderList();
+			},
+			async lotteryReceipt() {
+				let res = await lotteryReceiptApi(this.receiptParam);
+				uni.navigateBack({});
+				this.resetOrderList();
+			},
+
 			changePayType(e) {
 				this.payType = e.detail.value;
 			},
@@ -278,7 +347,6 @@
 				});
 				uni.hideLoading();
 				this.payInfo = res.data.data;
-
 				if (this.payType == 0) {
 					this.$util.redirectTo('/page_my/myInvolved', {
 						orderType: res.data.data
@@ -309,6 +377,27 @@
 				});
 				this.orderPay();
 				this.showPay = false;
+			},
+			// 签收
+			receiptClick() {
+				uni.showModal({
+					title: '确定签收?',
+					success: (res) => {
+						if (res.confirm) {
+							if (this.detail.type == 'lottery') {
+								this.receiptParam.id = this.detail.id;
+								this.lotteryReceipt();
+								return;
+							}
+							this.receiptParam.order_id = this.detail.order_id;
+							this.receipt();
+							return;
+						}
+						if (res.cancel) {
+							return;
+						}
+					}
+				})
 			}
 		}
 	}
@@ -336,6 +425,7 @@
 			}
 		}
 	}
+
 	.status-card {
 		background-size: 100% 100%;
 		padding: 40rpx;

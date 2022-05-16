@@ -6,7 +6,7 @@
 						v-bind:class="{ 'n-tabs-tab--active': !cashType }">余额提现</span></view>
 				<view class="n-tabs-tab-wrapper" @click="switchTab(1)"><span
 						v-bind:class="{ 'n-tabs-tab--active': cashType }">积分提现</span></view>
-				<view class="n-tabs-bar" v-bind:style="tabBarSide"></view>
+				<view class="n-tabs-bar" v-bind:style="[tabBarSide]"></view>
 			</view>
 			<view class="row">{{cashType?'当前积分 '+ Number(userInfo.point) :'当前余额 ￥'+ userInfo.balance_money}}
 				<view style="font-size: 30rpx; margin-top: 20rpx; color: #45D4FF;" @click="toTxBill"> 提现明细</view>
@@ -334,6 +334,7 @@
 				} else {
 					this.userInfo.point = this.userInfo.point - this.money
 				}
+				uni.setStorageSync('userInfo', this.userInfo)
 			}
 		}
 	}
@@ -342,6 +343,10 @@
 <style lang="scss" scoped>
 	page {
 		background: #F9F9F9;
+	}
+
+	.page-wrap {
+		padding-top: 10rpx;
 	}
 
 	.content {

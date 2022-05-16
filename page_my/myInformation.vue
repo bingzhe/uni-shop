@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<view class="information border_t" @click="chooseImage()">
+	<view class="page-wrap">
+		<view class="information border_t" @click="chooseImage()" style="height: 180rpx;">
 			<view class="">头像</view>
 			<view class="portrait">
 				<view class="portrait_img">
@@ -301,7 +301,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		background-color: #F6F6F6;
 	}
@@ -311,11 +311,12 @@
 	}
 
 	.information {
+		box-sizing: border-box;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
-		height: 200rpx;
+		min-height: 100rpx;
 		padding: 0 20rpx;
 		background-color: #fff;
 

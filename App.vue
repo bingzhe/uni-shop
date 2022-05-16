@@ -46,4 +46,21 @@
 	body {
 		font-family: PingFang SC, Roboto Medium;
 	}
+	/* 解决滚动条的问题 */
+	::-webkit-scrollbar {
+		display: none;
+		width: 0;
+		height: 0;
+		color: transparent;
+	}
+
+	/* 解决H5 的问题 */
+	uni-scroll-view .uni-scroll-view::-webkit-scrollbar {
+		/* 隐藏滚动条，仍然可以滚动 */
+		display: none;
+		width: 0;
+		height: 0;
+		color: transparent;
+	}
+	
 </style>

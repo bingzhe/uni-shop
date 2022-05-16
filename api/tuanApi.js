@@ -33,9 +33,95 @@ const url = {
 	RevisePwdByPwd: 'Api/Login/RevisePwdByPwd', // 旧密码修改密码
 	
 	Lottery: 'Api/Lottery/index', // 获取抽奖信息
+	UsersLottery: 'Api/Lottery/usersLottery', // 打开盲盒
+	LotteryList: 'Api/Lottery/usersLotteryList', // 我的奖品
+	AddLotteryAddress: 'Api/Lottery/usersLotteryAddress', // 填写奖品收获地址
+	Receipt: 'Api/Usersinfo/receipt', // 签收
+	LotteryReceipt: 'Api/Lottery/receipt', // 奖品签收
+	
+	OrderInfo: 'Api/Order/getOrderInfo', // 获取订单详情
 }
 
 
+/**
+ * @param {Object} data
+ * 获取订单详情
+ */
+export function getOrderInfoApi(data) {
+	return request.request({
+		url: url.OrderInfo,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 获取轮播图
+ */
+export function getBannerApi(data) {
+	return request.request({
+		url: url.Banner,
+		noToken: true,
+		method: 'post',
+		data
+	})
+}
+
+/**
+ * @param {Object} data
+ * 奖品签收
+ */
+export function lotteryReceiptApi(data) {
+	return request.request({
+		url: url.LotteryReceipt,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 签收
+ */
+export function receiptApi(data) {
+	return request.request({
+		url: url.Receipt,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 填写奖品收获地址
+ */
+export function addLotteryAddressApi(data) {
+	return request.request({
+		url: url.AddLotteryAddress,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 我的奖品
+ */
+export function lotteryListApi(data) {
+	return request.request({
+		url: url.LotteryList,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 打开盲盒
+ */
+export function usersLotteryApi(data) {
+	return request.request({
+		url: url.UsersLottery,
+		method: 'post',
+		data
+	})
+}
 /**
  * @param {Object} data
  * 获取抽奖信息

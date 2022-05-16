@@ -31,7 +31,7 @@
 </script>
 
 <style lang="scss" scoped>
-	$slid-height: 206rpx;
+	$slid-height: 240rpx;
 
 	.co-slid-wrap {
 		.slid-swiper {

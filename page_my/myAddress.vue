@@ -97,7 +97,7 @@
 				}
 				let pages = getCurrentPages();
 				let backPage = pages[pages.length - 2]
-				backPage.changeAddress(this.selected_item)
+				backPage.$vm.changeAddress && backPage.$vm.changeAddress(this.selected_item)
 				uni.navigateBack()
 			}
 		}
@@ -111,7 +111,7 @@
 	}
 
 	.page-wrap {
-		padding: 0 20rpx;
+		padding: 10rpx 20rpx;
 	}
 
 	.mt_20 {
@@ -159,6 +159,7 @@
 	}
 
 	.default {
+		box-sizing: border-box;
 		width: 60rpx;
 		height: 40rpx;
 		padding: 5rpx;
@@ -167,7 +168,7 @@
 		line-height: 27rpx;
 		font-weight: 100;
 		border: 1rpx solid $red-color;
-		font-size: 18rpx;
+		font-size: 24rpx;
 		border-radius: 10rpx;
 		color: $red-color;
 	}

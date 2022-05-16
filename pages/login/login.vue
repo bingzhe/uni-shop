@@ -1,4 +1,4 @@
-<template>
+-<template>
 	<view class="page-wrap register">
 
 		<view class="hender">
@@ -29,6 +29,12 @@
 					第一次使用?
 					<text @click="formItem = 2" class="font-color-red" style="margin-left: 30rpx;">立即注册</text>
 				</view>
+				<view style="line-height: 40rpx;">
+					<text @click="findPwd" class="font-color-red" style="margin: 10rpx;">忘记密码？</text>
+					<!-- #ifdef H5 -->
+					<text @click="changeClient" class="font-color-red" style="margin: 10rpx;">切换到商家端</text>
+					<!-- #endif -->
+				</view>
 			</view>
 
 			<!-- <view class="tip" style="margin: 0 0 30rpx; padding: 0; height: 30rpx; line-height: 30rpx;">
@@ -44,9 +50,17 @@
 				</checkbox-group>
 				<view class="protocol-text">
 					<text>我已阅读并同意</text>
-					<text @click="$toPage('/pagesz/my/protocol?title=用户协议&type=0')" class="font-color-red">《用户协议》</text>
+					<text class="font-color-red"
+						@click="$util.diyRedirectTo({wap_url: '/hybrid/html/yhxy.html',title: '用户协议'})">
+						《用户协议》
+					</text>
+					<!-- <text @click="$util.redirectTo('/pages/my/protocol?title=用户协议&type=0')" class="font-color-red">《用户协议》</text> -->
 					<text>和</text>
-					<text @click="$toPage('/pagesz/my/protocol?title=隐私政策&type=1')" class="font-color-red">《隐私政策》</text>
+					<text class="font-color-red"
+						@click="$util.diyRedirectTo({wap_url: '/hybrid/html/yszc.html',title: '隐私政策'})">
+						《隐私政策》
+					</text>
+					<!-- <text @click="$util.redirectTo('/pages/my/protocol?title=隐私政策&type=1')" class="font-color-red">《隐私政策》</text> -->
 				</view>
 			</view>
 			<!-- <view class="protocol-empty-style"></view> -->
@@ -124,7 +138,8 @@
 				clockText: '验证码',
 				disabled: false,
 				isWeixin: '', // 判断是否为微信内置浏览器
-				openId: ''
+				openId: '',
+				weapp_openid: ''
 			};
 		},
 		onLoad(option) {
@@ -248,6 +263,9 @@
 				this.$store.commit('SET_TOKEN', result.token);
 				let resz = await this.GetInfo();
 				this.$util.redirectTo('/pages/index/index');
+				this.$util.showToast({
+					title: '注册成功已自动登录'
+				});
 				// this.$util.showToast({
 				// 	title: '注册成功请登录'
 				// });
@@ -255,7 +273,6 @@
 			},
 
 			judge(e) {
-
 				this._timer = setTimeout(() => {
 					let value = e.target.value;
 					const pattern = /[\W]/g; //修改inputRule 的值
@@ -328,12 +345,22 @@
 					"&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
 			},
 
+			changeClient() {
+				// #ifdef H5
+				uni.clearStorageSync()
+				location.replace('https://tuan.100dtc.com/mshop/pages/login/login')
+				// #endif
+			},
+			// 忘记密码
+			findPwd() {
+				this.$util.redirectTo('/page_my/findPwd')
+			}
 
 		}
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.hender {
 		margin-top: 50rpx;
 		margin-left: 50rpx;

@@ -15,6 +15,14 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+// 自适应默认宽度
+%app-default-width {
+	width: 750rpx;
+	// max-width: 750rpx;
+	max-width: 600px;
+}
+
+
 // 继承
 .flex-center {
 	@extend %flex-center;

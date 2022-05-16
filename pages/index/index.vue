@@ -8,8 +8,10 @@
 		<!-- 列表 -->
 		<view class="list-wrap padding-y">
 			<view class="list-header flex-title">
-				<view class="main">
-					<text>热门团拼</text>
+				<view class="main flex-center-y">
+					<image style="width: 32rpx; height: 32rpx; margin-right: 10rpx;" src="/static/imgs/icon_hot.png"
+						mode="aspectFit"></image>
+					<text>热门参团</text>
 				</view>
 				<view class="other">
 				</view>
@@ -39,20 +41,33 @@
 									<text>{{item.goods_price}}</text>
 								</view>
 							</view>
-
 							<view class="right">
 								<view class="group-btn">
 									<text>去参团</text>
 								</view>
 							</view>
-
 						</view>
 					</view>
 				</view>
 			</view>
 			<view v-else class="list-body-empty">
-				<text>暂无更多拼团</text>
+				<text>暂无更多参团</text>
 			</view>
+		</view>
+
+		<view @click="toBlind" class="blind-wrap padding-y">
+			<view class="list-header flex-title">
+				<view class="main flex-center-y">
+					<image style="width: 32rpx; height: 32rpx; margin-right: 10rpx;" src="/static/imgs/icon_gift.png"
+						mode="aspectFit"></image>
+					<text>盲盒抽奖</text>
+				</view>
+				<view class="other">
+					<uni-icons color="#ff5454" type="forward" size="16"></uni-icons>
+				</view>
+			</view>
+			<image style="width: 100%; height: 320rpx; border-radius: 0 0 16rpx 16rpx;"
+				src="/static/imgs/home_blind.png" mode="aspectFill"></image>
 		</view>
 
 
@@ -61,16 +76,14 @@
 
 <script>
 	import {
+		getBannerApi,
 		groupListApi
 	} from '@/api/tuanApi.js';
 
 	export default {
 		data() {
 			return {
-				slid_list: [
-					'https://spike.bdtc100.com//public/img/banner1.jpg',
-					'https://spike.bdtc100.com//public/img/banner2.jpg'
-				],
+				slid_list: [],
 				data_list: []
 			}
 		},
@@ -87,16 +100,28 @@
 		methods: {
 			init() {
 				this.groupList();
+				this.getBanner();
 			},
 			async groupList() {
 				let res = await groupListApi();
 				this.data_list = res.data.data;
 			},
+			async getBanner() {
+				let res = await getBannerApi();
+				this.slid_list = res.data.data;
+			},
 			toDetail(item) {
-				console.log(item);
 				this.$util.redirectTo('/pages/goods/goods_detail', {
 					group_id: item.group_id
 				})
+			},
+
+			toBlind() {
+				if (!this.$util.checkLogin()) {
+					this.$util.redirectTo('/pages/login/login', undefined, 'reLaunch');
+					return;
+				}
+				this.$util.redirectTo('/page_my/blindBox');
 			}
 		},
 	}
@@ -110,6 +135,32 @@
 		.list-header {
 			background-color: $app-primary-color;
 			color: $white-color;
+			height: 70rpx;
+			padding: 20rpx;
+			font-size: $font-30;
+			border-radius: 16rpx 16rpx 0 0;
+		}
+
+		.list-body {
+			background-color: #f8f8f8;
+			border-radius: 0 0 16rpx 16rpx;
+		}
+
+		.list-body-empty {
+			height: 400rpx;
+			@extend %flex-center;
+			background-color: #f8f8f8;
+			border-radius: 0 0 16rpx 16rpx;
+			color: $gray-color;
+		}
+	}
+
+	.blind-wrap {
+		margin-top: 20rpx;
+
+		.list-header {
+			background-color: $white-color;
+			color: $app-primary-color;
 			height: 70rpx;
 			padding: 20rpx;
 			font-size: $font-30;

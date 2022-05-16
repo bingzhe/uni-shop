@@ -1,5 +1,5 @@
 <template>
-	<view class="my-promotion">
+	<view class="page-wrap my-promotion">
 		<view class="header">
 			<view class="name acea-row row-center-wrapper">
 				<view style="font-size: 18; text-align: center; margin-top: 20px;">当前积分</view>

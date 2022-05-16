@@ -1,5 +1,5 @@
 <template>
-	<view style="width: 100%;">
+	<view class="page-wrap">
 		<view class="detail_ct" v-for="(item, index) in list" :key="index">
 			<view class="detail_ct_st">
 				<view class="detail_ct_st_text">{{item.type_name}}</view>
@@ -80,7 +80,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		// padding-top: 100rpx;
 		background-color: #f7f7f7;
@@ -125,6 +125,7 @@
 	}
 
 	.detail_ct {
+		box-sizing: border-box;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

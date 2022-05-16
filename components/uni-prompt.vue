@@ -1,9 +1,9 @@
 <!-- prompt组件 -->
 <template>
 	<view>
-		<view v-show="show" class="uni-mask" :style="{ top: offsetTop + 'px' }"
+		<view v-if="show" class="uni-mask" :style="{ top: offsetTop + 'px' }"
 			@touchmove.stop.prevent="maskMoveHandle"></view>
-		<view v-show="show" class="prompt-content contentFontColor"
+		<view v-if="show" class="prompt-content contentFontColor"
 			:class="'uni-prompt-' + position + ' ' + 'uni-prompt-' + mode">
 			<view class="prompt-title">{{title}}</view>
 			<slot>

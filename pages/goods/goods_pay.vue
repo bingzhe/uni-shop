@@ -255,8 +255,11 @@
 					return;
 				}
 				if (this.payType == 1) {
-					uni.setStorageSync('webviewUrl', this.payInfo.payData);
-					this.$util.redirectTo('/otherpages/webview/webview');
+					this.$util.redirectTo('/otherpages/webview/webview', {
+						link: encodeURIComponent(this.payInfo.payData)
+					})
+					// uni.setStorageSync('webviewUrl', this.payInfo.payData);
+					// this.$util.redirectTo('/otherpages/webview/webview');
 					return;
 				}
 				if (this.payType == 2) {
@@ -314,14 +317,15 @@
 		position: fixed;
 		left: 0;
 		bottom: 0;
-		width: 100%;
+		width: 750rpx;
 		height: 120rpx;
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
 		background-color: $white-color;
-		padding: 0 30rpx;
 		font-size: $font-28;
+		padding: 0 30rpx;
+		box-sizing: border-box;
 
 		.goods-pay-num {
 			color: $gray-color;

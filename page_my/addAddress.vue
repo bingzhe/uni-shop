@@ -154,9 +154,9 @@
 						addressData.title = '地址添加成功'
 					}
 					this.$util.showToast(addressData)
-					var pages = getCurrentPages(); //当前页
-					var beforePage = pages[pages.length - 2]; //上个页面
-					beforePage.getAddress()
+					let pages = getCurrentPages(); 
+					let beforePage = pages[pages.length - 2]; //上个页面
+					beforePage.$vm.getAddress && beforePage.$vm.getAddress()
 					uni.navigateBack({
 						delta: 1, //返回层数，2则上上页
 					})
@@ -174,7 +174,7 @@
 				})
 				var pages = getCurrentPages(); //当前页
 				var beforePage = pages[pages.length - 2]; //上个页面
-				beforePage.getAddress()
+				beforePage.$vm.getAddress()
 				uni.navigateBack({
 					delta: 1, //返回层数，2则上上页
 				})

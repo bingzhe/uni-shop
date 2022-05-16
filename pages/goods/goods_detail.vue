@@ -17,10 +17,12 @@
 			</cover-view>
 		</view>
 
-		<view class="goods-bar flex-title">
+		<view class="goods-bar flex-title"
+			:style="{'background-image': 'url('+$util.img('public/img/detail_bar_left.png')+')'}">
 			<view class="goods-bar-left">
 				<view class="bar-info flex-center-y">
-					<image class="bar-logo" src="../../static/imgs/detail_pintuan_tag.png" mode="aspectFit"></image>
+					<image class="bar-logo" :src="$util.img('public/img/detail_pintuan_tag.png')" mode="aspectFit">
+					</image>
 					<view class="bar-team-num flex-center-y">
 						<view class="num-value">{{detail.team_num}}</view>
 						<view class="num-text">人团</view>
@@ -29,7 +31,7 @@
 				<view class="">
 				</view>
 			</view>
-			<view class="goods-bar-right">
+			<view class="goods-bar-right" :style="{'background-image': 'url('+$util.img('public/img/detail_bar_right.png')+')'}">
 				<view class="goods-bar-right-label">
 					<text>距结束仅剩</text>
 				</view>
@@ -44,7 +46,7 @@
 		<view class="goods-detail-card padding-all">
 			<view class="goods-price-line flex-center-y">
 				<view class="goods-price-tags">
-					<text>拼团价</text>
+					<text>参团价</text>
 				</view>
 				<view class="goods-price">
 					<text>{{detail.price}}</text>
@@ -113,46 +115,27 @@
 			return {
 				group_id: '',
 				slid_index: 1,
-
 				showDay: 0,
 				showHour: 0,
 				showMinute: 0,
 				showSecond: 0,
-
 				detail: {
-					begin_time: 1651680000,
-					create_time: 1651798944,
-					end_time: 1652798800,
-					get_num: 3,
-					goods_class: 2,
-					goods_id: 1,
-					goods_img: "/upload/goods/20220428/202204281106470.jpeg",
-					goods_name: "风景画",
-					goods_price: "1000.00",
-					group_id: 1,
-					img_list: [
-						'/upload/goods/20220428/202204281106470.jpeg',
-						'/upload/goods/20220428/202204281106471.jpeg',
-						'/upload/goods/20220428/202204281106472.jpeg',
-						'/upload/goods/20220428/202204281106473.jpeg'
-					],
-					is_delete: 0,
-					price: "200.00",
-					shop_list: [{
-						address: "兴国路13号华泓智乐广场二楼赣湘名厨",
-						distance: 0,
-						end_time: 0,
-						full_address: "江西省赣州市章贡区",
-						goods_content: "测试",
-						latitude: "25.82845",
-						logo: "/upload/goods/20220428/202204281106470.jpeg",
-						longitude: "114.937971",
-						shop_id: 1,
-						shop_name: "测试",
-						start_time: 0
-					}],
-					status: 1,
-					team_num: 10,
+					begin_time: null,
+					create_time: null,
+					end_time: null,
+					get_num: null,
+					goods_class: null,
+					goods_id: null,
+					goods_img: "",
+					goods_name: "",
+					goods_price: "",
+					group_id: null,
+					img_list: [],
+					is_delete: null,
+					price: "",
+					shop_list: [],
+					status: null,
+					team_num: null,
 					shop_list: []
 				}
 			}
@@ -349,7 +332,7 @@
 	.goods-bar {
 		height: 110rpx;
 		padding-left: 30rpx;
-		background-image: url(@/static/imgs/detail_bar_left.png);
+		// background-image: url(@/static/imgs/detail_bar_left.png);
 		background-position: center;
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
@@ -364,6 +347,7 @@
 
 			.bar-team-num {
 				@extend %flex-center;
+				box-sizing: border-box;
 				height: 36rpx;
 				border: 1rpx solid $white-color;
 				border-radius: 8rpx;
@@ -388,7 +372,7 @@
 			padding: 0 20rpx;
 			width: 320rpx;
 			height: 100%;
-			background-image: url(@/static/imgs/detail_bar_right.png);
+			// background-image: url(@/static/imgs/detail_bar_right.png);
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: cover;

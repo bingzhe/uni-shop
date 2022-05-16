@@ -3,7 +3,6 @@
 		<!-- 背景 -->
 		<image class="bg-img" src="../static/imgs/promoterBg.jpg"></image>
 
-
 		<view class="promote_ct">
 			<view class="promote_ct_hander">
 				<view class="promote_ct_hander_title">邀请码</view>
@@ -79,26 +78,30 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.container {
-		width: 100%;
+		// width: 100%;
+		position: relative;
+		@extend %app-default-width;
 	}
 
 	.bg-img {
 		position: fixed;
-		width: 100%;
-		height: 100%;
 		top: 0;
-		left: 0;
+		// width: 100%;
+		@extend %app-default-width;
+		// margin: 0 auto;
+		height: 100%;
 		z-index: -1;
 	}
 
 	.promote_ct {
-		position: fixed;
+		position: absolute;
 		text-align: center;
 		width: 100%;
-		margin-top: 260rpx;
-		padding-top: 30rpx;
+		top: 22vh;
+		// margin-top: 260rpx;
+		// padding-top: 30rpx;
 
 		.promote_ct_hander {
 			display: flex;

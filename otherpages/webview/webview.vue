@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="content">
 		<web-view :src="link"></web-view>
 	</view>
 </template>
@@ -12,17 +12,22 @@
 			};
 		},
 		onLoad(option) {
+			uni.setNavigationBarTitle({
+				title: uni.getStorageSync('webviewTitle') || '优团客'
+			})
+			uni.removeStorageSync('webviewTitle')
 			if (option.link) {
-				this.link = decodeURIComponent(option.link);
+				this.link = decodeURI(option.link);
+				// this.link = option.link
+				console.log(this.link)
+			} else {
+				this.init();
 			}
-			this.init();
 		},
 		methods: {
 			init() {
-				if (uni.getStorageSync('webviewUrl')) {
-					this.link = uni.getStorageSync('webviewUrl');
-					uni.removeStorageSync('webviewUrl');
-				}
+				this.link = uni.getStorageSync('webviewUrl')
+				uni.removeStorageSync('webviewUrl')
 			}
 		}
 	};

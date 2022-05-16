@@ -12,7 +12,8 @@
 
 .page-wrap {
 	max-width: 750rpx;
-	min-height: calc(100vh - var(--window-bottom) - var(--window-top) - var(--status-bar-height));
+	// min-height: calc(100vh - var(--window-bottom) - var(--window-top) - var(--status-bar-height));
+	min-height: calc(100vh - var(--window-top) - var(--status-bar-height));
 	background-color: $app-background-color;
 	position: relative;
 	background-repeat: no-repeat;
