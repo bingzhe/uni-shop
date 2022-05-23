@@ -64,16 +64,13 @@
 				"navigationBarTextStyle": "white",
 				"navigationBarTitleText": "提现"
 			}
+		}, {
+			"path": "pages/goods/goods_rich",
+			"style": {
+				"navigationBarTitleText": "店铺详情"
+			}
 		}
-	    ,{
-            "path" : "pages/goods/goods_rich",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "店铺详情"
-            }
-            
-        }
-    ],
+	],
 
 	"subPackages": [{
 			"root": "otherpages",

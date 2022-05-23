@@ -377,7 +377,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	@import "./iconfont.css";
 	.wyb-popup-box{
 		position: fixed;

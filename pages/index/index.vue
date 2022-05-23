@@ -70,7 +70,6 @@
 				src="/static/imgs/home_blind.png" mode="aspectFill"></image>
 		</view>
 
-
 	</view>
 </template>
 
