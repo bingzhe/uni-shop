@@ -52,8 +52,28 @@
 				this.userInfo = uni.getStorageSync('userInfo')
 				this.erweima = config.imgUrl + this.userInfo.invitation_qr_code
 			},
-			saveImg() {
-				// H5 保存图片
+			// saveImg() {
+			// 	// H5 保存图片
+			// 	// #ifdef H5
+			// 	const imgUrl = this.erweima;
+			// 	if (window.navigator.msSaveOrOpenBlob) {
+			// 		let bstr = atob(imgUrl.split(",")[1]);
+			// 		let n = bstr.length;
+			// 		let u8arr = new Uint8Array(n);
+			// 		while (n--) {
+			// 			u8arr[n] = bstr.charCodeAt(n);
+			// 		}
+			// 		let blob = new Blob([u8arr]);
+			// 		window.navigator.msSaveOrOpenBlob(blob, "chart-download" + "." + "png");
+			// 	} else {
+			// 		let a = document.createElement("a");
+			// 		a.href = imgUrl;
+			// 		a.setAttribute("download", "chart-download");
+			// 		a.click();
+			// 	}
+			// 	// #endif
+			// },
+			saveImg(){
 				// #ifdef H5
 				const imgUrl = this.erweima;
 				if (window.navigator.msSaveOrOpenBlob) {
@@ -68,10 +88,42 @@
 				} else {
 					let a = document.createElement("a");
 					a.href = imgUrl;
-					a.setAttribute("download", "chart-download");
+					// a.setAttribute("download", "chart-download");
+					a.download = 'chart-download'
 					a.click();
 				}
 				// #endif
+				// #ifdef MP-WEIXIN
+				// 获取APP的所有页面列表
+				const pages = getCurrentPages();
+				// 获取到当前页面
+				const page = pages[pages.length - 1];
+				const currentWebview = page.$getAppWebview();
+				let bitmap = new plus.nativeObj.Bitmap('amway_img');
+				// 将webview内容绘制到Bitmap对象中
+				currentWebview.draw(bitmap, function() {
+					console.log('截屏绘制图片成功');
+					let fileName = '_doc/' + new Date().getTime() + '.png'
+					bitmap.save(fileName, {}, function(i) {
+						console.log('bitmap保存图片成功：' + JSON.stringify(i));
+						// 将图片保存到相册
+						uni.saveImageToPhotosAlbum({
+							filePath: i.target,
+							success: function() {
+								bitmap.clear(); //销毁Bitmap图片
+								uni.$u.toast('保存图片成功')
+							}
+						});
+					}, function(e) {
+						console.log('保存图片失败：' + JSON.stringify(e));
+					});
+				}, function(e) {
+					console.log('截屏绘制图片失败：' + JSON.stringify(e));
+				});
+				//currentWebview.append(amway_bit);
+				// #endif
+				// H5 保存图片
+				
 			}
 
 		},
@@ -138,10 +190,10 @@
 		}
 
 		.ermweima {
-			width: 300rpx;
-			height: 300rpx;
+			width: 18vh;
+			// height: 300rpx;
 			margin: auto;
-			margin-top: 20rpx;
+			// margin-top: 1vh;
 
 			image {
 				width: 100%;

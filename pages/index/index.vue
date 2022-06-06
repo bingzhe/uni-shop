@@ -1,7 +1,7 @@
 <template>
 	<view class="page-wrap">
 		<!-- 轮播图 -->
-		<view class="padding-all">
+		<view style="" class="swiperContainer">
 			<co-slid :slid_list="slid_list"></co-slid>
 		</view>
 
@@ -70,6 +70,7 @@
 				src="/static/imgs/home_blind.png" mode="aspectFill"></image>
 		</view>
 
+
 	</view>
 </template>
 
@@ -117,7 +118,7 @@
 
 			toBlind() {
 				if (!this.$util.checkLogin()) {
-					this.$util.redirectTo('/pages/login/login', undefined, 'reLaunch');
+					this.$util.redirectTo('/pages/login/login?connect_redirect=1', undefined, 'reLaunch');
 					return;
 				}
 				this.$util.redirectTo('/page_my/blindBox');
@@ -127,6 +128,13 @@
 </script>
 
 <style lang="scss" scoped>
+	
+	// 轮播图
+	.swiperContainer {
+		padding: 30rpx;
+		
+	}
+	
 	// .margin-all {
 	// 	margin: 30rpx;
 	// }

@@ -13,12 +13,12 @@ const url = {
 	OrderBalanceCreate: 'Api/Order/createBalanceOrder', //创建充值余额订单
 	OrderPay: 'Api/OrderPay/userOrder', //支付充值余额订单
 	OrderList: 'Api/Order/myOrderList', //我的订单
+	OrderParter:'Api/Order/createPartnerOrder',// 创建合伙人订单
 
 	Withdraw: 'Api/UsersWithdraw/index', //提现
 	WithdrawConfig: 'Api/UsersWithdraw/getWithdrawConfig', //提现配置
 	WithdrawBill: 'Api/UsersWithdraw/withdrawBill', // 提现明细 积分 保证金
 	UsersBill: 'Api/Usersinfo/getUsersBill', // 查询余额 积分 保证金 消费充值明细
-
 	GetAddress: 'Api/Usersinfo/getAddress', // 获取地址列表
 	GetDefaultAddress: 'Api/Usersinfo/getDefaultAddress', // 获取用户默认地址
 	SaveAddress: 'Api/Usersinfo/saveAddress', // 增加用户地址
@@ -40,8 +40,133 @@ const url = {
 	LotteryReceipt: 'Api/Lottery/receipt', // 奖品签收
 	
 	OrderInfo: 'Api/Order/getOrderInfo', // 获取订单详情
+	ShopInfo: '/Api/Group/getShopInfo', // 获取商家详情
+	
+	getParterConfig: 'Api/Usersinfo/getParConfig' ,// 成为合伙人配置
+	myTrade: 'Api/TradeMarket/usersAccount' ,// 我的通用券账户
+	tradeList:'Api/TradeMarket/getTradeMarketList' ,// 交易列表
+	trade: 'Api/TradeMarket/buyMarket' ,//购买通用券
+	releaseMy: 'Api/TradeMarket/createTrade' ,// 发布通用券
+	myVerifyList: '/Api/TradeMarket/myVerify', // 通用券列表
+	setWhiteList: 'Api/Usersinfo/setWhiteList', // 编辑白名单
+	getRateList: 'Api/TradeMarket/getRateList', // 汇率变动
 }
 
+/**
+ * @param {Object} data
+ * 获取商家详情
+ */
+export function getRateListApi(data) {
+	return request.request({
+		url: url.getRateList,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 获取商家详情
+ */
+export function setWhiteListApi(data) {
+	return request.request({
+		url: url.setWhiteList,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 获取商家详情
+ */
+export function myVerifyListApi(data) {
+	return request.request({
+		url: url.myVerifyList,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 购买通用券
+ */
+export function releaseMy(data) {
+	return request.request({
+		url: url.releaseMy,
+		method: 'post',
+		data
+	})
+}
+
+/**
+ * @param {Object} data
+ * 购买通用券
+ */
+export function trade(data) {
+	return request.request({
+		url: url.trade,
+		method: 'post',
+		data
+	})
+}
+
+/**
+ * @param {Object} data
+ * 交易列表
+ */
+export function tradeList(data) {
+	return request.request({
+		url: url.tradeList,
+		method: 'post',
+		data
+	})
+}
+
+
+/**
+ * @param {Object} data
+ * 我的通用券账户
+ */
+export function myTrade(data) {
+	return request.request({
+		url: url.myTrade,
+		method: 'post',
+		data
+	})
+}
+
+/**
+ * @param {Object} data
+ * 合伙人配置
+ */
+export function getParterConfig(data) {
+	return request.request({
+		url: url.getParterConfig,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 创建合伙人订单
+ */
+export function createOrderParter(data) {
+	return request.request({
+		url: url.OrderParter,
+		method: 'post',
+		data
+	})
+}
+/**
+ * @param {Object} data
+ * 获取商家详情
+ */
+export function getShopInfoApi(data) {
+	return request.request({
+		url: url.ShopInfo,
+		method: 'post',
+		data
+	})
+}
 
 /**
  * @param {Object} data

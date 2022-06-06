@@ -58,21 +58,34 @@
 				</view>
 			</view>
 			<view class="goods-name-line">
-				<text>{{detail.goods_name}}</text>
+				<view>{{detail.goods_name}}</view>
+				<view class="goods-detail">{{detail.subtitle}}</view>
+				<!-- <view>餐饮抵用券</view>
+				<view class="goods-detail">门店消费抵扣券（全国通用）</view> -->
 			</view>
-			<view class="goods-other-line flex-title">
+			<view class="goods-other-line flex-title" v-if="detail.sales == 1">
 				<view class="goods-other-left">
 					<text>快递 卖家承担</text>
 				</view>
 				<view class="goods-other-right">
-					<text>销量{{detail.get_num}}件</text>
+					<text>销量{{detail.sales}}件</text>
 				</view>
+			</view>
+			<view class="goods-other-line flex-title" v-else>
+				<view class="active">已激活：{{detail.sales}}</view>
+				<view class="destory">已核销：{{detail.verify_num}}</view>
+				<view class="residue">剩余：{{detail.stock-detail.sales}}</view>
 			</view>
 		</view>
 
 		<view class="shop-list">
+			<view class="shop-list-top" v-if="detail.goods_class==2">
+				<view class="viewMore" @click="viewMoreFun">查看更多</view>
+				<uni-icons type="top" size="28" v-if="isViewMore" color="red"></uni-icons>
+				<uni-icons type="bottom" size="28" v-else color="red"></uni-icons>
+			</view>
 			<view @click="toShopHtml(item, index)" class="shop-item flex-center-y"
-				v-for="(item, index) in detail.shop_list" :key="index">
+				v-for="(item, index) in list" :key="index">
 				<image class="shop-img" :src="$util.img(item.logo)" mode="aspectFit"></image>
 				<view class="shop-detail">
 					<view class="shop-detail-left">
@@ -111,7 +124,7 @@
 
 <script>
 	import {
-		groupDetailApi
+		groupDetailApi,
 	} from '@/api/tuanApi.js';
 	import moment from 'moment';
 
@@ -125,12 +138,13 @@
 				showHour: 0,
 				showMinute: 0,
 				showSecond: 0,
+				url:'',
 				detail: {
 					begin_time: null,
 					create_time: null,
 					end_time: null,
-					get_num: null,
-					goods_class: null,
+					sales: null,
+					goods_class: null, // 1 实物 2 虚拟
 					goods_id: null,
 					goods_img: "",
 					goods_info: "",
@@ -143,15 +157,19 @@
 					shop_list: [],
 					status: null,
 					team_num: null,
-					shop_list: []
-				}
+					// shop_list: []
+				},
+				list: [], // 详情默认显示10个商家
+				isViewMore: false // 判断 显示10/显示全部
 			}
 		},
 		onLoad(option) {
 			if (option.group_id) {
 				this.group_id = option.group_id;
 			}
-			this.init();
+			this.groupDetail();
+			// console.log(this.detail)
+			
 		},
 		methods: {
 			moment,
@@ -159,11 +177,24 @@
 				this.groupDetail();
 			},
 			initCountDown() {
-				let time = moment(this.detail.end_time * 1000).valueOf() - new Date()
-				this.showDay = moment.duration(time).days();
-				this.showHour = moment.duration(time).hours();
-				this.showMinute = moment.duration(time).minutes();
-				this.showSecond = moment.duration(time).seconds();
+				// console.log('end_time:',this.detail.end_time * 1000);
+				// console.log('new Date():',new Date().getTime());
+				let time = moment(this.detail.end_time * 1000).valueOf() - new Date().getTime()
+				// console.log(time);
+				// var showMonth = moment.duration(time).months()
+				// console.log(showMonth);
+				// this.showDay = moment.duration(time).days();
+				// console.log(this.showDay);
+				// this.showHour = moment.duration(time).hours();
+				// console.log(this.showHour);
+				// this.showMinute = moment.duration(time).minutes();
+				// console.log(this.showMinute);
+				// this.showSecond = moment.duration(time).seconds();
+				// console.log(this.showSecond);
+				this.showDay = Math.floor(time / 1000 / 60 / 60 / 24)
+				this.showHour = Math.floor(time / 1000 / 60 / 60 % 24)
+				this.showMinute = Math.floor(time / 1000 / 60 % 60)
+				this.showMinute = Math.floor(time / 1000 % 60)
 			},
 			async groupDetail() {
 				let _location = uni.getStorageSync('location')
@@ -173,6 +204,15 @@
 					latitude: _location.latitude || 25.81751,
 				});
 				this.detail = res.data.data;
+				var title = this.detail.goods_name;
+				uni.setNavigationBarTitle({
+				    title: title
+				});
+				// 默认显示10个门店
+				if(this.detail.shop_list)this.list = this.detail.shop_list.length>10? this.detail.shop_list.slice(0,10):this.detail.shop_list
+				
+				// var reg = /\/h5/ig
+				// this.detail.goods_info = this.detail.goods_info.replaceAll(reg,'/')
 				this.initCountDown();
 			},
 			slidChange(event) {
@@ -188,27 +228,66 @@
 					this.$util.redirectTo('/pages/login/login', undefined, 'reLaunch');
 					return;
 				}
+				
 				this.$util.redirectTo('/pages/goods/goods_pay', {
-					...this.detail
-					// group_id: this.detail.group_id,
-					// goods_class: this.detail.goods_class,
-					// order_price: this.detail.price,
+					// ...this.detail
+					group_id: this.detail.group_id,
+					goods_class: this.detail.goods_class,
+					order_price: this.detail.price,
+					goods_img: this.detail.goods_img,
+					price: this.detail.goods_price
 				});
 			},
 
 			// 打开地图
 			openMap(item, index) {
-				uni.openLocation({
-					name: item.site_name,
-					address: item.full_address + item.address,
-					latitude: +item.latitude,
-					longitude: +item.longitude
+				const lat =item.latitude;
+				const lon = item.longitude;
+				console.log(lat);
+				console.log(lon);
+				// uni.openLocation({
+				// 	// name: item.site_name,
+				// 	// address: item.full_address + item.address,
+				// 	// latitude: +item.latitude,
+				// 	// longitude: +item.longitude,
+				// 	latitude: parseFloat(lat),
+				// 	longitude: parseFloat(lon),
+				// 	success: function () {
+				// 	console.log('success');
+				// 	}
+				// });
+				// var _this = this
+				// console.log(this)
+				  // this.$jsonp('https://apis.map.qq.com/ws/geocoder/v1/?', {
+				  //   location: lat + ',' + lon, // 经纬度
+				  //   key: 'V74BZ-Z5OCD-3AU4J-PCWL2-GRUQ6-FLFP4', // 创建应用的钥匙
+				  //   output: 'jsonp' ,// output必须jsonp   不然会超时
+				  // }).then(res => {
+				  //   console.log(res, '腾讯地图')
+				  // })
+				  uni.navigateTo({
+				     url: '/pages/goods/webView?url=https://3gimg.qq.com/lightmap/v1/marker/?marker=coord:'+lat+','+lon+'&referer=myApp&key=V74BZ-Z5OCD-3AU4J-PCWL2-GRUQ6-FLFP4'
+				  })
+				
+			},
+			async toShopHtml(item, index) {
+				this.$util.redirectTo('/pages/goods/goods_rich', {
+					shop_id: item.shop_id
 				})
 			},
-			toShopHtml(item, index) {
-				this.$util.redirectTo('/pages/goods/goods_rich', {
-					html: item.goods_content
+			viewMoreFun() {
+				// debugger
+				this.isViewMore = !this.isViewMore
+				this.$util.showToast({
+					title: '加载中',
+					icon: 'loading',
+					duration: '200'
 				})
+				if(this.isViewMore) { // 显示全部
+					this.list = this.detail.shop_list
+				}else{
+					this.list = this.detail.shop_list.length>10? this.detail.shop_list.slice(0,10):this.detail.shop_list
+				}
 			}
 		}
 	}
@@ -221,6 +300,20 @@
 
 	.shop-list {
 		padding: 20rpx;
+		
+		.shop-list-top {
+			margin-bottom: 10rpx;
+			padding-right: 8rpx;
+			color: #ff0000;
+			
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-end;
+		}
+		
+		.viewMore {
+			font-size: 38rpx;
+		}
 
 		.shop-item {
 			background-color: $white-color;
@@ -308,7 +401,7 @@
 		}
 	}
 
-	$slid-height: 600rpx;
+	$slid-height: 520rpx;
 
 	.slid-wrap {
 		position: relative;
@@ -435,6 +528,20 @@
 			font-size: $font-32;
 			font-weight: bold;
 			margin: 20rpx 0;
+			
+			
+			view {
+				display: inline-block;
+			}
+			
+			
+			.goods-detail {
+				width: 240rpx;
+				font-size: $font-24;
+				color: #696bcf;
+				margin-left: 24rpx;
+				vertical-align: middle;
+			}
 		}
 
 		.goods-other-line {

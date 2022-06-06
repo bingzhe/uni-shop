@@ -12,49 +12,52 @@
 			<cover-view class="n-tabs-bar" v-bind:style="[tabBarSide]"></cover-view>
 		</cover-view>
 		<view class="n-tabs-wrapper-empty"></view>
-
-		<view class="list-wrap">
-			<view v-if="list.length>0" class="list-body order-list">
-				<view @click="toOrderDetail(item, index)" class="order-item" v-for="(item, index) in list" :key="index">
-					<view class="goods-card flex-title">
-						<image class="goods-img" :src="$util.img(item.image_url)" mode="aspectFit"></image>
-						<view class="goods-detail-wrap">
-							<view class="goods-detail-top">
-								<view class="goods-detail-name">
-									<text>{{item.goods_name}}</text>
+		
+		<view class="list-wrap" :style="{'height':scrollHeight+'px'}" style="overflow: hidden;">
+			<!-- <view class="list-wrap"> -->
+			<movable-refresh ref="movableRefresh" :scrollHeight="scrollHeight" @onScroll="onScroll" noMoreText="" :refreshSuccessText="refreshSuccessText" @refresh="refresh" :noMore="noMore">
+					<view v-if="list.length>0" class="list-body order-list">
+						<view @click="toOrderDetail(item, index)" class="order-item" v-for="(item, index) in list" :key="index">
+							<view class="goods-card flex-title">
+								<image class="goods-img" :src="$util.img(item.image_url)" mode="aspectFit"></image>
+								<view class="goods-detail-wrap">
+									<view class="goods-detail-top">
+										<view class="goods-detail-name">
+											<text>{{item.goods_name}}</text>
+										</view>
+									</view>
+									<view class="goods-detail-bottom">
+										<view class="goods-detail-price-line flex-title">
+											<view class="goods-detail-price">
+												<text>{{item.order_price}}</text>
+											</view>
+											<view class="goods-detail-num">
+												<text>x1</text>
+											</view>
+										</view>
+									</view>
 								</view>
 							</view>
-							<view class="goods-detail-bottom">
-								<view class="goods-detail-price-line flex-title">
-									<view class="goods-detail-price">
-										<text>{{item.order_price}}</text>
-									</view>
-									<view class="goods-detail-num">
-										<text>x1</text>
-									</view>
+							<view class="order-other flex-title">
+								<view class="order-status-text">
+									<text>{{formatStatus(item.order_status)}}</text>
+								</view>
+								<view class="order-price">
+									<text>实付款：</text>
+									<text>￥{{item.order_price}}</text>
+								</view>
+							</view>
+							<view v-if="item.order_status == 2" class="order-control-wrap">
+								<view @click.stop="receiptClick(item)" class="order-control-btn receipt-btn">
+									<text>签收</text>
 								</view>
 							</view>
 						</view>
 					</view>
-					<view class="order-other flex-title">
-						<view class="order-status-text">
-							<text>{{formatStatus(item.order_status)}}</text>
-						</view>
-						<view class="order-price">
-							<text>实付款：</text>
-							<text>￥{{item.order_price}}</text>
-						</view>
+					<view v-else class="list-empty">
+						<text>暂无数据</text>
 					</view>
-					<view v-if="item.order_status == 2" class="order-control-wrap">
-						<view @click.stop="receiptClick(item)" class="order-control-btn receipt-btn">
-							<text>签收</text>
-						</view>
-					</view>
-				</view>
-			</view>
-			<view v-else class="list-empty">
-				<text>暂无数据</text>
-			</view>
+			</movable-refresh>
 		</view>
 
 	</view>
@@ -62,6 +65,7 @@
 
 <script>
 	import moment from 'moment';
+	import movableRefresh from '@/components/zyq-movableRefresh/zyq-movableRefresh.vue'
 
 	import {
 		receiptApi,
@@ -69,6 +73,9 @@
 	} from '@/api/tuanApi.js';
 
 	export default {
+		components: {
+			movableRefresh
+		},
 		data() {
 			return {
 				cashType: 0,
@@ -78,10 +85,17 @@
 					order_id: ''
 				},
 				// 0全部1待支付2待发货3待收货4已完成（不传查全部）
-				searchParam: {}
+				searchParam: {},
+				scrollHeight: 300, // 用于获取屏幕高度
+				refreshSuccessText: '刷新成功', // 用于显示刷新后文字
+				noMore: true, // 上拉加载
 			};
 		},
 		onLoad(option) {
+			// 获取屏幕高度
+			let system = uni.getSystemInfoSync()
+			this.scrollHeight = system.windowHeight - system.statusBarHeight - 80
+			// 获取订单数据
 			this.getOrderList();
 		},
 		methods: {
@@ -108,7 +122,7 @@
 			},
 			formatStatus(status) {
 				if (status == 0) {
-					return '待支付';
+					return '已支付';
 				}
 				if (status == 1) {
 					return '待发货';
@@ -131,6 +145,7 @@
 				this.list = res.data.data;
 			},
 			toOrderDetail(item, index) {
+				item.join_status = 1 // 写死为了页面判断统一 并且这里面都是中产品的
 				this.$util.redirectTo('/page_my/orderDetail', {
 					detail: JSON.stringify(item)
 				});
@@ -151,7 +166,35 @@
 						}
 					}
 				})
-			}
+			},
+			// 下拉刷新
+			async refresh(){
+				// this.noMore = true
+				this.refreshSuccessText = '刷新成功'
+				let res = await getOrderListApi(this.searchParam)
+				if(this.$refs.movableRefresh){
+					let that = this
+					setTimeout(function(){
+						if(res.data.code == 200 ){
+							this.list = res.data.data
+							this.noMore = true
+						}else{
+							that.refreshSuccessText = '刷新失败'
+						}
+						that.$refs.movableRefresh.endLoad()		//刷新结束
+					},1000)
+				} 
+			},
+			// 上拉加载
+			// loadMore(){
+			// 	this.noMore = true
+			// 	if(this.noMore){
+			// 		return
+			// 	}
+			// },
+			onScroll(scrollTop){
+				this.scrollTop = scrollTop
+			},
 		}
 	}
 </script>
@@ -226,6 +269,9 @@
 	}
 	.list-wrap {
 		margin: 0;
+	}
+	.list-wrap /deep/ .uni-scroll-view {
+		background-color: #f3f4f8;
 	}
 	.order-list {
 		padding: 30rpx 20rpx 60rpx;

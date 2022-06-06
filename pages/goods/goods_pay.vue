@@ -11,13 +11,13 @@
 								<text>余额支付</text>
 							</label>
 						</view>
-						<view class="paytype-line flex-center-y">
+						<!-- <view class="paytype-line flex-center-y">
 							<image class="paytype-icon" src="/static/imgs/alipay.png" mode="aspectFit"></image>
 							<label>
 								<radio color="#fe543a" style="transform:scale(0.7)" value="1" :checked="payType == 1" />
 								<text>支付宝支付</text>
 							</label>
-						</view>
+						</view> -->
 						<view class="paytype-line flex-center-y">
 							<image class="paytype-icon" src="/static/imgs/wxpay.png" mode="aspectFit"></image>
 							<label>
@@ -161,7 +161,7 @@
 				showPay: false,
 				detail: {},
 				defaultAddress: {},
-				payType: 1, //支付方式0余额支付，1支付宝h5，2微信公众号，3微信小程序
+				payType: 0, //支付方式0余额支付，1支付宝h5，2微信公众号，3微信小程序
 				goods_class: 1, //1代表实体2代表虚拟
 				pay_param: {
 					group_id: '',
@@ -183,6 +183,7 @@
 			}
 		},
 		onLoad(option) {
+
 			if (Object.keys(option).length > 0) {
 				this.detail = {
 					...option

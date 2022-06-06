@@ -77,6 +77,8 @@
 					<!-- <view class="field-c-row">手续费比例：{{poundageRate *100}}%</view> -->
 					<view class="field-c-row">手续费比例：{{cashType?proportionIntegral:poundageRate}}%
 						{{serveCharge}}
+						<text v-if="cashType==1&&proportionIntegral_fixed!=0">+{{proportionIntegral_fixed}}/单笔</text>
+						<text v-if="cashType==0&&poundageRate_fixed!=0">+{{poundageRate_fixed}}/单笔</text>
 					</view>
 					<view class="field-c-row">手续费：{{poundage}}</view>
 					<view class="field-c-row">实际到账金额：{{arrivalPoint}}</view>
@@ -138,6 +140,8 @@
 				tabBarSide: '',
 				poundageRate: 0, //手续费余额比例 5%
 				proportionIntegral: 0, //积分比例
+				poundageRate_fixed: 0, // 余额单笔手续费
+				proportionIntegral_fixed: 0, // 积分单笔手续费
 				poundage: 0, //手续费
 				arrivalPoint: 0, //实际到账金额
 				userId: '', //当前账号UID
@@ -187,7 +191,6 @@
 				this.cashType = type;
 				this.account = 0
 				if (type == 0) {
-					console.log(111);
 					this.nickname = '开户姓名'
 					this.updateAccount = '银行卡号'
 					this.type = 1
@@ -229,13 +232,16 @@
 			},
 			//限制输入金额不能超过俩个小数点
 			inputChange(value) {
-				if (this.cashType == 1) {
+				if (this.cashType == 1) { // 0 余额 1 积分
 					if (value) {
 						value.target.value = (value.target.value.match(/^\d*(\.?\d{0,2})/g)[0]) || null
 						this.$nextTick(() => {
 							this.money = value.target.value
-							this.poundage = this.money * (this.poundageRate / 100)
-							this.arrivalPoint = this.money - this.money * (this.poundageRate / 100)
+							this.poundage = this.money * (this.proportionIntegral / 100)
+							this.poundage = this.poundage+parseFloat(this.proportionIntegral_fixed)
+							this.poundage = Number(this.poundage).toFixed(2)
+							this.arrivalPoint = this.money - this.poundage
+							this.arrivalPoint = Number(this.arrivalPoint).toFixed(2)
 						})
 					}
 				} else {
@@ -244,7 +250,10 @@
 						this.$nextTick(() => {
 							this.money = value.target.value
 							this.poundage = this.money * (this.poundageRate / 100)
-							this.arrivalPoint = this.money - this.money * (this.poundageRate / 100)
+							this.poundage = this.poundage+parseFloat(this.poundageRate_fixed)
+							this.poundage = Number(this.poundage).toFixed(2)
+							this.arrivalPoint = this.money - this.poundage
+							this.arrivalPoint = Number(this.arrivalPoint).toFixed(2)
 						})
 					}
 				}
@@ -252,11 +261,14 @@
 			// 取用户信息
 			getUserInfo() {},
 
-			//获取手续费比例
+			//获取手续费比例 手续费
 			async getPoundageRate() {
 				let res = await withdrawConfigApi();
 				let data = res.data.data
-				this.poundageRate = data[0].withdraw_rate
+				this.poundageRate = data[1].withdraw_rate
+				this.proportionIntegral = data[0].withdraw_rate
+				this.poundageRate_fixed = data[1].withdraw_fixed
+				this.proportionIntegral_fixed = data[0].withdraw_fixed
 			},
 			//获取服务费
 			getServeCharge() {},
@@ -274,7 +286,6 @@
 
 			// 跳转提现明细
 			toTxBill() {
-				console.log(11111111);
 				uni.navigateTo({
 					url: '/page_my/txDetail'
 				})
@@ -325,17 +336,23 @@
 				}
 				let res = await withdrawApi(data);
 				let tit = res.data.data
+				var that = this
 				this.$util.showToast({
-					title: '申请成功！请等待'
+					title: '申请成功！请等待',
+					success: function(){
+						if (cashType == 2) {
+							that.userInfo.balance_money = that.userInfo.balance_money - that.money
+						} else {
+							that.userInfo.point = that.userInfo.point - that.money
+						}
+						uni.setStorageSync('userInfo', that.userInfo)
+						setTimeout(function(){
+							uni.navigateBack({})
+						},2000)
+					}
 				})
 
-				if (cashType == 2) {
-					this.userInfo.balance_money = this.userInfo.balance_money - this.money
-				} else {
-					this.userInfo.point = this.userInfo.point - this.money
-				}
-				uni.setStorageSync('userInfo', this.userInfo)
-				uni.navigateBack({})
+				
 			}
 		}
 	}

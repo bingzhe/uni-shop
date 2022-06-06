@@ -18,7 +18,7 @@
 			uni.removeStorageSync('webviewTitle')
 			if (option.link) {
 				this.link = decodeURI(option.link);
-				// this.link = option.link
+				this.link = option.link
 				console.log(this.link)
 			} else {
 				this.init();
@@ -27,7 +27,7 @@
 		methods: {
 			init() {
 				this.link = uni.getStorageSync('webviewUrl')
-				uni.removeStorageSync('webviewUrl')
+				// uni.removeStorageSync('webviewUrl')
 			}
 		}
 	};

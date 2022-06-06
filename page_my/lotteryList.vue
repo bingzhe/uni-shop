@@ -11,57 +11,64 @@
 		</cover-view>
 		<view class="n-tabs-wrapper-empty"></view>
 
-		<view class="list-wrap">
-			<view v-if="list.length>0" class="list-body lottery-list">
+		<view class="list-wrap" :style="{'height':scrollHeight+'px'}" style="overflow: hidden;">
+			<movable-refresh ref="movableRefresh" :scrollHeight="scrollHeight" @onScroll="onScroll" noMoreText="" :refreshSuccessText="refreshSuccessText" @refresh="refresh" :noMore="noMore">
+				<view v-if="list.length>0" class="list-body lottery-list">
 
-				<view class="lottery-item" v-for="(item, index) in list" :key="index">
-					<view v-if="item.is_get == 0" class="detail_ct">
-						<view class="detail_ct_st">
-							<view class="detail_ct_st_text">未中奖</view>
-							<view class="detail_ct_st_time">
-								{{moment(item.create_time*1000).format('YYYY-MM-DD HH:mm:ss')}}
-							</view>
-						</view>
-					</view>
-					<view @click="lotteryClick(item, index)" v-if="item.is_get == 1" class="detail_ct">
-						<view class="flex-center-y">
-							<image class="goods-img" :src="$util.img(item.goods_img)" mode="aspectFit"></image>
-							<view class="detail_ct_st">
-								<view class="detail_ct_st_text">{{item.goods_name}}</view>
-								<view class="detail_ct_st_time">
-									{{moment(item.create_time*1000).format('YYYY-MM-DD HH:mm:ss')}}
+					<view class="lottery-item" v-for="(item, index) in list" :key="index">
+						<view v-if="item.is_get == 0" class="detail_ct">
+
+							<view class="flex-center-y">
+								<image class="goods-img" :src="$util.img(item.goods_img)" mode="aspectFit"></image>
+								<view class="detail_ct_st">
+									<view class="detail_ct_st_text">未中奖</view>
+									<view class="detail_ct_st_time">
+										{{moment(item.create_time*1000).format('YYYY-MM-DD HH:mm:ss')}}
+									</view>
 								</view>
 							</view>
 						</view>
+						<view @click="lotteryClick(item, index)" v-if="item.is_get == 1" class="detail_ct">
+							<view class="flex-center-y">
+								<image class="goods-img" :src="$util.img(item.goods_img)" mode="aspectFit"></image>
+								<view class="detail_ct_st">
+									<view class="detail_ct_st_text">{{item.goods_name}}</view>
+									<view class="detail_ct_st_time">
+										{{moment(item.create_time*1000).format('YYYY-MM-DD HH:mm:ss')}}
+									</view>
+								</view>
+							</view>
 
-						<view v-if="item.status == 0" class="detail_ct_money">
-							<text>请选择收货地址</text>
-						</view>
-						<view v-if="item.status == 1" class="detail_ct_money">
-							<text>待发货</text>
-						</view>
-						<view v-if="item.status == 2" class="detail_ct_money">
-							<text>待收货</text>
-							<!-- <view class="receipt-btn">
-								<text>签收</text>
-							</view> -->
-						</view>
-						<view v-if="item.status == 3" class="detail_ct_money">
-							<text>已完成</text>
+							<view v-if="item.status == 0" class="detail_ct_money">
+								<text>请选择收货地址</text>
+							</view>
+							<view v-if="item.status == 1" class="detail_ct_money">
+								<text>待发货</text>
+							</view>
+							<view v-if="item.status == 2" class="detail_ct_money">
+								<text>待收货</text>
+								<!-- <view class="receipt-btn">
+									<text>签收</text>
+								</view> -->
+							</view>
+							<view v-if="item.status == 3" class="detail_ct_money">
+								<text>已完成</text>
+							</view>
 						</view>
 					</view>
-				</view>
 
-			</view>
-			<view v-else class="list-empty">
-				<text>暂无数据</text>
-			</view>
+				</view>
+				<view v-else class="list-empty">
+					<text>暂无数据</text>
+				</view>
+			</movable-refresh>
 		</view>
 	</view>
 </template>
 
 <script>
 	import moment from 'moment';
+	import movableRefresh from '@/components/zyq-movableRefresh/zyq-movableRefresh.vue'
 	import {
 		lotteryListApi,
 		addLotteryAddressApi
@@ -69,6 +76,9 @@
 
 	// 中奖时订单状态0待确认1待发货2已发货3已完成
 	export default {
+		components: {
+			movableRefresh
+		},
 		data() {
 			return {
 				cashType: 0,
@@ -78,10 +88,18 @@
 				addParam: {
 					id: '', // 奖品id
 					address_id: '', // 地址id
-				}
+				},
+				scrollHeight: 300, // 用于获取屏幕高度
+				refreshSuccessText: '刷新成功', // 用于显示刷新后文字
+				noMore: true, // 上拉加载
 			}
 		},
 		onLoad() {
+
+			// 获取屏幕高度
+			let system = uni.getSystemInfoSync()
+			this.scrollHeight = system.windowHeight - system.statusBarHeight - 50
+
 			this.init();
 		},
 		methods: {
@@ -90,7 +108,7 @@
 				this.lotteryList();
 			},
 			resetOrderList() {
-				
+
 			},
 			async lotteryList() {
 				let res = await lotteryListApi(this.searchParam);
@@ -147,7 +165,26 @@
 					this.searchParam.is_get = 0;
 				}
 				this.lotteryList();
-			}
+			},
+			// 下拉刷新
+			async refresh() {
+				this.refreshSuccessText = '刷新成功'
+				let res = await lotteryListApi(this.searchParam)
+				if (this.$refs.movableRefresh) {
+					let that = this
+					setTimeout(function() {
+						if (res.data.code == 200) {
+							this.list = res.data.data
+						} else {
+							that.refreshSuccessText = '刷新失败'
+						}
+						that.$refs.movableRefresh.endLoad() //刷新结束
+					}, 1000)
+				}
+			},
+			onScroll(scrollTop){
+				this.scrollTop = scrollTop
+			},
 		}
 	}
 </script>

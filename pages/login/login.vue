@@ -6,105 +6,133 @@
 			<view>欢迎来到优团客</view>
 		</view>
 
-		<view class="whiteBg" v-if="formItem === 1">
+		<view class="whiteBg">
 			<view class="title acea-row">
-				<view class="item" :class="current === index ? 'on' : ''" v-for="(item, index) in navList"
-					@click="navTap(index)" :key="index">{{ item }}</view>
+				<view :class="formItem === index+1 ? 'item on' : ''" v-for="(item, index) in navList"
+					@click="navTap(index+1)" :key="index">{{ item }}</view>
 			</view>
-			<view class="list">
-				<view class="item">
-					<view class="acea-row row-between-wrapper">
-						<input @input="judge" type="text" maxlength="16" placeholder="请输入账号" v-model="account" />
+			<template v-if="formItem === 1">
+
+				<view class="list">
+					<view class="item">
+						<view class="acea-row row-between-wrapper">
+							<input @input="judge" type="text" maxlength="16" placeholder="请输入账号" v-model="account" />
+						</view>
+					</view>
+					<view class="item">
+						<view class="acea-row row-between-wrapper">
+							<input @confirm="submit" type="password" maxlength="16" placeholder="输入密码"
+								v-model="password" />
+						</view>
 					</view>
 				</view>
-				<view class="item">
-					<view class="acea-row row-between-wrapper">
-						<input @confirm="submit" type="password" maxlength="16" placeholder="输入密码" v-model="password" />
+				<view class="logon" @click="submit">登录</view>
+				<view class="Logintip">
+					<view style="margin-top: 20rpx;">
+						第一次使用?
+						<!-- <text @click="formItem = 2" class="font-color-red" style="margin-left: 30rpx;">立即注册</text> -->
+						<text @click="findPwd" class="font-color-red" style="margin-left: 30rpx;">忘记密码？</text>
+					</view>
+					<view style="line-height: 40rpx;margin-top: 40rpx;">
+						<!-- #ifdef H5 -->
+						<text @click="changeClient" class="font-color-red" style="margin: 10rpx;">切换到商家端</text>
+						<!-- #endif -->
+					</view>
+					<view class="protocol-style">
+						<checkbox-group @change="agreeProtocol">
+							<label>
+								<checkbox color="#DC201F" style="transform:scale(0.7)" value="1" />
+							</label>
+						</checkbox-group>
+						<view class="protocol-text">
+							<text>我已阅读并同意</text>
+							<text class="font-color-red"
+								@click="$util.diyRedirectTo({wap_url: '/hybrid/html/yhxy.html',title: '用户协议'})">
+								《用户协议》
+							</text>
+							<!-- <text @click="$util.redirectTo('/pages/my/protocol?title=用户协议&type=0')" class="font-color-red">《用户协议》</text> -->
+							<text>和</text>
+							<text class="font-color-red"
+								@click="$util.diyRedirectTo({wap_url: '/hybrid/html/yszc.html',title: '隐私政策'})">
+								《隐私政策》
+							</text>
+							<!-- <text @click="$util.redirectTo('/pages/my/protocol?title=隐私政策&type=1')" class="font-color-red">《隐私政策》</text> -->
+						</view>
 					</view>
 				</view>
-			</view>
-			<view class="logon" @click="submit">登录</view>
-			<view class="tip">
-				<view>
-					第一次使用?
-					<text @click="formItem = 2" class="font-color-red" style="margin-left: 30rpx;">立即注册</text>
-				</view>
-				<view style="line-height: 40rpx;">
-					<text @click="findPwd" class="font-color-red" style="margin: 10rpx;">忘记密码？</text>
-					<!-- #ifdef H5 -->
-					<text @click="changeClient" class="font-color-red" style="margin: 10rpx;">切换到商家端</text>
-					<!-- #endif -->
-				</view>
-			</view>
 
-			<!-- <view class="tip" style="margin: 0 0 30rpx; padding: 0; height: 30rpx; line-height: 30rpx;">
-				忘记了密码?
-				<text class="font-color-red" @click="toRetrieve" style="margin-left: 30rpx;">找回密码</text>
-			</view> -->
+				<!-- <view class="tip" style="margin: 0 0 30rpx; padding: 0; height: 30rpx; line-height: 30rpx;">
+					忘记了密码?
+					<text class="font-color-red" @click="toRetrieve" style="margin-left: 30rpx;">找回密码</text>
+				</view> -->
 
-			<view class="protocol-style">
-				<checkbox-group @change="agreeProtocol">
-					<label>
-						<checkbox color="#DC201F" style="transform:scale(0.7)" value="1" />
-					</label>
-				</checkbox-group>
-				<view class="protocol-text">
-					<text>我已阅读并同意</text>
-					<text class="font-color-red"
-						@click="$util.diyRedirectTo({wap_url: '/hybrid/html/yhxy.html',title: '用户协议'})">
-						《用户协议》
-					</text>
-					<!-- <text @click="$util.redirectTo('/pages/my/protocol?title=用户协议&type=0')" class="font-color-red">《用户协议》</text> -->
-					<text>和</text>
-					<text class="font-color-red"
-						@click="$util.diyRedirectTo({wap_url: '/hybrid/html/yszc.html',title: '隐私政策'})">
-						《隐私政策》
-					</text>
-					<!-- <text @click="$util.redirectTo('/pages/my/protocol?title=隐私政策&type=1')" class="font-color-red">《隐私政策》</text> -->
+				<!-- <view class="protocol-style">
+					<checkbox-group @change="agreeProtocol">
+						<label>
+							<checkbox color="#DC201F" style="transform:scale(0.7)" value="1" />
+						</label>
+					</checkbox-group>
+					<view class="protocol-text">
+						<text>我已阅读并同意</text>
+						<text class="font-color-red"
+							@click="$util.diyRedirectTo({wap_url: '/hybrid/html/yhxy.html',title: '用户协议'})">
+							《用户协议》
+						</text>
+						<text @click="$util.redirectTo('/pages/my/protocol?title=用户协议&type=0')" class="font-color-red">《用户协议》</text>
+						<text>和</text>
+						<text class="font-color-red"
+							@click="$util.diyRedirectTo({wap_url: '/hybrid/html/yszc.html',title: '隐私政策'})">
+							《隐私政策》
+						</text>
+						<text @click="$util.redirectTo('/pages/my/protocol?title=隐私政策&type=1')" class="font-color-red">《隐私政策》</text>
+					</view>
+				</view> -->
+				<!-- <view class="protocol-empty-style"></view> -->
+
+			</template>
+			<template v-else>
+
+				<view class="list">
+					<view class="item">
+						<view>
+							<input name="account" @input="judge" type="text" maxlength="16" placeholder="请输入账号"
+								v-model="account" />
+						</view>
+					</view>
+					<!-- <view class="item">
+						<view class="align-left">
+							<input name="verifyCode" type="number" maxlength="6" placeholder="填写验证码" class="codeIput"
+								v-model="captcha" />
+							<button class="code" :disabled="disabled" :class="disabled === true ? 'on' : ''"
+								@click="code">获取验证码</button>
+						</view>
+					</view> -->
+					<view class="item">
+						<view>
+							<input name="password" type="password" maxlength="16" placeholder="填写您的登录密码"
+								v-model="password" />
+						</view>
+					</view>
+					<view class="item">
+						<view>
+							<input name="inviteCode" type="text" placeholder="邀请码" v-model="inviteCode" />
+						</view>
+					</view>
 				</view>
-			</view>
-			<!-- <view class="protocol-empty-style"></view> -->
-
+				<view class="logon" @click="register">注册</view>
+				<view class="tip">
+					已有账号?
+					<text @click="formItem = 1" class="font-color-red">立即登录</text>
+				</view>
+			</template>
 		</view>
 
 		<!-- 注册 -->
-		<view class="whiteBg" v-else>
+		<!-- <view class="whiteBg">
 			<view class="title acea-row row-between-wrapper">
 				<view class="item on">注册账号</view>
 			</view>
-			<view class="list">
-				<view class="item">
-					<view>
-						<input name="account" @input="judge" type="text" maxlength="16" placeholder="请输入账号"
-							v-model="account" />
-					</view>
-				</view>
-				<!-- <view class="item">
-					<view class="align-left">
-						<input name="verifyCode" type="number" maxlength="6" placeholder="填写验证码" class="codeIput"
-							v-model="captcha" />
-						<button class="code" :disabled="disabled" :class="disabled === true ? 'on' : ''"
-							@click="code">获取验证码</button>
-					</view>
-				</view> -->
-				<view class="item">
-					<view>
-						<input name="password" type="password" maxlength="16" placeholder="填写您的登录密码"
-							v-model="password" />
-					</view>
-				</view>
-				<view class="item">
-					<view>
-						<input name="inviteCode" type="text" placeholder="邀请码" v-model="inviteCode" />
-					</view>
-				</view>
-			</view>
-			<view class="logon" @click="register">注册</view>
-			<view class="tip">
-				已有账号?
-				<text @click="formItem = 1" class="font-color-red">立即登录</text>
-			</view>
-		</view>
+		</view> -->
 
 	</view>
 </template>
@@ -124,7 +152,7 @@
 		name: "Login",
 		data: function() {
 			return {
-				navList: ["账号登录"],
+				navList: ["账号登录", "注册账号"],
 				current: 0,
 				account: "",
 				password: "",
@@ -165,6 +193,11 @@
 					return
 				}
 				this.protocolAgree = false;
+			},
+			// 登录 注册 切换
+			navTap(index) {
+				this.current = index
+				this.formItem = this.current
 			},
 			async bindOpenId(code) {
 				let res = await openIdApi({
@@ -259,18 +292,25 @@
 					invitation_code: inviteCode
 				};
 				let res = await registerApi(_param);
-				let result = res.data.data;
-				uni.setStorageSync('token', result.token);
-				this.$store.commit('SET_TOKEN', result.token);
-				let resz = await this.GetInfo();
-				this.$util.redirectTo('/pages/index/index');
-				this.$util.showToast({
-					title: '注册成功已自动登录'
-				});
+				// let result = res.data.data;
+				if(res.data.code == 200) {
+					this.$util.showToast({
+						title: '注册成功请登录'
+					});
+					this.inviteCode = ''
+					this.formItem = 1;
+				}else{
+					this.$util.showToast({
+						title: res.data.msg
+					});
+				}
+				// uni.setStorageSync('token', result.token);
+				// this.$store.commit('SET_TOKEN', result.token);
+				// let resz = await this.GetInfo();
 				// this.$util.showToast({
-				// 	title: '注册成功请登录'
+				// 	title: '注册成功已自动登录'
 				// });
-				// this.formItem = 1;
+				
 			},
 
 			judge(e) {
@@ -291,7 +331,7 @@
 					this.account = _str;
 				}, 10)
 			},
-			
+
 			/*微信登录相关  start*/
 			//方法：用来判断是否是微信内置的浏览器
 			isWechat() {
@@ -346,6 +386,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.page-wrap {
+		
+		// min-height: 800rpx;
+	}
 	.hender {
 		margin-top: 50rpx;
 		margin-left: 50rpx;
@@ -369,12 +413,19 @@
 		line-height: 2em;
 		font-size: 0.36 * 100rpx;
 		color: #282828;
-		text-align: left;
+		
 		font-weight: bold;
 		margin-top: 50rpx;
 		margin-bottom: 50rpx;
-		width: 150rpx;
+		// width: 150rpx;
 		text-align: center;
+		
+		display: flex;
+		flex-direction: row;
+		
+		view:nth-child(2) {
+			margin-left: 20px;
+		}
 	}
 
 	.register .whiteBg .title .item~.item {
@@ -466,11 +517,20 @@
 		margin-top: 0.47 * 100rpx;
 	}
 
-	.register .whiteBg .tip {
-		height: 1.1 * 100rpx;
+	.register .whiteBg .Logintip {
+		// height: 110rpx;
 		text-align: center;
-		line-height: 1.05 * 100rpx;
-		font-size: 0.3 * 100rpx;
+		// line-height: 105rpx;
+		font-size: 30rpx;
+		color: #cccccc;
+		display: flex;
+		flex-direction: column;
+	}
+	.register .whiteBg .tip {
+		height: 110rpx;
+		text-align: center;
+		line-height: 105rpx;
+		font-size: 30rpx;
 		color: #cccccc;
 	}
 
@@ -515,11 +575,12 @@
 	}
 
 	.protocol-style {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		height: 120rpx;
+		// position: absolute;
+		// bottom: 100rpx;
+		// left: 0;
+		// width: 100%;
+		// height: 240rpx;
+		margin-top: 200rpx;
 		display: flex;
 		justify-content: center;
 		align-items: center;

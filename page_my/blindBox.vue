@@ -50,7 +50,8 @@
 			:duration="300" bgColor="transparent">
 			<view class="blind-box-popup">
 				<view class="fireworks-wrap">
-					<image v-if="blindDetail.is_get == 1" class="fireworks-bg" src="/static/imgs/fireworksBg.png" mode="aspectFit"></image>
+					<image v-if="blindDetail.is_get == 1" class="fireworks-bg" src="/static/imgs/fireworksBg.png"
+						mode="aspectFit"></image>
 					<!-- <image class="fireworks-img fireworks-img-left" :animation="fireworksLeft"
 						src="/static/imgs/fireworks.png" mode="aspectFit"></image>
 					<image class="fireworks-img fireworks-img-right" :animation="fireworksRight"
@@ -206,16 +207,6 @@
 				this.openRuleBox();
 			},
 			openBlind() {
-				let intervalTime = 100;
-				this.$util.throttle(() => {
-					clearInterval(interval);
-					interval = setInterval(() => {
-						this.blindBoxIndex = this.blindBoxIndex + 1;
-						if (this.blindBoxIndex > 5) {
-							this.blindBoxIndex = 0;
-						}
-					}, intervalTime);
-				});
 				if (this.lottery.users_num <= 0) {
 					this.$util.showToast({
 						title: '抽奖次数不足'
@@ -231,6 +222,17 @@
 					})
 					return;
 				}
+				let intervalTime = 100;
+				this.$util.throttle(() => {
+					clearInterval(interval);
+					interval = setInterval(() => {
+						this.blindBoxIndex = this.blindBoxIndex + 1;
+						if (this.blindBoxIndex > 5) {
+							this.blindBoxIndex = 0;
+						}
+					}, intervalTime);
+				});
+				
 				setTimeout(() => {
 					this.$util.throttle(async () => {
 						await this.usersLottery();
@@ -282,7 +284,7 @@
 		@extend %flex-center;
 		flex-direction: column;
 		padding-top: 200rpx;
-		
+
 		.fireworks-wrap {
 			position: absolute;
 			left: 0;
@@ -291,6 +293,7 @@
 			display: flex;
 			justify-content: center;
 			padding: 0 30rpx;
+
 			.fireworks-bg {
 				position: absolute;
 				top: -240rpx;
@@ -300,6 +303,7 @@
 				// background-color: yellow;
 				// height: 300rpx;
 			}
+
 			.fireworks-img {
 				width: 300rpx;
 				height: 300rpx;
@@ -383,7 +387,9 @@
 			width: 200rpx;
 			height: 180rpx;
 			position: relative;
+
 			&.actived {
+
 				// background-image: radial-gradient(circle, transparent, yellow, transparent);
 				// background-color: yellow;
 				.blind-box-img {
@@ -392,6 +398,7 @@
 					height: 156rpx;
 				}
 			}
+
 			.light-shadow {
 				// position: absolute;
 				// width: 180rpx;
@@ -410,6 +417,7 @@
 				// 	20rpx 0rpx 100rpx 80rpx rgba(yellow, 0.6);
 			}
 		}
+
 		.blind-box-img {
 			width: 140rpx;
 			height: 140rpx;
@@ -423,21 +431,26 @@
 		border: 10rpx solid #ffe5b5;
 		border-radius: 24rpx;
 		color: #ffffff;
+
 		.rule-box-header {
 			height: 80rpx;
 			@extend %flex-center;
 			font-size: $font-32;
 			font-weight: bold;
+
 			.rule-box-title {}
 		}
+
 		.rule-box-body {
 			font-size: $font-24;
 			padding: 0 30rpx;
 			line-height: 36rpx;
 		}
+
 		.rule-box-control-wrap {
 			padding-top: 10rpx;
 			@extend %flex-center;
+
 			.rule-box-confirm-btn {
 				background-color: #ffe5b5;
 				color: #ff7b32;

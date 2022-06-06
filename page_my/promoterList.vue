@@ -12,13 +12,6 @@
 					</view>
 				</view>
 			</view>
-			<!-- <view class="nav acea-row row-around">
-				<view class="item" :class="screen.grade == 0 ? 'on' : ''" @click="checkGrade(0)">一级({{ first||'0' }})
-				</view>
-				<view class="item" :class="screen.grade == 1 ? 'on' : ''" @click="checkGrade(1)">二级({{ second||'0' }})
-				</view>
-			</view> -->
-
 		</view>
 		<view class="list">
 			<view :class="fixedState === true ? 'sortList' : ''">

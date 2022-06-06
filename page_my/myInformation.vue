@@ -9,7 +9,7 @@
 					<image v-else style="width: 100%;height: 100%;border-radius: 50%;" :src="portraitImg"
 						mode="aspectFill"></image>
 				</view>
-				<uni-icons type="forward" size="28"></uni-icons>
+				<uni-icons type="forward" size="18"></uni-icons>
 			</view>
 		</view>
 		<view class="information border_t" @click="phoneShow">
@@ -17,14 +17,14 @@
 			<view class="portrait">
 				<view v-if="userInfo.phone">{{userInfo.phone}}</view>
 				<!-- <view class="">还未绑定手机，请绑定手机号！</view> -->
-				<uni-icons type="forward" size="28"></uni-icons>
+				<uni-icons type="forward" size="18"></uni-icons>
 			</view>
 		</view>
 		<view class="information border_t">
 			<view class="">账号</view>
 			<view class="portrait">
 				<view class="">{{userInfo.username}}</view>
-				<uni-icons type="forward" size="28"></uni-icons>
+				<uni-icons type="forward" size="18"></uni-icons>
 			</view>
 		</view>
 		<view class="changePassword" @click="changePassword()">修改密码</view>
@@ -128,7 +128,6 @@
 			init() {
 				this.userInfo = uni.getStorageSync('userInfo')
 				this.portraitImg = config.imgUrl + this.userInfo.avatar
-				console.log(this.userInfo);
 			},
 			chooseImage() {
 				uni.chooseImage({
@@ -249,7 +248,7 @@
 				if (this.modifyShow) {
 					this.modifyShow = false
 				} else {
-					if(uni.getStorageSync('userInfo').phone) {
+					if(!uni.getStorageSync('userInfo').phone) {
 						this.$util.showToast({
 							title: '请绑定手机号'
 						})
@@ -293,7 +292,7 @@
 				} else {
 					let res = await revisePwdByMobileApi({
 						mobile: this.mobile,
-						code: this.old_password,
+						code: this.yzm,
 						new_password: this.new_password,
 						again_password: this.again_password
 					})

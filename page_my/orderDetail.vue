@@ -72,7 +72,7 @@
 		</view>
 
 		<!-- 核销码 -->
-		<view v-if="detail.verify_info" class="verify-code-wrap">
+		<view v-if="detail.verify_info && detail.goods_class!=2 && detail.join_status!=1" class="verify-code-wrap">
 			<view class="verify-code-header">
 				<text>核销码：</text>
 				<text>{{detail.verify_info.verify_code}}</text>
@@ -100,8 +100,11 @@
 						</view>
 						<view class="goods-detail-bottom">
 							<view class="goods-detail-price-line flex-title">
-								<view class="goods-detail-price">
+								<view class="goods-detail-price" v-if="detail.price">
 									<text>{{detail.price}}</text>
+								</view>
+								<view class="goods-detail-btn" v-if="detail.goods_class==2 && detail.join_status==1">
+									<text class="btn" @click.stop="intoCoupons">去查看</text>
 								</view>
 								<view class="goods-detail-num">
 									<text>x1</text>
@@ -398,6 +401,10 @@
 						}
 					}
 				})
+			},
+			// 进入通用券列表
+			intoCoupons(){
+				this.$util.redirectTo('/page_my/myCoupons')
 			}
 		}
 	}
@@ -541,6 +548,16 @@
 
 				.goods-detail-num {
 					font-size: $font-28;
+				}
+				
+				.goods-detail-btn {
+					margin-left: 10rpx;
+					.btn {
+						padding: 4px 14px;
+						background-color: #ff5454;
+						color: #ffffff;
+						border-radius: 30rpx;
+					}
 				}
 			}
 		}

@@ -5,7 +5,7 @@
 			"style": {
 				"navigationBarBackgroundColor": "#ff5454",
 				"navigationBarTextStyle": "white",
-				"navigationBarTitleText": "首页",
+				"navigationBarTitleText": "优团客",
 				"enablePullDownRefresh": true
 			}
 		}, {
@@ -40,7 +40,9 @@
 				// #ifdef H5
 				"navigationStyle": "default",
 				// #endif
-				"navigationBarTitleText": "详情"
+				// "navigationBarTitleText": "详情",
+				"navigationBarBackgroundColor": "#ff5454",
+				"navigationBarTextStyle": "white"
 			}
 		}, {
 			"path": "pages/goods/goods_pay",
@@ -48,7 +50,9 @@
 				// #ifdef H5
 				"navigationStyle": "default",
 				// #endif
-				"navigationBarTitleText": "支付"
+				"navigationBarTitleText": "支付",
+				"navigationBarBackgroundColor": "#ff5454",
+				"navigationBarTextStyle": "white"
 			}
 		}, {
 			"path": "pages/my/cz",
@@ -57,18 +61,56 @@
 				"navigationBarTextStyle": "white",
 				"navigationBarTitleText": "余额充值"
 			}
-		}, {
+		}, 
+		{
+			"path": "pages/my/cz-parter",
+			"style": {
+				"navigationBarBackgroundColor": "#ff5454",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "余额充值"
+			}
+		}, 
+		{
 			"path": "pages/my/tx",
 			"style": {
 				"navigationBarBackgroundColor": "#ff5454",
 				"navigationBarTextStyle": "white",
 				"navigationBarTitleText": "提现"
 			}
-		}, {
+		}, 
+		{
+			"path": "pages/my/txPoint",
+			"style": {
+				"navigationBarBackgroundColor": "#ff5454",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "提现"
+			}
+		}, 
+		{
 			"path": "pages/goods/goods_rich",
 			"style": {
-				"navigationBarTitleText": "店铺详情"
+				"navigationBarTitleText": "店铺详情",
+				"navigationBarBackgroundColor": "#ff5454",
+				"navigationBarTextStyle": "white"
 			}
+
+		},
+		{
+			"path": "pages/goods/webView",
+			"style": {
+				"navigationBarBackgroundColor": "#ff5454",
+				"navigationBarTextStyle": "white"
+			}
+		
+		},
+		{
+			"path": "pages/trade/index",
+			"style": {
+				"navigationBarBackgroundColor": "#ff5454",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": true
+			}
+		
 		}
 	],
 
@@ -78,7 +120,7 @@
 				"path": "webview/webview",
 				"style": {
 					// #ifdef H5
-					"navigationStyle": "default",
+					"navigationStyle": "custom",
 					// #endif
 					"navigationBarTitleText": "优团客"
 				}
@@ -102,13 +144,21 @@
 						"navigationBarTitleText": "推广统计"
 					}
 				},
+				// {
+				// 	"path": "whitelist",
+				// 	"style": {
+				// 		"navigationBarTitleText": "临时白名单"
+				// 	}
+				// },
 				{
 					"path": "myAddress",
 					"style": {
 						// #ifdef H5
 						"navigationStyle": "default",
 						// #endif
-						"navigationBarTitleText": "我的地址"
+						"navigationBarTitleText": "我的地址",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
 					}
 				},
 				{
@@ -117,7 +167,9 @@
 						// #ifdef H5
 						"navigationStyle": "default",
 						// #endif
-						"navigationBarTitleText": "新增地址"
+						"navigationBarTitleText": "新增地址",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
 					}
 				},
 				{
@@ -126,7 +178,9 @@
 						// #ifdef H5
 						"navigationStyle": "default",
 						// #endif
-						"navigationBarTitleText": "基本信息"
+						"navigationBarTitleText": "基本信息",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
 					}
 				},
 				{
@@ -134,16 +188,27 @@
 					"style": {
 						"navigationBarTitleText": "提现明细"
 					}
-				}, {
+				}, 
+				{
+					"path": "txDetailParter",
+					"style": {
+						"navigationBarTitleText": "提现明细"
+					}
+				},
+				{
 					"path": "myInvolved",
 					"style": {
-						"navigationBarTitleText": "我参与的"
+						"navigationBarTitleText": "我参与的",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
 					}
 
 				}, {
 					"path": "myOrder",
 					"style": {
-						"navigationBarTitleText": "我的订单"
+						"navigationBarTitleText": "我的订单",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
 					}
 				}, {
 					"path": "orderDetail",
@@ -153,7 +218,9 @@
 				}, {
 					"path": "userBillDetail",
 					"style": {
-						"navigationBarTitleText": "明细"
+						"navigationBarTitleText": "明细",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
 					}
 				}, {
 					"path": "blindBox",
@@ -168,7 +235,9 @@
 				}, {
 					"path": "lotteryList",
 					"style": {
-						"navigationBarTitleText": "我的奖品"
+						"navigationBarTitleText": "我的奖品",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
 					}
 				}, {
 					"path": "findPwd",
@@ -178,7 +247,65 @@
 						// #endif
 						"navigationBarTitleText": "找回密码"
 					}
+				},
+				{
+					"path": "parterPage",
+					"style": {
+						"navigationBarTitleText": "分红积分",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
+					}
+				},
+				{
+					"path": "isNotParter",
+					"style": {
+						"navigationBarTitleText": "支付",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
+					}
+				},
+				{
+					"path": "parterPoint",
+					"style": {
+						"navigationBarTitleText": "合伙人积分明细",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
+					}
+				},
+				{
+					"path": "couponsTrade",
+					"style": {
+						"navigationBarTitleText": "通用券交易",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
+					}
+				},
+				{
+					"path": "echarts",
+					"style": {
+						"navigationBarTitleText": "汇率变动",
+						"navigationBarBackgroundColor": "#ff5454",
+						"navigationBarTextStyle": "white"
+					}
+				},
+				{
+					"path": "myCoupons",
+					"style": {
+						"navigationBarTitleText": "通用券"
+						// "navigationBarBackgroundColor": "#ff5454",
+						// "navigationBarTextStyle": "white"
+					}
+				},
+				{
+					"path": "myCouponsDetail",
+					"style": {
+						"navigationBarTitleText": "通用券"
+						// "navigationBarBackgroundColor": "#ff5454",
+						// "navigationBarTextStyle": "white"
+					}
 				}
+				
+				
 			]
 		}
 	],
@@ -208,10 +335,27 @@
 				"selectedIconPath": "static/imgs/tabbar/home_selected.png"
 			},
 			{
+				"pagePath": "pages/trade/index",
+				"text": "转让",
+				"iconPath": "static/imgs/trade/trade.png",
+				"selectedIconPath": "static/imgs/trade/tradeSelect.png"
+				
+			},
+			{
 				"pagePath": "pages/my/my",
 				"text": "我的",
 				"iconPath": "static/imgs/tabbar/my.png",
 				"selectedIconPath": "static/imgs/tabbar/my_selected.png"
+			}
+		]
+	},
+	"condition" : { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [
+			{
+				"name": "", //模式名称
+				"path": "", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
 			}
 		]
 	}

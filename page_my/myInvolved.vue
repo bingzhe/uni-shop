@@ -21,29 +21,29 @@
 			<view class="detail_ct_money">{{item.withdraw_price}}</view>
 		</view> -->
 
-		<view class="list-wrap">
-			<view v-if="list.length>0" class="list-body group-list">
-				<view @click="toDetail(item)" class="group-item" v-for="(item, index) in list" :key="index">
-					<image class="group-img" :src="$util.img(item.image_url)" mode="aspectFit"></image>
-					<view class="group-detail">
-						<view class="group-detail-top flex-title">
-							<view class="group-name">
-								<text>{{item.goods_name}}</text>
-							</view>
-							<view class="group-order">
-								<text v-if="item.join_status == 1" @click.stop="getOrderInfo(item, index)">查看订单</text>
-							</view>
-						</view>
-						<view class="group-detail-bottom flex-title">
-							<view class="left">
-								<!-- <view class="group-tags-wrap">
-									<view class="group-tags team-num">
-										<text>{{item.team_num}}人团</text>
-									</view>
+		<view class="list-wrap" :style="{'height':scrollHeight+'px'}" style="overflow: hidden;">
+			<movable-refresh ref="movableRefresh" :scrollHeight="scrollHeight" @onScroll="onScroll" noMoreText="" :refreshSuccessText="refreshSuccessText" @refresh="refresh" :noMore="noMore">
+				<view v-if="list.length>0" class="list-body group-list">
+					<view @click="toDetail(item)" class="group-item" v-for="(item, index) in list" :key="index">
+						<image class="group-img" :src="$util.img(item.image_url)" mode="aspectFit"></image>
+						<view class="group-detail">
+							<view class="group-detail-top flex-title">
+								<view class="group-name">
+									<text>{{item.goods_name}}</text>
+								</view>
+								<!-- <view class="group-order">
+									<text v-if="item.join_status == 1" @click.stop="getOrderInfo(item, index)">查看订单</text>
 								</view> -->
+							</view>
+							<view class="group-detail-price flex-title">
 								<view class="group-price">
-									<text class="group-price-symbol">￥</text>
-									<text>{{item.price}}</text>
+									<view>
+										<text class="group-price-symbol">￥</text>
+										<text>{{item.price}}</text>
+									</view>
+									<view>
+										<uni-countdown v-if="item.status == 1" :day="item.showDeliveryDay" :hour="item.showDeliveryHour" :minute="item.showDeliveryMinute" :second="item.showDeliverySecond" color="#FFFFFF" background-color="#fd3535"></uni-countdown>
+									</view>
 								</view>
 								<view class="del-price">
 									<text class="label">原价：</text>
@@ -60,34 +60,68 @@
 									</view>
 								</template>
 							</view>
-							<view class="right">
-								<!-- <view v-if="item.join_status == 0" class="group-btn">
-									<text>去分享</text>
-								</view> -->
-								<view v-if="item.join_status == 1" class="group-btn">
-									<text>中产品</text>
+							
+							<view class="group-detail-btn flex-title">
+						
+									<!-- <view v-if="item.join_status == 0" class="group-btn">
+										<text>去分享</text>
+									</view> -->
+									<!-- goods_class  1  实物  2  虚拟 -->
+									<template v-if="item.goods_class == 1">
+										<view v-if="item.join_status == 1" class="group-btn">
+											<text @click.stop="getOrderInfo(item, index)">查看订单</text>
+										</view>
+										<view v-if="item.join_status == 1" class="group-btn">
+											<text>获得产品</text>
+										</view>
+										
+										<view v-if="item.join_status == 2" class="group-btn">
+											<text>获得红包</text>
+										</view>
+										<view v-if="item.join_status == 3" class="group-btn disabled">
+											<text>拼团失败</text>
+										</view>
+										
+										<view v-if="item.join_status == 0" class="">
+											<uni-countdown ref="countdown" @timeup="timeOver" :showDay="item.showDay>0"
+												:font-size="11" :day="item.showDay" :hour="item.showHour"
+												:minute="item.showMinute" :second="item.showSecond" color="#FFFFFF"
+												background-color="#ff5454" splitorColor="#ff5454" />
+										</view>
+									</template>
+									<template v-if="item.goods_class == 2">
+										<view v-if="item.join_status == 1" class="group-btn">
+											<text @click.stop="goBlindBox">去抽奖</text>
+										</view>
+										<view v-if="item.join_status == 1" class="group-btn">
+											<text @click.stop="getOrderInfo(item, index)">查看订单</text>
+										</view>
+										<view v-if="item.join_status == 1" class="group-btn">
+											<text>获得产品</text>
+										</view>
+										
+										<view v-if="item.join_status == 2" class="group-btn">
+											<text>获得红包</text>
+										</view>
+										<view v-if="item.join_status == 3" class="group-btn disabled">
+											<text>拼团失败</text>
+										</view>
+										
+										<view v-if="item.join_status == 0" class="">
+											<uni-countdown ref="countdown" @timeup="timeOver" :showDay="item.showDay>0"
+												:font-size="11" :day="item.showDay" :hour="item.showHour"
+												:minute="item.showMinute" :second="item.showSecond" color="#FFFFFF"
+												background-color="#ff5454" splitorColor="#ff5454" />
+										</view>
+									</template>
 								</view>
-								<view v-if="item.join_status == 2" class="group-btn">
-									<text>中红包</text>
-								</view>
-								<view v-if="item.join_status == 3" class="group-btn disabled">
-									<text>拼团失败</text>
-								</view>
-
-								<view v-if="item.join_status == 0" class="">
-									<uni-countdown ref="countdown" @timeup="timeOver" :showDay="item.showDay>0"
-										:font-size="11" :day="item.showDay" :hour="item.showHour"
-										:minute="item.showMinute" :second="item.showSecond" color="#FFFFFF"
-										background-color="#ff5454" splitorColor="#ff5454" />
-								</view>
-							</view>
 						</view>
 					</view>
 				</view>
-			</view>
-			<view v-else class="list-empty">
-				<text>暂无数据</text>
-			</view>
+				<view v-else class="list-empty">
+					<text>暂无数据</text>
+				</view>
+			</movable-refresh>
 		</view>
 
 	</view>
@@ -95,6 +129,7 @@
 
 <script>
 	import moment from 'moment';
+	import movableRefresh from '@/components/zyq-movableRefresh/zyq-movableRefresh.vue'
 
 	import {
 		getOrderInfoApi,
@@ -102,6 +137,9 @@
 	} from '@/api/tuanApi.js';
 
 	export default {
+		components: {
+			movableRefresh
+		},
 		data() {
 			return {
 				cashType: 1,
@@ -109,16 +147,26 @@
 				list: [],
 				searchParam: {
 					status: '1', //1拼团中2拼团成功3拼团失败
-				}
+				},
+				scrollHeight: 300, // 用于获取屏幕高度
+				refreshSuccessText: '刷新成功', // 用于显示刷新后文字
+				noMore: true, // 上拉加载
 			};
 		},
 		onLoad(option) {
+			
+			// 获取屏幕高度
+			let system = uni.getSystemInfoSync()
+			this.scrollHeight = system.windowHeight - system.statusBarHeight - 80
+			
 			if (option.orderType) {
 				if (option.orderType == 1) {
 					this.switchTab(2);
 					return;
 				}
 			}
+			
+			// 获取订单数据
 			this.getMyGroupList();
 		},
 		methods: {
@@ -166,6 +214,8 @@
 				let res = await getOrderInfoApi({
 					order_no: item.order_no
 				});
+				res.data.data.goods_class = item.goods_class
+				res.data.data.join_status = item.join_status
 				this.$util.redirectTo('/page_my/orderDetail', {
 					detail: JSON.stringify(res.data.data)
 				});
@@ -178,15 +228,44 @@
 				this.$util.redirectTo('/pages/goods/goods_detail', {
 					group_id: item.group_id
 				})
+			},
+			// 下拉刷新
+			async refresh(){
+				this.refreshSuccessText = '刷新成功'
+				let res = await getMyGroupListApi(this.searchParam)
+				if(this.$refs.movableRefresh){
+					let that = this
+					setTimeout(function(){
+						if(res.data.code == 200 ){
+							this.list = res.data.data
+						}else{
+							that.refreshSuccessText = '刷新失败'
+						}
+						that.$refs.movableRefresh.endLoad()		//刷新结束
+					},1000)
+				} 
+			},
+			onScroll(scrollTop){
+				this.scrollTop = scrollTop
+			},
+			// 去抽奖
+			goBlindBox(){
+				this.$util.redirectTo('/page_my/blindBox')
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	
+	
 	page {
 		// padding-top: 100rpx;
 		background-color: #f7f7f7;
+	}
+	
+	.list-wrap /deep/ .uni-scroll-view {
+		background-color: #f3f4f8;
 	}
 
 	.list-empty {
@@ -285,35 +364,53 @@
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
-
-				.group-detail-bottom {
-					.left {
-						height: 150rpx;
-						display: flex;
-						flex-direction: column;
-						justify-content: flex-end;
-						width: 240rpx;
-
-						overflow: hidden;
+				
+				.group-detail-top {
+					// height: 50rpx;
+					// display: flex;
+					// flex-direction: column;
+					
+					.group-name {
+						width: 100%;
+						height: 50rpx;
+						line-height: 50rpx;
+						// text-align: left;
+						text-indent: 42rpx;
 					}
-
-					.right {
-						height: 150rpx;
-						display: flex;
-						flex-direction: column;
-						justify-content: flex-end;
-
-						.group-btn {
-							background: linear-gradient(to right, rgba($app-primary-color, 0.7), $app-primary-color);
-							color: $white-color;
-							padding: 8rpx 16rpx;
-							border-radius: 30rpx;
-							font-size: $font-26;
-
-							&.disabled {
-								background-color: $gray-color;
-								background-image: none;
-							}
+					// .group-order {
+					// 	width: 95%;
+					// 	height: 50rpx;
+					// 	line-height: 50rpx;
+					// 	text-align: right;
+					// }
+				}
+				
+				.group-detail-price {
+					display: flex;
+					flex-direction: column;
+					justify-content: flex-start;
+					width: 240rpx;
+					
+					overflow: hidden;
+				}
+				
+				.group-detail-btn {
+					// height: 84rpx;
+					display: flex;
+					flex-direction: row;
+					justify-content: flex-end;
+					
+					.group-btn {
+						background: linear-gradient(to right, rgba($app-primary-color, 0.7), $app-primary-color);
+						color: $white-color;
+						padding: 8rpx 16rpx;
+						border-radius: 30rpx;
+						font-size: $font-26;
+						margin-right: 20rpx;
+					
+						&.disabled {
+							background-color: $gray-color;
+							background-image: none;
 						}
 					}
 				}

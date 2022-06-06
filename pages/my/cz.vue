@@ -13,13 +13,13 @@
 									style="height: 40rpx; width: 40rpx; margin-right: 10rpx;" mode="aspectFit"></image>
 								微信支付
 							</view>
-							<view @click="selectType(1)" class="cs-li icon yticon flex-center-y"
+							<!-- 支付宝支付 -->
+							<!-- <view @click="selectType(1)" class="cs-li icon yticon flex-center-y"
 								v-bind:class="{ 'cs-li-select': (payType == 1) }">
-								<!-- 支付宝支付 -->
 								<image src="/static/imgs/alipay.png"
 									style="height: 40rpx; width: 40rpx; margin-right: 10rpx;" mode="aspectFit"></image>
 								支付宝支付
-							</view>
+							</view> -->
 						</template>
 						<template v-else>
 							<view @click="selectType(1)" class="cs-li icon yticon flex-center-y"
@@ -144,7 +144,22 @@
 						})
 					return;
 				}
-
+				// uni-customer
+					// if (this.payType == 2) {
+					// 	// new Weixin().pay(JSON.parse(this.payInfo.payData), () => {
+					// 	// 	this.$util.showToast({
+					// 	// 		title: '支付成功'
+					// 	// 	})
+					// 	// })
+					// 	WeixinJSBridge.invoke('getBrandWCPayRequest', JSON.parse(this.payInfo.payData),
+					// 		(res) => {
+					// 			console.log(res);
+					// 		})
+					// 	return;
+					// }
+					// uni.setStorageSync('webviewUrl', this.payInfo.payData);
+					// this.$util.redirectTo('/otherpages/webview/webview')
+					// console.log(res.data)
 				// uni.setStorageSync('webviewUrl', this.payInfo.payData)
 				// console.log(res.data)
 			},
