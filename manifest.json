@@ -1,5 +1,5 @@
 {
-    "name" : "优团客",
+    "name" : "一亩莲",
     "appid" : "__UNI__D255BE8",
     "description" : "",
     "versionName" : "1.0.0",
@@ -84,7 +84,7 @@
             "base" : "/h5/",
             "mode" : "history"
         },
-        "title" : "优团客",
+        "title" : "一亩莲",
         "sdkConfigs" : {
             "maps" : {
                 "qqmap" : {
@@ -94,7 +94,7 @@
         },
         "devServer" : {
             "https" : false,
-            "port" : 4399
+            "port" : 4888
         },
         "domain" : "tuan.100dtc.com/h5/"
     }

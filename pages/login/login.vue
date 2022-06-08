@@ -3,7 +3,7 @@
 
 		<view class="hender">
 			<view>您好，</view>
-			<view>欢迎来到优团客</view>
+			<view>欢迎来到一亩莲</view>
 		</view>
 
 		<view class="whiteBg">

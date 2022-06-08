@@ -3,7 +3,7 @@
 
 		<view v-if="type == 0" class="protocol-wrap">
 			<view class="protocol-title">
-				<text>优团客用户协议</text>
+				<text>一亩莲用户协议</text>
 			</view>
 			<view class="protocol-body">
 				<text>
@@ -41,7 +41,7 @@
 
 		<view v-if="type == 1" class="protocol-wrap">
 			<view class="protocol-title">
-				<text>优团客隐私政策</text>
+				<text>一亩莲隐私政策</text>
 			</view>
 			<template>
 				<view class="protocol-body">

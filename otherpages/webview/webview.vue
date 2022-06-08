@@ -13,7 +13,7 @@
 		},
 		onLoad(option) {
 			uni.setNavigationBarTitle({
-				title: uni.getStorageSync('webviewTitle') || '优团客'
+				title: uni.getStorageSync('webviewTitle') || '一亩莲'
 			})
 			uni.removeStorageSync('webviewTitle')
 			if (option.link) {
