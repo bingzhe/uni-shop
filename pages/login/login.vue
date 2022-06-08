@@ -12,7 +12,6 @@
 					@click="navTap(index+1)" :key="index">{{ item }}</view>
 			</view>
 			<template v-if="formItem === 1">
-
 				<view class="list">
 					<view class="item">
 						<view class="acea-row row-between-wrapper">
@@ -35,7 +34,7 @@
 					</view>
 					<view style="line-height: 40rpx;margin-top: 40rpx;">
 						<!-- #ifdef H5 -->
-						<text @click="changeClient" class="font-color-red" style="margin: 10rpx;">切换到商家端</text>
+						<!-- <text @click="changeClient" class="font-color-red" style="margin: 10rpx;">切换到商家端</text> -->
 						<!-- #endif -->
 					</view>
 					<view class="protocol-style">
@@ -278,18 +277,19 @@
 					});
 					return false;
 				}
-				if (!inviteCode) {
-					uni.showToast({
-						title: '邀请码不能为空',
-						icon: 'none',
-						duration: 2000
-					});
-					return false;
-				}
+				// TODO
+				// if (!inviteCode) {
+				// 	uni.showToast({
+				// 		title: '邀请码不能为空',
+				// 		icon: 'none',
+				// 		duration: 2000
+				// 	});
+				// 	return false;
+				// }
 				let _param = {
 					username: account,
 					password: password,
-					invitation_code: inviteCode
+					// invitation_code: inviteCode //TODO
 				};
 				let res = await registerApi(_param);
 				// let result = res.data.data;
