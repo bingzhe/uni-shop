@@ -42,6 +42,8 @@
 </script>
 
 <style lang="scss">
+	@import url("/static/iconfont/iconfont.css");
+
 	/*每个页面公共css */
 	body {
 		font-family: PingFang SC, Roboto Medium;
