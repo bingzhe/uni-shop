@@ -60,7 +60,10 @@
         <text class="iconfont iconshouye-1"></text>
         <text>首页</text>
       </view>
-
+      <view class="btn-area dflex dflex-flow-c" @click="handletoCartClick">
+        <text class="iconfont iconcart"></text>
+        <text>购物车</text>
+      </view>
       <!-- <view
         class="btn-area dflex dflex-flow-c"
         :class="{ active: favorite }"
@@ -76,13 +79,13 @@
       <view class="flex1 btn-container dflex-b border-radius-big">
         <view
           class="tac padding-tb-sm flex1 bg-warn"
-          v-if="goods.stock == 0"
+          v-if="goods.stock > 0"
           @click="tocart(goods)"
-          >加入购物车1</view
+          >加入购物车</view
         >
         <view
           class="tac padding-tb-sm flex1 bg-base"
-          v-if="goods.stock == 0"
+          v-if="goods.stock > 0"
           @click="tobuy(goods)"
           >立即购买</view
         >
@@ -167,26 +170,26 @@ export default {
       this.goods.stock_num = e.num;
     },
   },
-  onShareAppMessage: function (ops) {
-    let _this = this;
-    let mid = 0;
-    if (_this.member && _this.member._id) {
-      mid = _this.member._id;
-    }
+  //   onShareAppMessage: function (ops) {
+  //     let _this = this;
+  //     let mid = 0;
+  //     if (_this.member && _this.member._id) {
+  //       mid = _this.member._id;
+  //     }
 
-    return {
-      title: _this.goods.share_title,
-      path: `/pages/goods/goods?id=${this.id}&mid=${mid}`, //这里设定都是以"/page"开头,并拼接好传递的参数
-      success: function (res) {
-        // 转发成功
-        console.log("转发成功", res);
-      },
-      fail: function (res) {
-        // 转发失败
-        console.log("转发失败", res);
-      },
-    };
-  },
+  //     return {
+  //       title: _this.goods.share_title,
+  //       path: `/pages/goods/goods?id=${this.id}&mid=${mid}`, //这里设定都是以"/page"开头,并拼接好传递的参数
+  //       success: function (res) {
+  //         // 转发成功
+  //         console.log("转发成功", res);
+  //       },
+  //       fail: function (res) {
+  //         // 转发失败
+  //         console.log("转发失败", res);
+  //       },
+  //     };
+  //   },
   // onPageScroll(e) {
   // 	//this.scrollTop = e.scrollTop;
   // 	this.$refs.usetop.change(e.scrollTop);
@@ -239,85 +242,6 @@ export default {
       });
 
       this.html_nodes = info.goods_info;
-
-      // await this.$func.usemall
-      // 	.call('goods/detail', {
-      // 		goods_id: this.id,
-      // 		share_mid: this.mid
-      // 	})
-      // 	.then(res => {
-      // 		if (res.code === 200) {
-      // 			// 商品评价
-      // 			this.evaluateDatas = res.datas.evaluate;
-      // 			if (res.datas.evaluate_cnt) this.evaluateTitle = `评价(${res.datas.evaluate_cnt})`;
-
-      // 			if (typeof res.datas.goods.imgs === 'string') {
-      // 				this.swiperDatas = res.datas.goods.imgs.split(',').filter(x => x);
-      // 			} else {
-      // 				this.swiperDatas = res.datas.goods.imgs;
-      // 			}
-      // 			this.goods = res.datas.goods;
-      // 			// 商品详情
-      // 			let __goods_detail = res.datas.goods_detail;
-      // 			// #ifndef MP-ALIPAY
-      // 			this.html_nodes = __goods_detail.desc_mobile;
-      // 			// #endif
-
-      // 			// #ifdef MP-ALIPAY
-      // 			this.html_nodes = [];
-      // 			aliParse(__goods_detail.desc_mobile.replace(/"><*/gi, '"/><'), (err, nodes) => {
-      // 				if (!err) {
-      // 					this.html_nodes = nodes;
-      // 				}
-      // 			});
-      // 			// #endif
-
-      // 			// 商品SKU
-      // 			let __goods_skus = res.datas.goods_skus;
-      // 			if (__goods_skus.length > 0) {
-      // 				let __skuDatas = [];
-      // 				__goods_skus.forEach((sku, index) => {
-      // 					// 	{ id: 1, name: '45寸（大规格）', price: 788, market_price: 999, num: 0, selected: !0 },
-      // 					__skuDatas.push({
-      // 						id: sku._id,
-      // 						sku: sku.goods_sku,
-      // 						name: sku.spec,
-      // 						price: sku.price,
-      // 						market_price: sku.market_price || this.goods.market_price,
-      // 						num: sku.stock_num,
-      // 						selected: index == 0
-      // 					});
-      // 				});
-      // 				this.skuDatas = __skuDatas;
-      // 			}
-
-      // 			// SKU
-      // 			if (this.skuDatas.length > 0) {
-      // 				this.sku = this.skuDatas[0];
-      // 			}
-
-      // 			// 服务标签
-      // 			if (typeof this.goods.tags === 'string') {
-      // 				this.goods.tags = this.goods.tags.split(',').filter(x => x);
-      // 			}
-
-      // 			let __tagDatas = [];
-
-      // 			this.goods.tags.forEach((data, index) => {
-      // 				__tagDatas.push({
-      // 					name: data,
-      // 					selected: index == 0
-      // 				});
-      // 			});
-
-      // 			this.tagDatas = __tagDatas;
-
-      // 			// 收藏状态
-      // 			this.favorite = this.goods.collected === 1;
-      // 			return;
-      // 		}
-      // 		this.$api.msg(res.msg);
-      // 	});
     },
     // 处理 query q 数据
     resolveQueryq(query) {
@@ -325,51 +249,7 @@ export default {
       if (arr.length == 2) this.mid = arr[1];
       this.id = arr[0];
     },
-    // 图片预览
-    preview(imgs, cur) {
-      if (!imgs) return;
 
-      uni.previewImage({
-        urls: imgs,
-        current: cur,
-        longPressActions: {
-          itemList: ["发送给朋友", "保存图片", "收藏"],
-          success: function (data) {
-            console.log(res);
-          },
-          fail: function (err) {
-            console.log(err);
-          },
-        },
-      });
-    },
-
-    // 打开分享
-    shareOpen() {
-      if (!this.loginCheck()) return;
-
-      this.shareShow = true;
-    },
-    // 创建海报
-    createPoster() {
-      if (this.posterUrl) {
-        this.posterShow = true;
-        return;
-      }
-      uni.showLoading({
-        title: "生成海报中",
-      });
-
-      // #ifdef MP
-      // 此处的二维码内容，需自己在小程序端配置普通二维码规则
-      this.posterQRcode = `https://usemall.use-cloud.com/wxmp-product/${this.goods._id}_${this.member._id}`;
-      // #endif
-
-      // #ifdef H5
-      // 如果为 h5，二维码内容需配置为线上版本产品详情路径
-      this.posterQRcode = `https://usemall-h5.use-cloud.com/#/pages/goods/goods?id=${this.goods._id}&mid=${this.member._id}`;
-      // #endif
-    },
     // 海报二维码生成成功
     posterQRcodeResult(res) {
       // 获取产品海报数据
@@ -420,35 +300,38 @@ export default {
     },
 
     // 评论
-    toevaluate() {
-      uni.navigateTo({
-        url: `/pages/goods/goods-evaluate?id=${this.id}`,
-      });
-    },
+    // toevaluate() {
+    //   uni.navigateTo({
+    //     url: `/pages/goods/goods-evaluate?id=${this.id}`,
+    //   });
+    // },
     // 首页
     tohome() {
-      this.$api.tohome();
+      this.$util.redirectTo("/pages/index/index");
+    },
+    handletoCartClick() {
+      this.$util.redirectTo("/pages/cart/cart");
     },
     // 收藏
-    tofavorite() {
-      if (!this.loginCheck()) return;
+    // tofavorite() {
+    //   if (!this.loginCheck()) return;
 
-      this.favorite = !this.favorite;
-      let _data = {
-        goods_id: this.id,
-        state: !this.favorite ? "已取消" : "已收藏",
-      };
-      this.$func.usemall.call("member/collect", _data).then((res) => {
-        if (res.datas) {
-          !this.favorite
-            ? this.$api.msg("取消成功")
-            : this.$api.msg("收藏成功");
-          return;
-        }
+    //   this.favorite = !this.favorite;
+    //   let _data = {
+    //     goods_id: this.id,
+    //     state: !this.favorite ? "已取消" : "已收藏",
+    //   };
+    //   this.$func.usemall.call("member/collect", _data).then((res) => {
+    //     if (res.datas) {
+    //       !this.favorite
+    //         ? this.$api.msg("取消成功")
+    //         : this.$api.msg("收藏成功");
+    //       return;
+    //     }
 
-        this.$api.msg(res.msg);
-      });
-    },
+    //     this.$api.msg(res.msg);
+    //   });
+    // },
     // 加入购物车
     async tocart(goods) {
       if (!this.$util.checkLogin()) return;
@@ -462,25 +345,8 @@ export default {
 
       if (result.code !== 200) return;
       this.$util.msg("添加成功");
-
-      console.log(result);
-
-      //   this.$func.usemall
-      //     .call("goods/addcart", {
-      //       goods_id: params._id,
-      //       goods_num: 1,
-      //       goods_sku: this.sku.id,
-      //     })
-      //     .then((res) => {
-      //       if (res.code === 200) {
-      //         this.$api.msg(res.datas.msg);
-      //         return;
-      //       }
-
-      //       this.$api.msg(res.msg);
-      //     });
     },
-    // 立即购买
+    // 立即购买  TODO
     tobuy(item) {
       let _this = this;
       if (!this.loginCheck()) return;
@@ -491,7 +357,7 @@ export default {
         }`,
       });
     },
-    // 检测是否已登录
+    // 检测是否已登录 TODO
     loginCheck() {
       if (!this.islogin) {
         let _this = this;

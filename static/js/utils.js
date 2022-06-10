@@ -12,7 +12,13 @@ export default {
   redirectTo(to, param, mode) {
     let url = to;
     // console.log({"$store":store.state.$store.tabbarList.list})
-    let tabbarList = ["/pages/index/index", "/pages/my/my"];
+    let tabbarList = [
+      "/pages/index/index",
+      "/pages/my/my",
+      "/pages/cart/cart",
+      "/pages/category/category",
+    ];
+
     for (let i = 0; i < tabbarList.length; i++) {
       if (to.indexOf(tabbarList[i]) != -1) {
         uni.switchTab({

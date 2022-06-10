@@ -8,6 +8,7 @@ const url = {
   GoodsInfo: "Api/Goods/getGoodsInfo", //商品详情
   ShopCartList: "Api/Order/GetCartList", //购物车列表
   AddCart: "Api/Order/CreateCart", //加入购物车
+  DelCart: "Api/Order/DelCart", //删除购物车
 
   GroupList: "Api/Group/groupList", //热门拼团列表
   GroupDetail: "Api/Group/getGroupInfo", //拼团详情
@@ -97,6 +98,15 @@ export function addCartApi(data) {
 export function getShopcartListApi(data) {
   return request.request({
     url: url.ShopCartList,
+    method: "post",
+    data,
+  });
+}
+
+//删除购物车
+export function delCartApi(data) {
+  return request.request({
+    url: url.DelCart,
     method: "post",
     data,
   });

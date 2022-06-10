@@ -101,12 +101,12 @@
 				portraitImg: '',
 				control_list: [
 					[
-						{
-							src: '/static/imgs/my/control-icon1.png',
-							text: '我参与的',
-							link: '/page_my/myInvolved',
-							check_login: true
-						},
+						// {
+						// 	src: '/static/imgs/my/control-icon1.png',
+						// 	text: '我参与的',
+						// 	link: '/page_my/myInvolved',
+						// 	check_login: true
+						// },
 						{
 							src: '/static/imgs/my/control-icon3.png',
 							text: '我的订单',
@@ -126,31 +126,31 @@
 							link: '/page_my/myAddress',
 							check_login: true
 						},
-						{
-							src: '/static/imgs/my/control-icon2.png',
-							text: '推广中心',
-							link: '/page_my/myPromote',
-							check_login: true
-						},
-						{
-							src: '/static/imgs/my/control-icon9.png',
-							text: '盲盒抽奖',
-							link: '/page_my/blindBox',
-							check_login: true
-						},
-						{
-							src: '/static/imgs/my/control-icon9.png',
-							text: '市场合伙人',
-							link1: '/page_my/parterPage', //合伙人页面
-							link: '/page_my/isNotParter', //非合伙人页面
-							check_login: true
-						},
-						{
-							src: '/static/imgs/my/control-icon9.png',
-							text: '我的通用券',
-							link: '/page_my/couponsTrade', 
-							check_login: true
-						},
+						// {
+						// 	src: '/static/imgs/my/control-icon2.png',
+						// 	text: '推广中心',
+						// 	link: '/page_my/myPromote',
+						// 	check_login: true
+						// },
+						// {
+						// 	src: '/static/imgs/my/control-icon9.png',
+						// 	text: '盲盒抽奖',
+						// 	link: '/page_my/blindBox',
+						// 	check_login: true
+						// },
+						// {
+						// 	src: '/static/imgs/my/control-icon9.png',
+						// 	text: '市场合伙人',
+						// 	link1: '/page_my/parterPage', //合伙人页面
+						// 	link: '/page_my/isNotParter', //非合伙人页面
+						// 	check_login: true
+						// },
+						// {
+						// 	src: '/static/imgs/my/control-icon9.png',
+						// 	text: '我的通用券',
+						// 	link: '/page_my/couponsTrade', 
+						// 	check_login: true
+						// },
 						// {
 						// 	src: '/static/imgs/my/control-icon9.png',
 						// 	text: '临时白名单',

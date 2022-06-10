@@ -21,7 +21,7 @@
 
       <!-- 右侧 1二级分类 2商品列表 -->
       <scroll-view
-        class="h-full right bg-main"
+        class="h-full right bg-main goods-wrapper"
         scroll-with-animation
         scroll-y
         :scroll-top="top"
@@ -30,11 +30,16 @@
       >
         <view>
           <!-- 空白页 -->
-          <use-empty v-if="empty" e-style="round" tip="无商品数据"></use-empty>
+          <use-empty
+            v-if="empty"
+            e-type="cart"
+            e-style="round"
+            tip="无商品数据"
+            height="70vh"
+          ></use-empty>
 
           <view
             v-else
-            class="padding-lr"
             v-for="(item, index) in goodsDatas"
             :key="index"
             @click="togoods(item)"
@@ -53,8 +58,8 @@
               <view class="margin-left-sm pos-r">
                 <text class="clamp-2">{{ item.goods_name }}</text>
                 <view class="pos-a price-box w-full">
-                  <text class="price">{{ item.goods_price / 100 }}</text>
-                  <text class="m-price">{{ item.goods_price / 100 }}</text>
+                  <text class="price">{{ item.goods_price }}</text>
+                  <!-- <text class="m-price">{{ item.goods_price }}</text> -->
                 </view>
               </view>
             </view>
@@ -76,14 +81,10 @@
 <script>
 import { getCateListApi, getGoodsListApi } from "@/api/tuanApi";
 import config from "@/common/config.js";
-// import UseEmpty from "@/components/use-empty/use-empty.vue";
 
 // const _goods = 'usemall-goods'
 // const _goodscategory = 'usemall-goods-category'
 export default {
-  //   components: {
-  //     UseEmpty,
-  //   },
   data() {
     return {
       // 1分类列表 2商品列表
@@ -161,11 +162,11 @@ export default {
     this.loadData();
   },
   // 下拉刷新
-  onPullDownRefresh() {
-    // this.loadData(() => {
-    //   uni.stopPullDownRefresh();
-    // });
-  },
+  //   onPullDownRefresh() {
+  //     this.loadData(() => {
+  //       uni.stopPullDownRefresh();
+  //     });
+  //   },
   methods: {
     async loadData() {
       const { data: result } = await getCateListApi();
@@ -287,6 +288,7 @@ page {
     flex: 1;
     overflow: hidden;
     display: block;
+    background: transparent;
 
     .item {
       flex-shrink: 0;
@@ -315,5 +317,9 @@ page {
   .price-box {
     bottom: 0;
   }
+}
+
+.goods-wrapper {
+  padding: 16px;
 }
 </style>
