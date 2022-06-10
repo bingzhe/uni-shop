@@ -26,8 +26,8 @@
         scroll-y
         :scroll-top="top"
         :style="{ height: scrollHeight }"
-        @scroll="onScroll"
       >
+        <!-- @scroll="onScroll" -->
         <view>
           <!-- 空白页 -->
           <use-empty

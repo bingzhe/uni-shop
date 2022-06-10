@@ -303,18 +303,19 @@ export default {
         // 选中有库存购物车
         if (
           item.checked &&
-          item.stock_num > 0 &&
-          item.stock_num > item.goods_num
+          item.stock > 0 &&
+          item.stock > item.goods_num
         ) {
-          cart_ids.push(item._id);
+          cart_ids.push(item.cart_id);
         }
       });
+
       if (cart_ids.length <= 0) {
         this.$api.msg("请选择结算商品");
         return;
       }
       uni.navigateTo({
-        url: `/pages/order/create?cart_ids=${cart_ids.join(",")}`,
+        url: `/pages/order/createOrder?cart_ids=${cart_ids.join(",")}`,
       });
     },
   },

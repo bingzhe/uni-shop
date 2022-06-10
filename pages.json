@@ -140,6 +140,15 @@
         "navigationBarTextStyle": "white",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/order/createOrder",
+      "style": {
+        "navigationBarTitleText": "创建订单",
+        "navigationBarBackgroundColor": "#ff5454",
+        "navigationBarTextStyle": "white"
+        // "enablePullDownRefresh": false
+      }
     }
   ],
 
