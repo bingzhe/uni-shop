@@ -10,6 +10,9 @@ const url = {
   AddCart: "Api/Order/CreateCart", //加入购物车
   DelCart: "Api/Order/DelCart", //删除购物车
 
+  CreateOrder: "Api/Order/CreateOrder", //创建订单
+  MallOrderList: "Api/Order/GetOrderList", //订单列表
+
   GroupList: "Api/Group/groupList", //热门拼团列表
   GroupDetail: "Api/Group/getGroupInfo", //拼团详情
   MyGroupList: "Api/Group/getMyGroupList", //我参与的
@@ -111,6 +114,25 @@ export function delCartApi(data) {
     data,
   });
 }
+
+//创建订单
+export function createOrderApi(data) {
+  return request.request({
+    url: url.CreateOrder,
+    method: "post",
+    data,
+  });
+}
+
+//订单列表
+export function getMallOrderList(data) {
+  return request.request({
+    url: url.MallOrderList,
+    method: "post",
+    data,
+  });
+}
+
 
 /**
  * @param {Object} data

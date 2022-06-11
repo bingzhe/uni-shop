@@ -45,7 +45,7 @@
             class="disabled dflex-c dflex-flow-c pos-a pos-tl-c border-radius-c"
           >
             <text>库存不足</text
-            ><text class="margin-left-xs fs-xs" v-if="item.goods.stock_num > 0"
+            ><text class="margin-left-xs fs-xs" v-if="item.stock > 0"
               >剩余 {{ item.stock }}</text
             >
           </view>
@@ -65,14 +65,10 @@
             <use-number-box
               v-if="!(cart_ids && cart_ids.length > 0)"
               :min="1"
-              :max="item.goods.stock_num"
-              :value="
-                item.goods.goods_num > item.goods.stock_num
-                  ? item.goods.stock_num
-                  : item.goods.goods_num
-              "
-              :is-max="item.goods.goods_num >= item.goods.stock_num"
-              :is-min="item.goods.goods_num === 1"
+              :max="item.stock"
+              :value="item.goods_num > item.stock ? item.stock : item.goods_num"
+              :is-max="item.goods_num >= item.stock"
+              :is-min="item.goods_num === 1"
               :index="index"
               direction="right"
               @eventChange="numberChange"
@@ -187,7 +183,12 @@
 </template>
 
 <script>
-import { getDefaultAddressApi, getShopcartListApi } from "@/api/tuanApi.js";
+import {
+  createOrderApi,
+  getDefaultAddressApi,
+  getShopcartListApi,
+  getGoodsInfoApi,
+} from "@/api/tuanApi.js";
 import config from "@/common/config.js";
 
 export default {
@@ -247,8 +248,15 @@ export default {
     if (options.cart_ids) {
       this.cart_ids = options.cart_ids.split(",");
     }
-    // 加载商品数据
-    this.loadData();
+    // 购物车过来加载商品数据
+    if (this.cart_ids.length > 0) {
+      this.loadData();
+    }
+
+    // 商品详情页过来加载商品数据
+    if (this.goods_id) {
+      this.loadDataFormGoods();
+    }
 
     uni.$on("__event_choice_address", (data) => {
       this.addrData = data;
@@ -262,8 +270,6 @@ export default {
   methods: {
     // 加载数据
     async loadData() {
-      console.log("cart_ids", this.cart_ids);
-
       const { data: result } = await getShopcartListApi();
       if (result.code !== 200) return;
 
@@ -282,39 +288,64 @@ export default {
       this.calcTotalMoney();
       this.is_submit = 0;
     },
+    async loadDataFormGoods() {
+      const params = { goods_id: this.goods_id };
+      const { data: result } = await getGoodsInfoApi(params);
+      if (result.code !== 200) return;
+
+      const goods = result.data || {};
+
+      goods.previewImg = `${config.imgUrl}${goods.goods_img}`;
+      goods.goods_num = 1;
+
+      this.goodsDatas = [goods];
+      this.calcTotalMoney();
+      this.is_submit = 0;
+    },
     // 计算实际支付 总金额
     calcTotalMoney() {
       // 服务项总金额
-      let service_money = 0;
+      // let service_money = 0;
 
       this.goods_money = 0;
-      this.goodsDatas.forEach((goods) => {
-        this.goods_money += goods.price;
-      });
+
+      //商品详情页来的数据用goods_price * goods_num 计算
+      //购物车用goods.price 计算
+      if (!this.goods_id) {
+        this.goodsDatas.forEach((goods) => {
+          this.goods_money += goods.price;
+        });
+      } else {
+        this.goodsDatas.forEach((goods) => {
+          this.goods_money += Number(goods.goods_price) * goods.goods_num;
+        });
+      }
+
+      this.total_money = this.goods_money;
 
       // 商品金额 + 服务金额 - 优惠金额
-      if (this.coupon_type == "满减") {
-        this.total_coupon_money = this.coupon_money;
-        this.total_money = (
-          this.goods_money +
-          service_money -
-          this.coupon_money
-        ).toFixed(2);
-      } else if (this.coupon_type == "折扣") {
-        this.total_coupon_money =
-          this.goods_money +
-          service_money -
-          ((this.goods_money + service_money) * this.coupon_money).toFixed(2);
-        this.total_money = (
-          (this.goods_money + service_money) *
-          this.coupon_money
-        ).toFixed(2);
-      }
+      // if (this.coupon_type == "满减") {
+      //   this.total_coupon_money = this.coupon_money;
+      //   this.total_money = (
+      //     this.goods_money +
+      //     service_money -
+      //     this.coupon_money
+      //   ).toFixed(2);
+      // } else if (this.coupon_type == "折扣") {
+      //   this.total_coupon_money =
+      //     this.goods_money +
+      //     service_money -
+      //     ((this.goods_money + service_money) * this.coupon_money).toFixed(2);
+      //   this.total_money = (
+      //     (this.goods_money + service_money) *
+      //     this.coupon_money
+      //   ).toFixed(2);
+      // }
     },
     // +- 下单数量
     numberChange(options) {
       let data = this.goodsDatas[options.index];
-      data.goods.goods_num = options.number;
+      data.goods_num = options.number;
 
       if (this.goods_id) this.goods_num = options.number;
 
@@ -339,51 +370,72 @@ export default {
       _this.couponShow = false;
     },
     // 提交订单
-    submit() {
+    async submit() {
       if (!(this.addrData && this.addrData.address_id)) {
-        this.$api.msg("请选择收货人");
+        // this.$api.msg("请选择收货人");
+        this.$util.msg("请选择收货人");
         return;
       }
 
       if (this.is_submit) {
-        this.$api.msg("提交中");
+        this.$util.msg("提交中");
+        // this.$api.msg("提交中");
         return;
       }
       this.is_submit = 1;
 
-      let _this = this;
+      // let _this = this;
 
-      let obj = {
-        cart_ids: _this.cart_ids,
+      let params = {
+        cart_list: this.cart_ids,
+        order_price: this.total_money,
+        address_id: this.addrData.address_id,
 
-        goods_id: _this.goods_id,
-        goods_num: _this.goods_num,
-        goods_sku_id: _this.goods_sku_id,
+        // goods_id: _this.goods_id,
+        // goods_num: _this.goods_num,
+        // goods_sku_id: _this.goods_sku_id,
 
-        order_coupon_id: _this.order_coupon_id,
-        order_integral: 0,
-        order_use_integral: 0,
-        addr_id: _this.addrData.address_id,
-        order_from: _this.platform_name,
-        order_desc: _this.order_desc,
+        // order_coupon_id: _this.order_coupon_id,
+        // order_integral: 0,
+        // order_use_integral: 0,
+        // addr_id: _this.addrData.address_id,
+        // order_from: _this.platform_name,
+        // order_desc: _this.order_desc,
       };
 
-      this.$func.usemall.call("order/create", obj).then((res) => {
-        if (res.code === 200) {
-          // 跳转支付页
-          _this.$api.topay({
-            order_id: res.datas.order_id,
-            money: res.datas.money,
-            type: "redirect",
-          });
-          return;
-        }
+      // 商品详情来的用商品信息创建
+      if (this.goods_id) {
+        params = {
+          address_id: this.addrData.address_id,
+          goods_list: JSON.stringify({
+            goods_id: this.goods_id,
+            goods_num: this.goods_num,
+            order_price: this.total_money,
+          }),
+        };
+      }
 
-        _this.$api.msg(res.msg);
-        _this.$api.timerout(() => {
-          _this.is_submit = 0;
-        }, 800);
-      });
+      const { data: result } = await createOrderApi(params);
+
+      console.log("result");
+      console.log(result);
+
+      // this.$func.usemall.call("order/create", obj).then((res) => {
+      //   if (res.code === 200) {
+      //     // 跳转支付页
+      //     _this.$api.topay({
+      //       order_id: res.datas.order_id,
+      //       money: res.datas.money,
+      //       type: "redirect",
+      //     });
+      //     return;
+      //   }
+
+      //   _this.$api.msg(res.msg);
+      //   _this.$api.timerout(() => {
+      //     _this.is_submit = 0;
+      //   }, 800);
+      // });
     },
     async getDefaultAddress() {
       const { data: result } = await getDefaultAddressApi();

@@ -231,7 +231,6 @@ export default {
 
       const { data: result } = await getGoodsInfoApi(params);
       if (result.code !== 200) return;
-      console.log(result);
 
       const info = result.data || {};
 
@@ -347,33 +346,30 @@ export default {
       this.$util.msg("添加成功");
     },
     // 立即购买  TODO
-    tobuy(item) {
-      let _this = this;
-      if (!this.loginCheck()) return;
+    tobuy() {
+      if (!this.$util.checkLogin()) return;
 
       uni.navigateTo({
-        url: `/pages/order/create?goods_id=${this.id}&sku_id=${
-          this.sku.id || ""
-        }`,
+        url: `/pages/order/createOrder?goods_id=${this.id}`,
       });
     },
     // 检测是否已登录 TODO
-    loginCheck() {
-      if (!this.islogin) {
-        let _this = this;
-        uni.showModal({
-          title: "授权登录",
-          success: function (res) {
-            if (res.confirm) {
-              _this.$api.tologin();
-            }
-          },
-        });
-        return false;
-      }
+    // loginCheck() {
+    //   if (!this.islogin) {
+    //     let _this = this;
+    //     uni.showModal({
+    //       title: "授权登录",
+    //       success: function (res) {
+    //         if (res.confirm) {
+    //           _this.$api.tologin();
+    //         }
+    //       },
+    //     });
+    //     return false;
+    //   }
 
-      return true;
-    },
+    //   return true;
+    // },
   },
 };
 </script>
