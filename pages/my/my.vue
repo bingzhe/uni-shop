@@ -110,7 +110,7 @@
 						{
 							src: '/static/imgs/my/control-icon3.png',
 							text: '我的订单',
-							link: '/page_my/myOrder',
+							link: '/pages/order/orderList',
 							other_text: '',
 							check_login: true
 						},

@@ -407,10 +407,10 @@ export default {
       if (this.goods_id) {
         params = {
           address_id: this.addrData.address_id,
+          order_price: this.total_money,
           goods_list: JSON.stringify({
             goods_id: this.goods_id,
             goods_num: this.goods_num,
-            order_price: this.total_money,
           }),
         };
       }

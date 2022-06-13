@@ -153,7 +153,16 @@
     {
       "path": "pages/order/pay",
       "style": {
-        "navigationBarTitleText": "支付中心 ",
+        "navigationBarTitleText": "支付中心",
+        "navigationBarBackgroundColor": "#ff5454",
+        "navigationBarTextStyle": "white"
+        // "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/order/orderList",
+      "style": {
+        "navigationBarTitleText": "我的订单",
         "navigationBarBackgroundColor": "#ff5454",
         "navigationBarTextStyle": "white"
         // "enablePullDownRefresh": false

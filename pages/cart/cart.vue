@@ -301,11 +301,7 @@ export default {
       let cart_ids = [];
       this.cartDatas.forEach((item) => {
         // 选中有库存购物车
-        if (
-          item.checked &&
-          item.stock > 0 &&
-          item.stock > item.goods_num
-        ) {
+        if (item.checked && item.stock > 0 && item.stock > item.goods_num) {
           cart_ids.push(item.cart_id);
         }
       });

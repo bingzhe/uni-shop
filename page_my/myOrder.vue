@@ -47,25 +47,25 @@
             v-for="(item, index) in list"
             :key="index"
           >
-            <view class="goods-card flex-title">
+            <view class="goods-card flex-title" v-for="goods in item.goods_list">
               <image
                 class="goods-img"
-                :src="$util.img(item.image_url)"
+                :src="$util.img(goods.goods_img)"
                 mode="aspectFit"
               ></image>
               <view class="goods-detail-wrap">
                 <view class="goods-detail-top">
                   <view class="goods-detail-name">
-                    <text>{{ item.goods_name }}</text>
+                    <text>{{ goods.goods_name }}</text>
                   </view>
                 </view>
                 <view class="goods-detail-bottom">
                   <view class="goods-detail-price-line flex-title">
                     <view class="goods-detail-price">
-                      <text>{{ item.order_price }}</text>
+                      <text>{{ goods.price }}</text>
                     </view>
                     <view class="goods-detail-num">
-                      <text>x1</text>
+                      <text>x{{goods.goods_num}}</text>
                     </view>
                   </view>
                 </view>
@@ -77,7 +77,7 @@
               </view>
               <view class="order-price">
                 <text>实付款：</text>
-                <text>￥{{ item.order_price }}</text>
+                <text>￥{{ item.price }}</text>
               </view>
             </view>
             <view v-if="item.order_status == 2" class="order-control-wrap">

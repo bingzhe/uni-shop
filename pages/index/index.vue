@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     init() {
-      this.groupList();
+      // this.groupList();
       this.getBanner();
     },
     async groupList() {
@@ -113,8 +113,8 @@ export default {
       this.data_list = res.data.data;
     },
     async getBanner() {
-      let res = await getBannerApi();
-      this.slid_list = res.data.data;
+      const { data: result } = await getBannerApi();
+      this.slid_list = (result.data || []).map((item) => item.img_url);
     },
     toDetail(item) {
       this.$util.redirectTo("/pages/goods/goods_detail", {
