@@ -12,6 +12,7 @@ const url = {
 
   CreateOrder: "Api/Order/CreateOrder", //创建订单
   MallOrderList: "Api/Order/GetOrderList", //订单列表
+  MallOrderDetail: "Api/Order/GetOrderInfo", //订单详情
 
   GroupList: "Api/Group/groupList", //热门拼团列表
   GroupDetail: "Api/Group/getGroupInfo", //拼团详情
@@ -133,6 +134,14 @@ export function getMallOrderList(data) {
   });
 }
 
+//订单详情
+export function getMallOrderInfo(data) {
+  return request.request({
+    url: url.MallOrderDetail,
+    method: "post",
+    data,
+  });
+}
 
 /**
  * @param {Object} data

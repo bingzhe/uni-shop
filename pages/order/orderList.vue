@@ -48,7 +48,7 @@
           >
             <!-- 订单项 -->
             <view class="order-item padding bg-main border-radius">
-              <view @click="todetail(item.order)">
+              <view @click="todetail(item)">
                 <!-- 订单商品明细 -->
                 <view
                   class="goods-area"
@@ -400,8 +400,8 @@ export default {
 
     // 点击跳转详情页面
     todetail(order) {
-      uni.navigateTo({
-        url: `/pages/user/order/order-detail?order_id=${order.order_id}`,
+      this.$util.redirectTo("/pages/order/orderDetail", {
+        order_id: order.order_id,
       });
     },
     // 立即支付
