@@ -3,102 +3,54 @@
     <!-- 订单状态 -->
     <view class="state-area padding-lr margin-tb-sm">
       <view class="padding border-radius bg-base">
-        <view v-if="order_data.state == '待付款'">
+        <view v-if="order_data.status_text == '待付款'">
           <view class="dflex-c fs-lg">
             <text class="iconfont icondaifukuan- fs-lg fwb"></text>
             <text class="fwb margin-left-sm">订单待支付</text>
           </view>
-          <view class="dflex-c">
-            剩余时间：
-            <use-count-down
-              :show-days="false"
-              separator="zh"
-              separator-color="#fff"
-              font-size="24"
-              :timestamp="time_remaining"
-            ></use-count-down>
-          </view>
         </view>
 
-        <view v-if="order_data.state == '待发货'">
+        <view v-if="order_data.status_text == '待发货'">
           <view class="dflex-c fs-lg">
             <text class="iconfont icondaifahuo- fs-lg fwb"></text>
             <text class="fwb margin-left-sm">订单备货中</text>
           </view>
-          <view class="dflex-c">预计1天后发货</view>
         </view>
 
-        <view v-if="order_data.state == '待收货'">
+        <view v-if="order_data.status_text == '待收货'">
           <view class="dflex-c fs-lg">
             <text class="iconfont icondaishouhuo- fs-lg fwb"></text>
             <text class="fwb margin-left-sm">订单已发货</text>
           </view>
-          <view class="dflex-c">还剩5天10时自动确认</view>
+          <!-- <view class="dflex-c">还剩5天10时自动确认</view> -->
         </view>
 
-        <view v-if="order_data.state == '待评价'">
-          <view class="dflex-c fs-lg">
-            <text class="iconfont iconyiwancheng- fs-lg fwb"></text>
-            <text class="fwb margin-left-sm">订单已收货</text>
-          </view>
-          <view class="dflex-c">感谢您的支持，评价送积分</view>
-        </view>
-
-        <view v-if="order_data.state == '已完成'">
+        <view v-if="order_data.status_text == '已完成'">
           <view class="dflex-c fs-lg">
             <text class="iconfont iconyiwancheng- fs-lg fwb"></text>
             <text class="fwb margin-left-sm">订单已完成</text>
           </view>
           <view class="dflex-c">感谢您的支持，期待下次购买</view>
         </view>
-
-        <view v-if="order_data.state == '已取消'">
-          <view class="dflex-c fs-lg">
-            <text class="iconfont icondaifukuan- fs-lg fwb"></text>
-            <text class="fwb margin-left-sm">订单已关闭</text>
-          </view>
-          <view class="dflex-c">感谢您的支持</view>
-        </view>
-
-        <view v-if="order_data.state == '售后中'">
-          <view class="dflex-c fs-lg">
-            <text class="iconfont icondaifukuan- fs-lg fwb"></text>
-            <text class="fwb margin-left-sm">已申请售后</text>
-          </view>
-          <view class="dflex-c">请耐心等待工作人员处理</view>
-        </view>
-        <view v-if="order_data.state == '售后结束'">
-          <view class="dflex-c fs-lg">
-            <text class="iconfont iconyiwancheng- fs-lg fwb"></text>
-            <text class="fwb margin-left-sm">{{
-              order_data.order_refund_state
-            }}</text>
-          </view>
-          <view class="dflex-c">感谢您的支持</view>
-        </view>
       </view>
     </view>
 
     <!-- 收货人 -->
-    <view
-      class="address-area padding-lr margin-tb-sm"
-      v-if="order_data.order_consignee"
-    >
+    <view class="address-area padding-lr margin-tb-sm">
+      <!-- v-if="order_data.order_consignee" -->
       <view class="dflex padding border-radius bg-main">
         <view class="iconfont icondizhi- margin-right ft-main"></view>
         <view class="flex1">
           <view class="w-full dflex-wrap-w">
             <view class="margin-bottom-xs desc">
               <text
-                >{{ order_data.order_consignee_addr }}
-                {{ order_data.order_consignee_addr_detail }}</text
+                >{{ order_data.province }}{{ order_data.city
+                }}{{ order_data.county }} {{ order_data.address }}</text
               >
             </view>
             <view>
-              <text>{{ order_data.order_consignee }}</text>
-              <text class="margin-left">{{
-                order_data.order_consignee_tel
-              }}</text>
+              <text>{{ order_data.username }}</text>
+              <text class="margin-left">{{ order_data.phone }}</text>
             </view>
           </view>
         </view>
@@ -115,18 +67,16 @@
       >
         <view class="dflex">
           <view class="img">
-            <image :src="item.goods_img"></image>
+            <image :src="item.previewImg"></image>
           </view>
           <view class="margin-left-sm">
-            <text class="clamp-2"
-              >{{ item.goods_name }} {{ item.goods_name_pw }}</text
-            >
+            <text class="clamp-2">{{ item.goods_name }}</text>
             <view class="ft-dark fs-xs padding-top-xs">
               <text class="margin-right">× {{ item.goods_num }}</text>
-              {{ item.goods_sku_name || "&nbsp;&nbsp;" }}
+              <!-- {{ item.goods_sku_name || "&nbsp;&nbsp;" }} -->
             </view>
             <view class="margin-top-sm">
-              <text class="price">{{ item.goods_price / 100 }}</text>
+              <text class="price">{{ item.goods_price }}</text>
             </view>
           </view>
         </view>
@@ -139,44 +89,21 @@
     >
       <view class="item">
         <text>订单编号：</text>
-        <text class="">{{ order_data.order_id }}</text>
+        <text class="">{{ order_data.order_no }}</text>
         <text class="copy" @click="copy">复制</text>
       </view>
       <view class="item">
         <text>下单时间：</text>
-        <text class="">{{ order_data.create_time }}</text>
+        <text class="">{{ order_data.ctime }}</text>
       </view>
       <view class="item">
         <text>支付方式：</text>
-        <text class="">{{ order_data.order_pay_way }}</text>
+        <text class="">{{ order_data.pay_type }}</text>
       </view>
-      <view class="item">
+      <!-- <view class="item">
         <text>支付编号：</text>
         <text class="">{{ order_data.order_pay_no }}</text>
-      </view>
-    </view>
-
-    <!-- 退款数据 -->
-    <view
-      class="order-area padding margin-lr margin-tb-sm bg-main border-radius"
-      v-if="order_data.order_refund_state"
-    >
-      <view class="item">
-        <text>退款原因：</text>
-        <text class="">{{ order_data.order_refund_reason }}</text>
-      </view>
-      <view class="item">
-        <text>退款说明：</text>
-        <text class="">{{ order_data.order_refund_desc }}</text>
-      </view>
-      <view class="item">
-        <text>退款状态：</text>
-        <text>{{ order_data.order_refund_state }}</text>
-      </view>
-      <view class="item">
-        <text>退款情况：</text>
-        <text>{{ order_data.order_refund_remark || "" }}</text>
-      </view>
+      </view> -->
     </view>
 
     <!-- 统计数据 -->
@@ -186,20 +113,20 @@
       <view class="ft-dark">
         <view class="item dflex-b">
           <text>{{ goods_price_tip }}</text>
-          <text class="">￥{{ order_data.order_total_money / 100 }}</text>
+          <text class="">￥{{ order_data.price }}</text>
         </view>
-        <view class="item dflex-b">
+        <!-- <view class="item dflex-b">
           <text>优惠</text>
           <text class="">￥{{ order_data.order_coupon_price || 0 }}</text>
         </view>
         <view class="item dflex-b">
           <text>运费</text>
           <text class="">￥0</text>
-        </view>
+        </view> -->
       </view>
       <view class="item dflex-b">
         <text>实付款</text>
-        <text class="price">{{ order_data.order_actural_paid / 100 }}</text>
+        <text class="price">{{ order_data.price }}</text>
       </view>
     </view>
     <view style="height: 100rpx"></view>
@@ -207,39 +134,28 @@
     <!-- 底部操作区 -->
     <view class="oper-area dflex-b padding-right padding-left-sm">
       <view class="dflex">
-        <view class="btn-area dflex dflex-flow-c" @click="tohome">
+        <!-- <view class="btn-area dflex dflex-flow-c" @click="tohome">
           <text class="iconfont iconshouye-1"></text>
           <text>首页</text>
-        </view>
+        </view> -->
         <!-- #ifndef H5 || MP-360 || MP-ALIPAY -->
-        <button class="btn no-border" open-type="contact">
+        <!-- <button class="btn no-border" open-type="contact">
           <view class="btn-area dflex dflex-flow-c">
             <text class="iconfont iconkefu-01"></text>
             <text>客服</text>
           </view>
-        </button>
+        </button> -->
         <!-- #endif -->
       </view>
 
       <view class="dflex-e">
-        <view class="dflex" v-if="order_data.state == '待付款'">
-          <button class="action-btn" @click="cancelOrder">取消订单</button>
-          <button
-            v-if="order_data.order_pay_state == '待付款'"
-            class="action-btn main-btn"
-            @click="payment"
-          >
-            立即支付
-          </button>
-          <button
-            v-if="order_data.order_pay_state == '待核实'"
-            class="action-btn main-btn"
-            @click="payment"
-          >
-            待核实
-          </button>
+        <view class="dflex" v-if="order_data.status_text == '待付款'">
+          <!-- <button class="action-btn" @click="cancelOrder">取消订单</button> -->
+          <!-- v-if="order_data.order_pay_state == '待付款'" -->
+          <button class="action-btn main-btn" @click="payment">立即支付</button>
         </view>
-        <view class="dflex" v-if="order_data.state == '待发货'">
+
+        <!-- <view class="dflex" v-if="order_data.status_text == '待发货'">
           <button
             v-if="!order_data.order_refund_state"
             class="action-btn border-radius-big bg-main"
@@ -247,37 +163,33 @@
           >
             申请退款
           </button>
-        </view>
-        <button
+        </view> -->
+        <!-- <button
           v-if="
             !order_data.order_refund_state &&
-            ['待收货', '待评价', '已完成'].includes(order_data.state)
+            ['待收货', '待评价', '已完成'].includes(order_data.status_text)
           "
           class="action-btn"
           @click="toexpress"
         >
           查看物流
-        </button>
-        <view class="dflex" v-if="order_data.state == '待收货'">
-          <button
-            v-if="!order_data.order_refund_state"
-            class="action-btn main-btn"
-            @click="toreceipt"
-          >
+        </button> -->
+        <view class="dflex" v-if="order_data.status_text == '待收货'">
+          <!-- v-if="!order_data.order_refund_state" -->
+          <button class="action-btn main-btn" @click="toreceipt">
             确认收货
           </button>
         </view>
-        <view class="dflex" v-if="order_data.state == '待评价'">
-          <button class="action-btn main-btn" @click="evaluate">
-            我要评价
-          </button>
-        </view>
-        <view
-          v-if="order_data.state == '已完成' || order_data.state == '已取消'"
+
+        <!-- <view
+          v-if="
+            order_data.status_text == '已完成' ||
+            order_data.status_text == '已取消'
+          "
           ><button @click="delorder" class="action-btn main-btn">
             删除订单
           </button></view
-        >
+        > -->
       </view>
     </view>
   </view>
@@ -285,6 +197,7 @@
 
 <script>
 import { getMallOrderInfo } from "@/api/tuanApi.js";
+import config from "@/common/config.js";
 
 export default {
   components: {
@@ -304,14 +217,11 @@ export default {
       time_remaining: 0,
     };
   },
-  onUnload() {
-    uni.$emit("__event_order", "refresh");
-  },
+  // onUnload() {
+  //   uni.$emit("__event_order", "refresh");
+  // },
   onLoad(options) {
     this.order_id = options.order_id;
-
-    console.log(this.order_id);
-
     this.loadData();
   },
   //   onShow() {
@@ -319,7 +229,7 @@ export default {
   //   },
   methods: {
     tohome() {
-      this.$api.tohome();
+      this.$util.redirectTo("/pages/index/index");
     },
     async loadData() {
       const params = {
@@ -328,41 +238,26 @@ export default {
 
       const { data: result } = await getMallOrderInfo(params);
 
+      if (result.code !== 200) return;
+      const orderInfo = result.data || {};
+
+      this.order_data = orderInfo;
+      this.order_data.status_text = this.formatStatus(orderInfo.status);
+
+      this.order_data.status_text = "待收货";
+      //TODO
+      const userInfo = uni.getStorageSync("userInfo");
+      this.order_data.username = userInfo.username;
+
+      this.order_detail = orderInfo.goods_list.map((goods) => {
+        goods.previewImg = `${config.imgUrl}${goods.goods_img}`;
+
+        return goods;
+      });
+
       console.log(result);
-
-      let _this = this;
-      //   await this.$func.usemall
-      //     .call("order/detail", {
-      //       order_id: _this.order_id,
-      //     })
-      //     .then((res) => {
-      //       if (res.code === 200) {
-      //         res.datas.order.create_time = this.$api.format(
-      //           res.datas.order.create_time
-      //         );
-      //         _this.order_data = res.datas.order;
-      //         _this.order_detail = res.datas.order_detail;
-      //         _this.addressData = res.datas.order_trip;
-      //         if (res.datas.order && res.datas.order.state === "待付款") {
-      //           _this.time_remaining = res.datas.time_remaining;
-      //         }
-
-      //         _this.order_detail.forEach((data) => {
-      //           if (data.goods_opt_id > 0) {
-      //             let desc = "";
-      //             if (data.goods_opt_desc) {
-      //               desc = " (" + data.goods_opt_desc + ")";
-      //             }
-      //             _this.goods_price_tip = data.goods_opt_name + desc;
-      //           }
-      //         });
-
-      //         // console.log(_this.order_detail);
-      //         // console.log(_this.order_data.state);
-      //       }
-      //     });
     },
-    // 立即支付
+    // 立即支付 TODO
     payment() {
       if (this.order_data.order_pay_state == "待核实") {
         this.$api.msg("订单已支付待核实状态");
@@ -375,12 +270,12 @@ export default {
       });
     },
     // 查看物流
-    toexpress(item) {
-      // this.$api.msg('查看物流开发中');
-      uni.navigateTo({
-        url: `/pages/user/order/order-express?order_id=${this.order_id}`,
-      });
-    },
+    // toexpress(item) {
+    //   // this.$api.msg('查看物流开发中');
+    //   uni.navigateTo({
+    //     url: `/pages/user/order/order-express?order_id=${this.order_id}`,
+    //   });
+    // },
     // 已发货
     toreceipt() {
       let _this = this;
@@ -393,14 +288,14 @@ export default {
             uni.showLoading({
               title: "请稍后",
             });
-            _this.$func.usemall
-              .call("order/received", {
-                order_id: _this.order_id,
-                state: "待评价",
-              })
-              .then((res) => {
-                _this.loadData("refresh");
-              });
+            // _this.$func.usemall
+            //   .call("order/received", {
+            //     order_id: _this.order_id,
+            //     state: "待评价",
+            //   })
+            //   .then((res) => {
+            //     _this.loadData("refresh");
+            //   });
           } else if (res.cancel) {
             console.log("用户点击取消");
           }
@@ -411,66 +306,66 @@ export default {
       });
     },
     // 删除订单
-    delorder() {
-      let _this = this;
+    // delorder() {
+    //   let _this = this;
 
-      uni.showModal({
-        title: "提示",
-        content: "删除订单",
-        success: function (res) {
-          if (res.confirm) {
-            uni.showLoading({
-              title: "请稍后",
-            });
-            _this.$func.usemall
-              .call("order/deleted", {
-                order_id: _this.order_id,
-              })
-              .then((res) => {
-                if (res.code === 200) {
-                  uni.navigateBack({});
-                }
-              });
-          } else if (res.cancel) {
-            console.log("点击取消");
-          }
-        },
-        complete() {
-          uni.hideLoading();
-        },
-      });
-    },
+    //   uni.showModal({
+    //     title: "提示",
+    //     content: "删除订单",
+    //     success: function (res) {
+    //       if (res.confirm) {
+    //         uni.showLoading({
+    //           title: "请稍后",
+    //         });
+    //         _this.$func.usemall
+    //           .call("order/deleted", {
+    //             order_id: _this.order_id,
+    //           })
+    //           .then((res) => {
+    //             if (res.code === 200) {
+    //               uni.navigateBack({});
+    //             }
+    //           });
+    //       } else if (res.cancel) {
+    //         console.log("点击取消");
+    //       }
+    //     },
+    //     complete() {
+    //       uni.hideLoading();
+    //     },
+    //   });
+    // },
     // 取消订单
-    cancelOrder() {
-      let _this = this;
+    // cancelOrder() {
+    //   let _this = this;
 
-      uni.showModal({
-        title: "提示",
-        content: "取消订单",
-        success: function (res) {
-          if (res.confirm) {
-            uni.showLoading({
-              title: "请稍后",
-            });
-            _this.$func.usemall
-              .call("order/cancel", {
-                order_id: _this.order_id,
-                state: "已取消",
-              })
-              .then((res) => {
-                if (res.code === 200) {
-                  _this.loadData("refresh");
-                }
-              });
-          } else if (res.cancel) {
-            console.log("用户点击取消");
-          }
-        },
-        complete() {
-          uni.hideLoading();
-        },
-      });
-    },
+    //   uni.showModal({
+    //     title: "提示",
+    //     content: "取消订单",
+    //     success: function (res) {
+    //       if (res.confirm) {
+    //         uni.showLoading({
+    //           title: "请稍后",
+    //         });
+    //         _this.$func.usemall
+    //           .call("order/cancel", {
+    //             order_id: _this.order_id,
+    //             state: "已取消",
+    //           })
+    //           .then((res) => {
+    //             if (res.code === 200) {
+    //               _this.loadData("refresh");
+    //             }
+    //           });
+    //       } else if (res.cancel) {
+    //         console.log("用户点击取消");
+    //       }
+    //     },
+    //     complete() {
+    //       uni.hideLoading();
+    //     },
+    //   });
+    // },
     // 点击复制
     copy() {
       let _this = this;
@@ -489,16 +384,30 @@ export default {
       });
     },
     // 评价
-    evaluate() {
-      uni.navigateTo({
-        url: `/pages/user/order/order-evaluate?id=${this.order_id}`,
-      });
-    },
+    // evaluate() {
+    //   uni.navigateTo({
+    //     url: `/pages/user/order/order-evaluate?id=${this.order_id}`,
+    //   });
+    // },
     // 申请退款
-    refund() {
-      uni.navigateTo({
-        url: `/pages/user/order/order-refund?order_id=${this.order_id}`,
-      });
+    // refund() {
+    //   uni.navigateTo({
+    //     url: `/pages/user/order/order-refund?order_id=${this.order_id}`,
+    //   });
+    // },
+    formatStatus(status) {
+      if (status == 1) {
+        return "待付款";
+      }
+      if (status == 2) {
+        return "待发货";
+      }
+      if (status == 3) {
+        return "待收货";
+      }
+      if (status == 4) {
+        return "已完成";
+      }
     },
   },
 };
@@ -510,7 +419,7 @@ page {
 }
 
 .order-detail .item text:first-child {
-  width: 152rpx;
+  // width: 152rpx;
   text-align: right;
   display: inline-block;
 }
