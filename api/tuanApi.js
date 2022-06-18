@@ -13,6 +13,7 @@ const url = {
   CreateOrder: "Api/Order/CreateOrder", //创建订单
   MallOrderList: "Api/Order/GetOrderList", //订单列表
   MallOrderDetail: "Api/Order/GetOrderInfo", //订单详情
+  MallOrderPay: "Api/OrderPay/WxPay", //订单支付
 
   GroupList: "Api/Group/groupList", //热门拼团列表
   GroupDetail: "Api/Group/getGroupInfo", //拼团详情
@@ -138,6 +139,15 @@ export function getMallOrderList(data) {
 export function getMallOrderInfo(data) {
   return request.request({
     url: url.MallOrderDetail,
+    method: "post",
+    data,
+  });
+}
+
+//订单支付
+export function mallOrderPayApi(data) {
+  return request.request({
+    url: url.MallOrderPay,
     method: "post",
     data,
   });

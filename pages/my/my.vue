@@ -136,7 +136,7 @@ export default {
           {
             src: "/static/imgs/my/control-icon7.png",
             text: "会员中心",
-            link: "/page_my/myAddress",
+            link: "/pages/my/member",
             check_login: true,
           },
           {

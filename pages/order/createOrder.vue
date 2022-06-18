@@ -416,9 +416,13 @@ export default {
       }
 
       const { data: result } = await createOrderApi(params);
+      if (result.code !== 200) return;
+      const info = result.data;
 
-      console.log("result");
-      console.log(result);
+      this.$util.redirectTo("/pages/order/pay", {
+        order_id: info.order_id,
+        money: info.price,
+      });
 
       // this.$func.usemall.call("order/create", obj).then((res) => {
       //   if (res.code === 200) {
