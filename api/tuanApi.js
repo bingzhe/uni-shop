@@ -13,7 +13,9 @@ const url = {
   CreateOrder: "Api/Order/CreateOrder", //创建订单
   MallOrderList: "Api/Order/GetOrderList", //订单列表
   MallOrderDetail: "Api/Order/GetOrderInfo", //订单详情
-  MallOrderPay: "Api/OrderPay/WxPay", //订单支付
+  MallOrderPay: "Api/OrderPay/goodsOrderPay", //订单支付
+
+  MemberConfigList: "Api/Usersinfo/getConfigList", //会员升级配置
 
   GroupList: "Api/Group/groupList", //热门拼团列表
   GroupDetail: "Api/Group/getGroupInfo", //拼团详情
@@ -30,7 +32,7 @@ const url = {
   Withdraw: "Api/UsersWithdraw/index", //提现
   WithdrawConfig: "Api/UsersWithdraw/getWithdrawConfig", //提现配置
   WithdrawBill: "Api/UsersWithdraw/withdrawBill", // 提现明细 积分 保证金
-  UsersBill: "Api/Usersinfo/getUsersBill", // 查询余额 积分 保证金 消费充值明细
+  UsersBill: "Api/Usersinfo/getUsersBill", // 查询余额 积分 保证金 消费充值明细  余额明细
   GetAddress: "Api/Usersinfo/getAddress", // 获取地址列表
   GetDefaultAddress: "Api/Usersinfo/getDefaultAddress", // 获取用户默认地址
   SaveAddress: "Api/Usersinfo/saveAddress", // 增加用户地址
@@ -148,6 +150,14 @@ export function getMallOrderInfo(data) {
 export function mallOrderPayApi(data) {
   return request.request({
     url: url.MallOrderPay,
+    method: "post",
+    data,
+  });
+}
+
+export function memberConfigListApi(data) {
+  return request.request({
+    url: url.MemberConfigList,
     method: "post",
     data,
   });

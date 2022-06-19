@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { memberConfigListApi } from "@/api/tuanApi.js";
+
 export default {
   data() {
     return {
@@ -54,10 +56,17 @@ export default {
       ],
     };
   },
+  onLoad() {
+    this.getMemberConfigList();
+  },
   methods: {
     // swiper 切换
     changeTab(e) {
       this.tabCurrentIndex = e.target.current;
+    },
+    async getMemberConfigList() {
+      const { data: result } = await memberConfigListApi();
+      console.log(result);
     },
   },
 };

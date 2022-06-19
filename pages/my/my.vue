@@ -28,20 +28,20 @@
         </view>
 
         <view class="user-info-body">
-          <view class="user-info-blance" @click="detail(1)">
+          <view class="user-info-blance">
             <view class="user-info-blance-label">账户积分</view>
             <view class="user-info-blance-value">{{
               userInfo.balance_money || "0.00"
             }}</view>
           </view>
           <view class="user-info-treasure">
-            <view class="user-blance">
+            <view class="user-blance" @click="detail(1)">
               <text> 复购积分： </text>
               <text>
                 {{ userInfo.balance_money || "0.00" }}
               </text>
             </view>
-            <view class="user-integral">
+            <view class="user-integral" @click="detail(2)">
               <text> 提现积分： </text>
               <text>
                 {{ userInfo.point || "0.00" }}
@@ -127,12 +127,12 @@ export default {
             link: "/page_my/myInformation",
             check_login: true,
           },
-          {
-            src: "/static/imgs/my/control-icon6.png",
-            text: "积分明细",
-            link: "/page_my/userBillDetail?type=1",
-            check_login: true,
-          },
+          // {
+          //   src: "/static/imgs/my/control-icon6.png",
+          //   text: "积分明细",
+          //   link: "/page_my/userBillDetail?type=1",
+          //   check_login: true,
+          // },
           {
             src: "/static/imgs/my/control-icon7.png",
             text: "会员中心",
