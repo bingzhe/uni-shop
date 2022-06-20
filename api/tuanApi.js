@@ -2,6 +2,7 @@ import request from "@/common/http/request.js"; // 自己的接口
 
 const url = {
   Banner: "Api/Index/getBanner", // 轮播图
+  GoodsIndex: "Api/Goods/index", //首页商品
 
   Catelist: "Api/Goods/getCateList", // 商品分类
   CateGoodsList: "Api/Goods/getGoodsList", //商品列表
@@ -69,6 +70,15 @@ const url = {
 export function getCateListApi(data) {
   return request.request({
     url: url.Catelist,
+    method: "post",
+    data,
+  });
+}
+
+//首页商品
+export function getGoodsIndexApi(data) {
+  return request.request({
+    url: url.GoodsIndex,
     method: "post",
     data,
   });

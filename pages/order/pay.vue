@@ -6,27 +6,6 @@
     </view>
 
     <view class="pay-type-list">
-      <!-- #ifdef MP-WEIXIN -->
-      <!-- <view
-        class="type-item dflex-b pos-r padding-tb-sm"
-        @click="changePayType('微信支付')"
-      >
-        <text class="iconfont iconweixin"></text>
-        <view class="item flex1">
-          <text class="tit">微信支付</text>
-          <text>推荐使用</text>
-        </view>
-        <label class="radio">
-          <radio
-            value=""
-            color="#FF6A6C"
-            :checked="pay_way == 1"
-            :disabled="money <= 0"
-          />
-        </label>
-      </view> -->
-      <!-- #endif -->
-
       <!-- #ifdef H5 || MP-360 -->
       <view
         class="type-item dflex-b pos-r padding-tb-sm"
@@ -73,18 +52,10 @@
         </label>
       </view>
     </view>
+    <!-- #endif  -->
 
     <view class="padding w-full margin-top-big pos-a" style="bottom: 30rpx">
       <view class="dflex-b border-radius-big">
-        <!-- #ifndef H5 || MP-360 -->
-        <!-- <view
-          class="tac padding-tb-sm flex1 bg-base"
-          :class="is_submit === 1 ? 'bg-disabled' : ''"
-          @click="confirm"
-          >{{ pay_tip }}</view
-        > -->
-        <!-- #endif -->
-
         <!-- #ifdef H5 || MP-360 -->
         <view
           class="tac padding-tb-sm flex1 bg-base"
@@ -132,7 +103,6 @@ export default {
     this.pay_trade_type = "JSAPI";
     // #endif
 
-    // #endif
     // #ifdef H5 || MP-360
     // this.$api.timerout(() => {
     //   this.pay_way = "微信支付";

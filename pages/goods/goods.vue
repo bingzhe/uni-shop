@@ -333,7 +333,10 @@ export default {
     // },
     // 加入购物车
     async tocart(goods) {
-      if (!this.$util.checkLogin()) return;
+      if (!this.$util.checkLogin()) {
+        this.$util.redirectTo("/pages/login/login", undefined, "reLaunch");
+        return;
+      }
 
       const params = {
         goods_id: goods.goods_id,
@@ -347,7 +350,10 @@ export default {
     },
     // 立即购买  TODO
     tobuy() {
-      if (!this.$util.checkLogin()) return;
+      if (!this.$util.checkLogin()) {
+        this.$util.redirectTo("/pages/login/login", undefined, "reLaunch");
+        return;
+      }
 
       uni.navigateTo({
         url: `/pages/order/createOrder?goods_id=${this.id}`,

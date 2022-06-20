@@ -14,55 +14,47 @@
             src="/static/imgs/icon_hot.png"
             mode="aspectFit"
           ></image>
-          <text>热门参团</text>
+          <text>热门商品</text>
         </view>
         <view class="other"> </view>
       </view>
-      <view v-if="data_list.length > 0" class="list-body group-list">
-        <view
-          @click="toDetail(item)"
-          class="group-item"
-          v-for="(item, index) in data_list"
-          :key="index"
-        >
+      <view class="list-body group-list">
+        <view @click="toDetail" class="group-item">
           <image
             class="group-img"
-            :src="$util.img(item.goods_img)"
+            :src="$util.img(goods.goods_img)"
             mode="aspectFit"
           ></image>
           <view class="group-detail">
             <view class="group-detail-top">
               <view class="group-name">
-                <text>{{ item.goods_name }}</text>
+                <text>{{ goods.goods_name }}</text>
               </view>
             </view>
             <view class="group-detail-bottom flex-title">
               <view class="left">
-                <view class="group-tags-wrap">
+                <!-- <view class="group-tags-wrap">
                   <view class="group-tags team-num">
-                    <text>{{ item.team_num }}人团</text>
+                    <text>{{ goods.team_num }}人团</text>
                   </view>
-                </view>
+                </view> -->
                 <view class="group-price">
                   <text class="group-price-symbol">￥</text>
-                  <text>{{ item.price }}</text>
+                  <text>{{ goods.goods_price }}</text>
                 </view>
-                <view class="group-old-price">
+                <!-- <view class="group-old-price">
                   <text>单购价：</text>
-                  <text>{{ item.goods_price }}</text>
-                </view>
+                  <text>{{ goods.goods_price }}</text>
+                </view> -->
               </view>
               <view class="right">
                 <view class="group-btn">
-                  <text>去参团</text>
+                  <text>去购买</text>
                 </view>
               </view>
             </view>
           </view>
         </view>
-      </view>
-      <view v-else class="list-body-empty">
-        <text>暂无更多参团</text>
       </view>
     </view>
 
@@ -84,13 +76,13 @@
 </template>
 
 <script>
-import { getBannerApi, groupListApi } from "@/api/tuanApi.js";
+import { getBannerApi, getGoodsIndexApi } from "@/api/tuanApi.js";
 
 export default {
   data() {
     return {
       slid_list: [],
-      data_list: [],
+      goods: {}, //套餐商品
     };
   },
   onLoad() {
@@ -105,34 +97,37 @@ export default {
   },
   methods: {
     init() {
-      // this.groupList();
       this.getBanner();
-    },
-    async groupList() {
-      let res = await groupListApi();
-      this.data_list = res.data.data;
+      this.getGoodsIndex();
     },
     async getBanner() {
       const { data: result } = await getBannerApi();
+      if (result.code !== 200) return;
       this.slid_list = (result.data || []).map((item) => item.img_url);
     },
-    toDetail(item) {
-      this.$util.redirectTo("/pages/goods/goods_detail", {
-        group_id: item.group_id,
+    async getGoodsIndex() {
+      const { data: result } = await getGoodsIndexApi();
+      if (result.code !== 200) return;
+
+      this.goods = result.data;
+    },
+    toDetail() {
+      this.$util.redirectTo("/pages/goods/goods", {
+        id: this.goods.goods_id,
       });
     },
 
-    toBlind() {
-      if (!this.$util.checkLogin()) {
-        this.$util.redirectTo(
-          "/pages/login/login?connect_redirect=1",
-          undefined,
-          "reLaunch"
-        );
-        return;
-      }
-      this.$util.redirectTo("/page_my/blindBox");
-    },
+    // toBlind() {
+    //   if (!this.$util.checkLogin()) {
+    //     this.$util.redirectTo(
+    //       "/pages/login/login?connect_redirect=1",
+    //       undefined,
+    //       "reLaunch"
+    //     );
+    //     return;
+    //   }
+    //   this.$util.redirectTo("/page_my/blindBox");
+    // },
   },
 };
 </script>
@@ -170,31 +165,31 @@ export default {
   }
 }
 
-.blind-wrap {
-  margin-top: 20rpx;
+// .blind-wrap {
+//   margin-top: 20rpx;
 
-  .list-header {
-    background-color: $white-color;
-    color: $app-primary-color;
-    height: 70rpx;
-    padding: 20rpx;
-    font-size: $font-30;
-    border-radius: 16rpx 16rpx 0 0;
-  }
+//   .list-header {
+//     background-color: $white-color;
+//     color: $app-primary-color;
+//     height: 70rpx;
+//     padding: 20rpx;
+//     font-size: $font-30;
+//     border-radius: 16rpx 16rpx 0 0;
+//   }
 
-  .list-body {
-    background-color: #f8f8f8;
-    border-radius: 0 0 16rpx 16rpx;
-  }
+//   .list-body {
+//     background-color: #f8f8f8;
+//     border-radius: 0 0 16rpx 16rpx;
+//   }
 
-  .list-body-empty {
-    height: 400rpx;
-    @extend %flex-center;
-    background-color: #f8f8f8;
-    border-radius: 0 0 16rpx 16rpx;
-    color: $gray-color;
-  }
-}
+//   .list-body-empty {
+//     height: 400rpx;
+//     @extend %flex-center;
+//     background-color: #f8f8f8;
+//     border-radius: 0 0 16rpx 16rpx;
+//     color: $gray-color;
+//   }
+// }
 
 .group-list {
   padding: 30rpx 30rpx 10rpx;
