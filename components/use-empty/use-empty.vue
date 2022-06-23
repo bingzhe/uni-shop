@@ -10,7 +10,7 @@
     >
       <image v-if="imgurl" :src="imgurl"></image>
       <view v-if="tip" class="title padding-sm">{{ tip }}</view>
-      <button class="no-border use-btn" @click="to">{{ btnTip }}</button>
+      <!-- <button class="no-border use-btn" @click="to">{{ btnTip }}</button> -->
     </view>
   </view>
 </template>
