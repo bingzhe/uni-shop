@@ -19,14 +19,25 @@
             ></image>
           </view>
           <view class="level">
-            {{ member.level }}
+            {{ member.levelName }}
+          </view>
+        </view>
+
+        <view class="welfare-content">
+          <view class="welfare-title">达标条件</view>
+          <view>
+            <view v-for="condition in member.conditionsList">
+              {{ condition }}
+            </view>
           </view>
         </view>
 
         <view class="welfare-content">
           <view class="welfare-title">会员福利</view>
           <view>
-            {{ member.welfareList }}
+            <view v-for="welfare in member.welfareList">
+              {{ welfare }}
+            </view>
           </view>
         </view>
       </swiper-item>
@@ -43,16 +54,12 @@ export default {
       tabCurrentIndex: 0,
 
       memberList: [
-        {
-          id: 0,
-          level: "白银会员",
-          welfareList: ["白银会员白银会员1", "白银会员白银会员2"],
-        },
-        {
-          id: 1,
-          level: "黄金会员",
-          welfareList: ["白银会员白银会员1", "白银会员白银会员2"],
-        },
+        // {
+        //   id: 0,
+        //   level: "白银会员",
+        //   conditionsList: [],
+        //   welfareList: ["白银会员白银会员1", "白银会员白银会员2"],
+        // },
       ],
     };
   },
@@ -64,9 +71,88 @@ export default {
     changeTab(e) {
       this.tabCurrentIndex = e.target.current;
     },
+    transformLevelName(level) {
+      let levelName = "";
+      switch (level) {
+        case 1:
+          levelName = "黄金会员";
+          break;
+        case 2:
+          levelName = "白金会员";
+          break;
+        case 3:
+          levelName = "县级代理";
+          break;
+        case 4:
+          levelName = "市级代理";
+          break;
+        case 5:
+          levelName = "省级代理";
+          break;
+        case 6:
+          levelName = "股东";
+          break;
+
+        default:
+          break;
+      }
+
+      return levelName;
+    },
     async getMemberConfigList() {
       const { data: result } = await memberConfigListApi();
-      console.log(result);
+      if (result.code !== 200) return;
+
+      const list = result.data.map((item) => {
+        item.levelName = this.transformLevelName(item.level);
+
+        const tuanLevelName = this.transformLevelName(item.tuan_level);
+
+        if (item.level == 1) {
+          item.conditionsList = ["未购买产品"];
+          item.welfareList = ["无权复购", "无权分润"];
+        } else if (item.level == 2) {
+          item.conditionsList = ["购买产品"];
+          item.welfareList = [
+            "有权复购",
+            `一级销售分润：可获得${item.rate}%（税前）`,
+            `二级销售分润：可获得${item.indirect_rate}%（税前）`,
+          ];
+        } else if (item.level == 3) {
+          item.conditionsList = [
+            `接销售产品${item.main_num}套`,
+            `团队业绩${item.tuan_performance}元`,
+          ];
+          item.welfareList = [
+            `一级销售分润：可获得${item.rate}%（税前）`,
+            `二级销售分润：可获得${item.indirect_rate}%（税前）`,
+            `给予补贴${item.fixed}元/套(新售)`,
+          ];
+        } else if (item.level == 4 || item.level == 5) {
+          item.conditionsList = [
+            `接销售产品${item.main_num}套`,
+            `直推${item.zhi_num}个${tuanLevelName}`,
+            `团队业绩${item.tuan_performance}元`,
+          ];
+          item.welfareList = [
+            `一级销售分润：可获得${item.rate}%（税前）`,
+            `二级销售分润：可获得${item.indirect_rate}%（税前）`,
+            `给予补贴${item.fixed}元/套(新售)`,
+          ];
+        } else if (item.level == 6) {
+          item.conditionsList = [
+            `接销售产品${item.main_num}套`,
+            `直推${item.zhi_num}个${tuanLevelName}`,
+            `团队业绩${item.tuan_performance}元`,
+          ];
+          item.welfareList = [
+            "股东享受公司商城系全球业绩营业额2%加权分红，签约生效",
+          ];
+        }
+        return item;
+      });
+
+      this.memberList = list;
     },
   },
 };
@@ -100,7 +186,7 @@ page {
   }
 }
 .welfare-content {
-  min-height: 400rpx;
+  min-height: 350rpx;
   margin: 40rpx 30rpx;
   padding: 30rpx;
   border-radius: 20rpx;
