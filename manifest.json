@@ -94,7 +94,8 @@
         },
         "devServer" : {
             "https" : false,
-            "port" : 4888
+            "port" : 4888,
+            "disableHostCheck" : true
         },
         "domain" : "tuan.100dtc.com/h5/"
     }
