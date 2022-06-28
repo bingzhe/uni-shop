@@ -84,8 +84,8 @@
 				<uni-icons type="top" size="28" v-if="isViewMore" color="red"></uni-icons>
 				<uni-icons type="bottom" size="28" v-else color="red"></uni-icons>
 			</view>
-			<view @click="toShopHtml(item, index)" class="shop-item flex-center-y"
-				v-for="(item, index) in list" :key="index">
+			<view @click="toShopHtml(item, index)" class="shop-item flex-center-y" v-for="(item, index) in list"
+				:key="index">
 				<image class="shop-img" :src="$util.img(item.logo)" mode="aspectFit"></image>
 				<view class="shop-detail">
 					<view class="shop-detail-left">
@@ -138,7 +138,7 @@
 				showHour: 0,
 				showMinute: 0,
 				showSecond: 0,
-				url:'',
+				url: '',
 				detail: {
 					begin_time: null,
 					create_time: null,
@@ -169,7 +169,7 @@
 			}
 			this.groupDetail();
 			// console.log(this.detail)
-			
+
 		},
 		methods: {
 			moment,
@@ -206,11 +206,12 @@
 				this.detail = res.data.data;
 				var title = this.detail.goods_name;
 				uni.setNavigationBarTitle({
-				    title: title
+					title: title
 				});
 				// 默认显示10个门店
-				if(this.detail.shop_list)this.list = this.detail.shop_list.length>10? this.detail.shop_list.slice(0,10):this.detail.shop_list
-				
+				if (this.detail.shop_list) this.list = this.detail.shop_list.length > 10 ? this.detail.shop_list.slice(
+					0, 10) : this.detail.shop_list
+
 				// var reg = /\/h5/ig
 				// this.detail.goods_info = this.detail.goods_info.replaceAll(reg,'/')
 				this.initCountDown();
@@ -228,7 +229,7 @@
 					this.$util.redirectTo('/pages/login/login', undefined, 'reLaunch');
 					return;
 				}
-				
+
 				this.$util.redirectTo('/pages/goods/goods_pay', {
 					// ...this.detail
 					group_id: this.detail.group_id,
@@ -241,7 +242,7 @@
 
 			// 打开地图
 			openMap(item, index) {
-				const lat =item.latitude;
+				const lat = item.latitude;
 				const lon = item.longitude;
 				console.log(lat);
 				console.log(lon);
@@ -258,17 +259,18 @@
 				// });
 				// var _this = this
 				// console.log(this)
-				  // this.$jsonp('https://apis.map.qq.com/ws/geocoder/v1/?', {
-				  //   location: lat + ',' + lon, // 经纬度
-				  //   key: 'V74BZ-Z5OCD-3AU4J-PCWL2-GRUQ6-FLFP4', // 创建应用的钥匙
-				  //   output: 'jsonp' ,// output必须jsonp   不然会超时
-				  // }).then(res => {
-				  //   console.log(res, '腾讯地图')
-				  // })
-				  uni.navigateTo({
-				     url: '/pages/goods/webView?url=https://3gimg.qq.com/lightmap/v1/marker/?marker=coord:'+lat+','+lon+'&referer=myApp&key=V74BZ-Z5OCD-3AU4J-PCWL2-GRUQ6-FLFP4'
-				  })
-				
+				// this.$jsonp('https://apis.map.qq.com/ws/geocoder/v1/?', {
+				//   location: lat + ',' + lon, // 经纬度
+				//   key: 'V74BZ-Z5OCD-3AU4J-PCWL2-GRUQ6-FLFP4', // 创建应用的钥匙
+				//   output: 'jsonp' ,// output必须jsonp   不然会超时
+				// }).then(res => {
+				//   console.log(res, '腾讯地图')
+				// })
+				uni.navigateTo({
+					url: '/pages/goods/webView?url=https://3gimg.qq.com/lightmap/v1/marker/?marker=coord:' + lat +
+						',' + lon + '&referer=myApp&key=V74BZ-Z5OCD-3AU4J-PCWL2-GRUQ6-FLFP4'
+				})
+
 			},
 			async toShopHtml(item, index) {
 				this.$util.redirectTo('/pages/goods/goods_rich', {
@@ -283,10 +285,11 @@
 					icon: 'loading',
 					duration: '200'
 				})
-				if(this.isViewMore) { // 显示全部
+				if (this.isViewMore) { // 显示全部
 					this.list = this.detail.shop_list
-				}else{
-					this.list = this.detail.shop_list.length>10? this.detail.shop_list.slice(0,10):this.detail.shop_list
+				} else {
+					this.list = this.detail.shop_list.length > 10 ? this.detail.shop_list.slice(0, 10) : this.detail
+						.shop_list
 				}
 			}
 		}
@@ -300,17 +303,17 @@
 
 	.shop-list {
 		padding: 20rpx;
-		
+
 		.shop-list-top {
 			margin-bottom: 10rpx;
 			padding-right: 8rpx;
 			color: #ff0000;
-			
+
 			display: flex;
 			flex-direction: row;
 			justify-content: flex-end;
 		}
-		
+
 		.viewMore {
 			font-size: 38rpx;
 		}
@@ -528,13 +531,13 @@
 			font-size: $font-32;
 			font-weight: bold;
 			margin: 20rpx 0;
-			
-			
+
+
 			view {
 				display: inline-block;
 			}
-			
-			
+
+
 			.goods-detail {
 				width: 240rpx;
 				font-size: $font-24;
