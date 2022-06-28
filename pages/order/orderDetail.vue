@@ -244,8 +244,6 @@ export default {
       this.order_data = orderInfo;
       this.order_data.status_text = this.formatStatus(orderInfo.status);
 
-      this.order_data.status_text = "待收货";
-      //TODO
       const userInfo = uni.getStorageSync("userInfo");
       this.order_data.username = userInfo.username;
 
@@ -257,16 +255,16 @@ export default {
 
       console.log(result);
     },
-    // 立即支付 TODO
+    // 立即支付
     payment() {
-      if (this.order_data.order_pay_state == "待核实") {
-        this.$api.msg("订单已支付待核实状态");
-        return;
-      }
+      // if (this.order_data.order_pay_state == "待核实") {
+      //   this.$api.msg("订单已支付待核实状态");
+      //   return;
+      // }
 
-      this.$api.topay({
+      this.$util.redirectTo("/pages/order/pay", {
         order_id: this.order_data.order_id,
-        money: this.order_data.order_actural_paid,
+        money: this.order_data.price,
       });
     },
     // 查看物流

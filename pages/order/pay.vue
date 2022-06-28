@@ -150,115 +150,32 @@ export default {
         pay_type: this.pay_way,
       };
 
-      //TODO
       const { data: result } = await mallOrderPayApi(params);
 
       if (result.code !== 200) return;
 
-      const payData = result.data;
-
-      WeixinJSBridge.invoke(
-        "getBrandWCPayRequest",
-        JSON.parse(payData),
-        (res) => {
-          // uni.navigateBack({});
-          if (res.err_msg == "get_brand_wcpay_request:ok") {
-            // 使用以上方式判断前端返回,微信团队郑重提示：
-            //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-            uni.redirectTo({
-              url: `/pages/order/paySuccess?order_id=${this.order_id}`,
-            });
-          }
-        }
-      );
-
-      // this.topayment(payData);
-      console.log(result);
-
       this.is_submit = 1;
-
-      //   let _this = this;
-      //   uni.login({
-      //     success(loginRes) {
-      //       console.log("loginRes", loginRes);
-      //       if (loginRes.code) {
-      //         let obj = {
-      //           code: loginRes.code,
-      //           order_id: _this.order_id,
-      //           pay_way: _this.pay_way,
-      //           pay_original: _this.pay_original,
-      //           pay_trade_type: _this.pay_trade_type,
-      //         };
-      //         _this.$func.usemall.call("order/pay", obj).then((res) => {
-      //           console.log("支付接口", obj, res);
-
-      //           if (res.code === 200) {
-      //             if (res.datas) {
-      //               let pay_datas = {};
-
-      //               //#ifdef MP-WEIXIN
-      //               pay_datas = {
-      //                 timeStamp: res.datas.timeStamp,
-      //                 nonceStr: res.datas.nonceStr,
-      //                 package: res.datas.package,
-      //                 signType: res.datas.signType,
-      //                 paySign: res.datas.paySign,
-      //               };
-      //               //#endif
-
-      //               // 检查当前 session 是否有效
-      //               if (uni.canIUse("checkSession")) {
-      //                 uni.checkSession({
-      //                   success() {
-      //                     // 调用支付
-      //                     _this.topayment(pay_datas, res.datas.order_id);
-      //                   },
-      //                   fail() {
-      //                     // 当前 session 无效，调用 uni.login 获取数据
-      //                     uni.login({
-      //                       success() {
-      //                         // 调用支付
-      //                         _this.topayment(pay_datas, res.datas.order_id);
-      //                       },
-      //                       fail() {},
-      //                     });
-      //                   },
-      //                 });
-      //               } else {
-      //                 // 调用支付
-      //                 _this.topayment(pay_datas, res.datas.order_id);
-      //               }
-      //             } else {
-      //               uni.setStorage({
-      //                 key: "__order_state",
-      //                 data: "待付款",
-      //                 success(res) {
-      //                   console.log(res);
-      //                 },
-      //                 complete() {
-      //                   _this.$api.toorder();
-      //                 },
-      //               });
-      //             }
-
-      //             return;
-      //           }
-
-      //           _this.$api.timerout(() => {
-      //             if (typeof res.msg === "object") {
-      //               res.msg = res.msg.errorMessage;
-      //             }
-      //             _this.$api.msg(res.msg, 5000);
-      //             _this.is_submit = 0;
-      //           }, 800);
-      //         });
-      //       }
-      //     },
-      //     fail(err) {
-      //       _this.$api.msg(err);
-      //       _this.is_submit = 0;
-      //     },
-      //   });
+      if (this.pay_way == 1) {
+        const payData = result.data;
+        WeixinJSBridge.invoke(
+          "getBrandWCPayRequest",
+          JSON.parse(payData),
+          (res) => {
+            // uni.navigateBack({});
+            if (res.err_msg == "get_brand_wcpay_request:ok") {
+              // 使用以上方式判断前端返回,微信团队郑重提示：
+              //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+              uni.redirectTo({
+                url: `/pages/order/paySuccess?order_id=${this.order_id}`,
+              });
+            }
+          }
+        );
+      } else if (this.pay_way == 0) {
+        uni.redirectTo({
+          url: `/pages/order/paySuccess?order_id=${this.order_id}`,
+        });
+      }
     },
     topayment(pay_datas, order_id) {
       let _this = this;

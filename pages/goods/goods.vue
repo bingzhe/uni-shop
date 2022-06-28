@@ -75,7 +75,7 @@
         ></text>
         <text>收藏</text>
       </view> -->
-      <!-- TODO -->
+      
       <view class="flex1 btn-container dflex-b border-radius-big">
         <view
           class="tac padding-tb-sm flex1 bg-warn"
@@ -348,7 +348,7 @@ export default {
       if (result.code !== 200) return;
       this.$util.msg("添加成功");
     },
-    // 立即购买  TODO
+    // 立即购买
     tobuy() {
       if (!this.$util.checkLogin()) {
         this.$util.redirectTo("/pages/login/login", undefined, "reLaunch");
@@ -359,7 +359,7 @@ export default {
         url: `/pages/order/createOrder?goods_id=${this.id}`,
       });
     },
-    // 检测是否已登录 TODO
+    // 检测是否已登录
     // loginCheck() {
     //   if (!this.islogin) {
     //     let _this = this;

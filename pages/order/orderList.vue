@@ -109,7 +109,7 @@
 
                     <button
                       class="action-btn border-radius-big bg-main main-btn"
-                      @click="payment(item.order)"
+                      @click="payment(item)"
                     >
                       立即支付
                     </button>
@@ -406,10 +406,15 @@ export default {
     },
     // 立即支付
     payment(order) {
-      if (order.order_pay_state == "待核实") {
-        this.$api.msg("订单已支付待核实状态");
-        return;
-      }
+      // if (order.order_pay_state == "待核实") {
+      //   this.$api.msg("订单已支付待核实状态");
+      //   return;
+      // }
+
+      this.$util.redirectTo("/pages/order/pay", {
+        order_id: order.order_id,
+        money: order.price,
+      });
 
       //   this.$api.topay({
       //     order_id: order.order_id,
