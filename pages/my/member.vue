@@ -1,5 +1,16 @@
 <template>
   <view>
+    <image
+      @click="handleLeftClick"
+      class="angle-left"
+      src="/static/imgs/angle-left.png"
+    ></image>
+    <image
+      @click="handleRightClick"
+      class="angle-right"
+      src="/static/imgs/angle-right.png"
+    ></image>
+
     <swiper
       class="swiper-area w-full"
       :duration="0"
@@ -20,6 +31,18 @@
           </view>
           <view class="level">
             {{ member.levelName }}
+            {{ tabCurrentIndex == userLevel - 1 ? "（当前等级）" : "" }}
+          </view>
+        </view>
+
+        <view
+          v-if="tabCurrentIndex == userLevel - 1"
+          class="welfare-content yeji-wrapper"
+        >
+          <view class="welfare-title">当前业绩</view>
+          <view>
+            <view>购买数量{{ performance.buy_num }}套</view>
+            <view>业绩{{ performance.performance }}元</view>
           </view>
         </view>
 
@@ -46,12 +69,17 @@
 </template>
 
 <script>
-import { memberConfigListApi } from "@/api/tuanApi.js";
+import { memberConfigListApi, performanceApi } from "@/api/tuanApi.js";
+import { userInfoApi } from "@/api/userApi.js";
 
 export default {
   data() {
     return {
       tabCurrentIndex: 0,
+
+      userLevel: 1, //会员等级
+
+      performance: {}, //当前业绩
 
       memberList: [
         // {
@@ -64,12 +92,39 @@ export default {
     };
   },
   onLoad() {
+    this.getUserinfo();
     this.getMemberConfigList();
+    this.getPerformance();
   },
   methods: {
     // swiper 切换
     changeTab(e) {
       this.tabCurrentIndex = e.target.current;
+    },
+    async getUserinfo() {
+      const { data: result } = await userInfoApi();
+      if (result.code !== 200) return;
+
+      const userinfo = result.data;
+      this.userLevel = userinfo.user_level;
+
+      this.tabCurrentIndex = this.userLevel - 1;
+    },
+    //当前业绩
+    async getPerformance() {
+      const { data: result } = await performanceApi();
+      if (result.code !== 200) return;
+      this.performance = result.data;
+    },
+    handleLeftClick() {
+      if (this.tabCurrentIndex > 0) {
+        this.tabCurrentIndex = this.tabCurrentIndex - 1;
+      }
+    },
+    handleRightClick() {
+      if (this.tabCurrentIndex < 5) {
+        this.tabCurrentIndex = this.tabCurrentIndex + 1;
+      }
     },
     transformLevelName(level) {
       let levelName = "";
@@ -109,7 +164,7 @@ export default {
         const tuanLevelName = this.transformLevelName(item.tuan_level);
 
         if (item.level == 1) {
-          item.conditionsList = ["未购买产品"];
+          item.conditionsList = ["无"];
           item.welfareList = ["无权复购", "无权分润"];
         } else if (item.level == 2) {
           item.conditionsList = ["购买产品"];
@@ -120,7 +175,7 @@ export default {
           ];
         } else if (item.level == 3) {
           item.conditionsList = [
-            `接销售产品${item.main_num}套`,
+            `直接销售产品${item.main_num}套`,
             `团队业绩${item.tuan_performance}元`,
           ];
           item.welfareList = [
@@ -130,7 +185,7 @@ export default {
           ];
         } else if (item.level == 4 || item.level == 5) {
           item.conditionsList = [
-            `接销售产品${item.main_num}套`,
+            `直接销售产品${item.main_num}套`,
             `直推${item.zhi_num}个${tuanLevelName}`,
             `团队业绩${item.tuan_performance}元`,
           ];
@@ -141,7 +196,7 @@ export default {
           ];
         } else if (item.level == 6) {
           item.conditionsList = [
-            `接销售产品${item.main_num}套`,
+            `直接销售产品${item.main_num}套`,
             `直推${item.zhi_num}个${tuanLevelName}`,
             `团队业绩${item.tuan_performance}元`,
           ];
@@ -199,5 +254,27 @@ page {
     margin-bottom: 20rpx;
     font-style: italic;
   }
+}
+
+.yeji-wrapper {
+  min-height: 280rpx;
+}
+
+.angle-left {
+  position: fixed;
+  top: 600rpx;
+  left: 0rpx;
+  z-index: 99;
+  width: 64rpx;
+  height: 48rpx;
+}
+
+.angle-right {
+  position: fixed;
+  top: 600rpx;
+  right: 0rpx;
+  z-index: 99;
+  width: 64rpx;
+  height: 48rpx;
 }
 </style>

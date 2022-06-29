@@ -21,7 +21,11 @@
           <view class="user-text">
             <view class="user-name" style="display: flex; align-items: center">
               <text>{{ userInfo.username }}</text>
-              <view v-if="userInfo.username && isMember" class="vip">会员</view>
+              <!-- <view v-if="userInfo.username && isMember" class="vip">会员</view> -->
+              <view v-if="userInfo.levelName" class="vip">{{
+                userInfo.levelName
+              }}</view>
+
               <text @click="logout()" v-if="!userInfo.username">请登录</text>
             </view>
           </view>
@@ -208,10 +212,12 @@ export default {
       uni.setStorageSync("userInfo", result);
       this.portraitImg = config.imgUrl + uni.getStorageSync("userInfo").avatar;
       this.userInfo = uni.getStorageSync("userInfo");
-      this.isMember = this.$util.checkMember();
-      if (this.isMember) {
-        this.control_list[1][1].text = "会员中心";
-      }
+      this.userInfo.levelName = this.transformLevelName(result.user_level);
+
+      // this.isMember = this.$util.checkMember();
+      // if (this.isMember) {
+      //   this.control_list[1][1].text = "会员中心";
+      // }
       if (this.userInfo.username) {
         this.getDefaultAddress();
       }
@@ -303,6 +309,34 @@ export default {
       // 	})
       // }
     },
+    transformLevelName(level) {
+      let levelName = "";
+      switch (level) {
+        case 1:
+          levelName = "黄金会员";
+          break;
+        case 2:
+          levelName = "白金会员";
+          break;
+        case 3:
+          levelName = "县级代理";
+          break;
+        case 4:
+          levelName = "市级代理";
+          break;
+        case 5:
+          levelName = "省级代理";
+          break;
+        case 6:
+          levelName = "股东";
+          break;
+
+        default:
+          break;
+      }
+
+      return levelName;
+    },
   },
 };
 </script>
@@ -311,7 +345,7 @@ export default {
 // @import '@/pages/my/css/my.scss';
 
 .vip {
-  width: 70rpx;
+  min-width: 70rpx;
   height: 40rpx;
   margin-left: 10rpx;
   line-height: 35rpx;
@@ -319,6 +353,7 @@ export default {
   border-radius: 20rpx;
   font-size: 18rpx;
   border: 1rpx solid #ffea00;
+  padding: 0 20rpx;
 }
 
 .other_text {

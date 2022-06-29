@@ -17,6 +17,7 @@ const url = {
   MallOrderPay: "Api/OrderPay/goodsOrderPay", //订单支付
 
   MemberConfigList: "Api/Usersinfo/getConfigList", //会员升级配置
+  Performance: "Api/Usersinfo/getPerformance", //当前业绩
 
   GroupList: "Api/Group/groupList", //热门拼团列表
   GroupDetail: "Api/Group/getGroupInfo", //拼团详情
@@ -165,9 +166,19 @@ export function mallOrderPayApi(data) {
   });
 }
 
+//会员配置
 export function memberConfigListApi(data) {
   return request.request({
     url: url.MemberConfigList,
+    method: "post",
+    data,
+  });
+}
+
+//当前业绩
+export function performanceApi(data) {
+  return request.request({
+    url: url.Performance,
     method: "post",
     data,
   });
