@@ -18,6 +18,7 @@ const url = {
 
   MemberConfigList: "Api/Usersinfo/getConfigList", //会员升级配置
   Performance: "Api/Usersinfo/getPerformance", //当前业绩
+  UserLevelUp: "/Api/Usersinfo/UserLevelUp", //会员等级提升
 
   GroupList: "Api/Group/groupList", //热门拼团列表
   GroupDetail: "Api/Group/getGroupInfo", //拼团详情
@@ -179,6 +180,14 @@ export function memberConfigListApi(data) {
 export function performanceApi(data) {
   return request.request({
     url: url.Performance,
+    method: "post",
+    data,
+  });
+}
+//会员等级提升
+export function userLevelUpApi(data) {
+  return request.request({
+    url: url.UserLevelUp,
     method: "post",
     data,
   });

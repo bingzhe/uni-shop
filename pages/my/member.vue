@@ -44,6 +44,11 @@
             <view>购买数量{{ performance.buy_num }}套</view>
             <view>业绩{{ performance.performance }}元</view>
           </view>
+          <view v-if="userLevel < 6" class="page-btn-wrap">
+            <view class="page-btn" @click="applyLevelUp">
+              <text>升级会员等级</text>
+            </view>
+          </view>
         </view>
 
         <view class="welfare-content">
@@ -69,7 +74,11 @@
 </template>
 
 <script>
-import { memberConfigListApi, performanceApi } from "@/api/tuanApi.js";
+import {
+  memberConfigListApi,
+  performanceApi,
+  userLevelUpApi,
+} from "@/api/tuanApi.js";
 import { userInfoApi } from "@/api/userApi.js";
 
 export default {
@@ -92,11 +101,14 @@ export default {
     };
   },
   onLoad() {
-    this.getUserinfo();
-    this.getMemberConfigList();
-    this.getPerformance();
+    this.init();
   },
   methods: {
+    init() {
+      this.getUserinfo();
+      this.getMemberConfigList();
+      this.getPerformance();
+    },
     // swiper 切换
     changeTab(e) {
       this.tabCurrentIndex = e.target.current;
@@ -125,6 +137,14 @@ export default {
       if (this.tabCurrentIndex < 5) {
         this.tabCurrentIndex = this.tabCurrentIndex + 1;
       }
+    },
+    async applyLevelUp() {
+      const params = {
+        user_level: this.userLevel + 1,
+      };
+      const { data: result } = await userLevelUpApi(params);
+      if (result.code !== 200) return;
+      this.init();
     },
     transformLevelName(level) {
       let levelName = "";
